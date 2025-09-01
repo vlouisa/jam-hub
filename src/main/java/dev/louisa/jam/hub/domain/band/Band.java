@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.domain.band;
 
+import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,5 +42,10 @@ public class Band implements AuditableEntity {
     public void removeMember(BandMember member) {
         members.remove(member);
         member.setBand(null);
+    }
+    
+    public boolean hasMember(UserId userId) {
+        return members.stream()
+                .anyMatch(m -> m.getUserId().equals(userId.getId()));
     }
 }

@@ -1,5 +1,7 @@
 package dev.louisa.jam.hub.domain.gig;
 
+import dev.louisa.jam.hub.application.gig.GigDetails;
+import dev.louisa.jam.hub.domain.band.BandId;
 import dev.louisa.jam.hub.domain.gig.persistence.DurationConverter;
 import dev.louisa.jam.hub.domain.gig.persistence.GigStatusConverter;
 import dev.louisa.jam.hub.domain.user.UserId;
@@ -10,6 +12,8 @@ import lombok.*;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,8 +42,9 @@ public class Gig implements AuditableEntity {
     })
     private Address venueAddress;
 
-    private Instant getInTime;
-    private Instant startTime;
+    private LocalDate eventDate;
+    private LocalTime getInTime;
+    private LocalTime startTime;
 
     @Convert(converter = DurationConverter.class)
     private Duration duration;
@@ -62,6 +67,21 @@ public class Gig implements AuditableEntity {
 
 
     // --- `Domain Behaviour methods ---
+    public static Gig planNewGig(BandId bandId, GigDetails details) {
+
+        return Gig.builder()
+                .id(GigId.generate())
+                .bandId(bandId.getId())
+                .title(details.title())
+                .venueAddress(details.address())
+                .eventDate(details.eventDate())
+                .getInTime(details.getInTime())
+                .startTime(details.startTime())
+                .duration(details.duration())
+                .status(GigStatus.OPTION) // New gigs start as 'options'
+                .build();
+    }
+    
     public void promote() {
         if (status != GigStatus.OPTION) {
             throw new IllegalStateException("Only 'options' can be promoted.");

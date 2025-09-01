@@ -32,8 +32,9 @@ CREATE TABLE jhb_gigs (
     venue_address_country VARCHAR(100),
     -- End of Embedded Address fields
     
-    get_in_time TIMESTAMP,
-    start_time TIMESTAMP,
+    event_date DATE,
+    get_in_time TIME,
+    start_time TIME,
     duration BIGINT, 
     band_id UUID NOT NULL,
     status VARCHAR(50),

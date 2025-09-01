@@ -9,11 +9,15 @@ import java.util.UUID;
 @Value
 @Embeddable
 @NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class BandId implements Id {
     UUID id;
 
     public static BandId generate() {
-        return new BandId(UUID.randomUUID());
+        return generate(UUID.randomUUID());
+    }
+
+    public static BandId generate(UUID uuid) {
+        return new BandId(uuid);
     }
 }

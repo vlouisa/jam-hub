@@ -15,6 +15,10 @@ public class GigId implements Id {
     UUID id;
     
     public static GigId generate() {
-        return new GigId(UUID.randomUUID());
+        return generate(UUID.randomUUID());
+    }
+
+    public static GigId generate(UUID uuid) {
+        return new GigId(uuid);
     }
 }

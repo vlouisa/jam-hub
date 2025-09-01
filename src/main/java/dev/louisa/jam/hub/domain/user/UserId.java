@@ -15,6 +15,10 @@ public class UserId implements Id {
     UUID id;
     
     public static UserId generate() {
-        return new UserId(UUID.randomUUID());
+        return generate(UUID.randomUUID());
+    }
+
+    public static UserId generate(UUID uuid) {
+        return new UserId(uuid);
     }
 }
