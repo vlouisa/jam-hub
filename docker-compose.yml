@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: "postgres:16.4-alpine"
+    container_name: postgres-jam-hub-db
+    ports:
+      - "54321:5432"
+    environment:
+      POSTGRES_USER: jam_hub_owner
+      POSTGRES_PASSWORD: jam_hub
+      POSTGRES_DB: jam_hub_db
+    command: >
+      sh -c "echo 'CREATE EXTENSION IF NOT EXISTS lo;' > /docker-entrypoint-initdb.d/init-lo-extension.sql &&
+      docker-entrypoint.sh postgres"

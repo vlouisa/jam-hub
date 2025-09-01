@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: jam-hub-service
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false

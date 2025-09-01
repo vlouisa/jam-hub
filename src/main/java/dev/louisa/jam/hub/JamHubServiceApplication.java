@@ -9,5 +9,4 @@ public class JamHubServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(JamHubServiceApplication.class, args);
     }
-
 }
