@@ -1,0 +1,5 @@
+spring:
+  jpa:
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:54321/jam_hub_db?user=jam_hub_owner&password=jam_hub
