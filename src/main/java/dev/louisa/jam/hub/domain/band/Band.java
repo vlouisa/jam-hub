@@ -16,9 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Band implements AuditableEntity {
 
     @EmbeddedId
+    @EqualsAndHashCode.Include
     private BandId id;
 
     @Column(nullable = false)

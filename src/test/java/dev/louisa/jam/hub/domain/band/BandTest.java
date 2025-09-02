@@ -13,12 +13,12 @@ class BandTest extends BaseDomainTest {
 
     @BeforeEach
     void setUp() {
-        band = Factory.band.create();
+        band = Factory.bandFactory.create();
     }
 
     @Test
     void shouldAddMemberToTheBand() {
-        BandMember member = Factory.bandMember.create();
+        BandMember member = Factory.bandMemberFactory.create();
         
         band.addMember(member);
 
@@ -28,7 +28,7 @@ class BandTest extends BaseDomainTest {
 
     @Test
     void shouldRemoveMemberFromTheBand() {
-        BandMember member = Factory.bandMember.create();
+        BandMember member = Factory.bandMemberFactory.create();
         
         band.addMember(member);
         band.removeMember(member);
@@ -40,7 +40,7 @@ class BandTest extends BaseDomainTest {
     @Test
     void shouldReturnTrueIfBandHasMember() {
         UserId userId = UserId.fromString("a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6");
-        BandMember member = Factory.bandMember.create(u -> u.userId(userId.id()));
+        BandMember member = Factory.bandMemberFactory.create(u -> u.userId(userId.id()));
 
         band.addMember(member);
 

@@ -15,8 +15,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class GigRoleAssignment implements AuditableEntity {
     @Id
+    @EqualsAndHashCode.Include
     private UUID id = UUID.randomUUID();
 
     @Column(nullable = false)
@@ -34,5 +36,4 @@ public class GigRoleAssignment implements AuditableEntity {
     private String recordCreationUser;
     private Instant recordModificationDateTime;
     private String recordModificationUser;
-
 }

@@ -2,6 +2,7 @@ package dev.louisa.jam.hub.domain.gig;
 
 import dev.louisa.jam.hub.application.gig.GigDetails;
 import dev.louisa.jam.hub.domain.band.BandId;
+import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainException;
 import dev.louisa.jam.hub.domain.gig.persistence.DurationConverter;
 import dev.louisa.jam.hub.domain.gig.persistence.GigStatusConverter;
 import dev.louisa.jam.hub.domain.user.UserId;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static dev.louisa.jam.hub.domain.gig.exceptions.GigDomainError.*;
+
 @Getter
 @Setter
 @Entity
@@ -25,9 +28,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Gig implements AuditableEntity {
 
     @EmbeddedId
+    @EqualsAndHashCode.Include
     private GigId id;
 
     private String title;
@@ -68,7 +73,6 @@ public class Gig implements AuditableEntity {
 
     // --- `Domain Behaviour methods ---
     public static Gig planNewGig(BandId bandId, GigDetails details) {
-
         return Gig.builder()
                 .id(GigId.generate())
                 .bandId(bandId.id())
@@ -84,17 +88,19 @@ public class Gig implements AuditableEntity {
     
     public void promote() {
         if (status != GigStatus.OPTION) {
-            throw new IllegalStateException("Only 'options' can be promoted.");
+            throw new GigDomainException(GIG_CANNOT_BE_PROMOTED);
         }
         this.status = GigStatus.CONFIRMED;
     }
 
     public void assignRole(UserId userId, ExternalRole role) {
         GigRoleAssignment assignment = GigRoleAssignment.builder()
+                .id(UUID.randomUUID())
                 .userId(userId.id())
                 .role(role)
                 .build();
         assignments.add(assignment);
         assignment.setGig(this);
     }
+
 }
