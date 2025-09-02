@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.application.gig;
 
-import dev.louisa.jam.hub.shared.Address;
+import dev.louisa.jam.hub.domain.shared.Address;
 import lombok.Builder;
 
 import java.time.Duration;

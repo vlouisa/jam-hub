@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.user;
 
-import dev.louisa.jam.hub.shared.Id;
+import dev.louisa.jam.hub.domain.shared.Id;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 

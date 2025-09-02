@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.domain.band;
 
 import dev.louisa.jam.hub.domain.user.UserId;
-import dev.louisa.jam.hub.shared.AuditableEntity;
+import dev.louisa.jam.hub.domain.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

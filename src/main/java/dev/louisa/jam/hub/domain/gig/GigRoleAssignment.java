@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.domain.gig;
 
 import dev.louisa.jam.hub.domain.gig.persistence.ExternalRoleConverter;
-import dev.louisa.jam.hub.shared.AuditableEntity;
+import dev.louisa.jam.hub.domain.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

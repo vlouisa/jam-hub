@@ -11,7 +11,7 @@ import dev.louisa.jam.hub.domain.gig.GigStatus;
 import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.domain.band.persistence.BandRepository;
 import dev.louisa.jam.hub.domain.gig.persistence.GigRepository;
-import dev.louisa.jam.hub.shared.Address;
+import dev.louisa.jam.hub.domain.shared.Address;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
