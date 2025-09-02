@@ -46,6 +46,6 @@ public class Band implements AuditableEntity {
     
     public boolean hasMember(UserId userId) {
         return members.stream()
-                .anyMatch(m -> m.getUserId().equals(userId.getId()));
+                .anyMatch(m -> m.getUserId().equals(userId.id()));
     }
 }

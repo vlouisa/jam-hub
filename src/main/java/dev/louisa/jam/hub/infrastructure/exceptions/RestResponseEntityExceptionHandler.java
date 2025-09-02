@@ -31,7 +31,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         return handleExceptionInternal(
                 ex,
-                constructErrorCode(ex.getError(), ex.getContexts()),
+                constructErrorResponse(ex.getError(), ex.getContexts()),
                 new HttpHeaders(),
                 ex.getError().getHttpStatus(),
                 request);
@@ -47,13 +47,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         return handleExceptionInternal(
                 ex,
-                constructErrorCode(GENERIC_ERROR, List.of()),
+                constructErrorResponse(GENERIC_ERROR, List.of()),
                 new HttpHeaders(),
                 GENERIC_ERROR.getHttpStatus(),
                 request);
     }
 
-    private ErrorResponse constructErrorCode(JamHubError error, List<Id> context) {
+    private ErrorResponse constructErrorResponse(JamHubError error, List<Id> context) {
         return ErrorResponse.builder()
                 .errorCode(error.getDomainCode() + "-" + error.getErrorCode())
                 .message(error.getMessage())

@@ -71,7 +71,7 @@ public class Gig implements AuditableEntity {
 
         return Gig.builder()
                 .id(GigId.generate())
-                .bandId(bandId.getId())
+                .bandId(bandId.id())
                 .title(details.title())
                 .venueAddress(details.address())
                 .eventDate(details.eventDate())
@@ -91,7 +91,7 @@ public class Gig implements AuditableEntity {
 
     public void assignRole(UserId userId, ExternalRole role) {
         GigRoleAssignment assignment = GigRoleAssignment.builder()
-                .userId(userId.getId())
+                .userId(userId.id())
                 .role(role)
                 .build();
         assignments.add(assignment);
