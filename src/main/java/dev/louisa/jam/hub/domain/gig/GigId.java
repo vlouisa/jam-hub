@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.gig;
 
-import dev.louisa.jam.hub.domain.band.exceptions.BandDomainException;
+import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainException;
 import dev.louisa.jam.hub.domain.shared.Id;
 import lombok.*;
 
@@ -14,7 +14,7 @@ public record GigId(UUID id) implements Id {
 
     public GigId {
         id = Optional.of(id)
-                .orElseThrow(() -> new BandDomainException(GIG_ID_CANNOT_BE_EMPTY));
+                .orElseThrow(() -> new GigDomainException(GIG_ID_CANNOT_BE_EMPTY));
     }
 
     public static GigId generate() {

@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.domain.user;
 
-import dev.louisa.jam.hub.domain.band.exceptions.BandDomainException;
 import dev.louisa.jam.hub.domain.shared.Id;
+import dev.louisa.jam.hub.domain.user.exceptions.UserDomainException;
 import lombok.*;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ public record UserId(UUID id) implements Id {
 
     public UserId {
         id = Optional.of(id)
-                .orElseThrow(() -> new BandDomainException(USER_ID_CANNOT_BE_EMPTY));
+                .orElseThrow(() -> new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
     }
 
     public static UserId generate() {

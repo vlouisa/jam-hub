@@ -57,7 +57,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ErrorResponse.builder()
                 .errorCode(error.getDomainCode() + "-" + error.getErrorCode())
                 .message(error.getMessage())
-                .context(context.toString().isEmpty() ? List.of() : context.stream().map(Id::toString).toList())
+                .context(context.isEmpty() ? List.of() : context.stream().map(Id::toString).toList())
                 .build();
     }
 

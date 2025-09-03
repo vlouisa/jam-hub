@@ -5,6 +5,7 @@ import dev.louisa.jam.hub.domain.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class Band implements AuditableEntity {
     @CreationTimestamp
     private Instant recordCreationDateTime;
     private String recordCreationUser;
-    @CreationTimestamp
+    @UpdateTimestamp
     private Instant recordModificationDateTime;
     private String recordModificationUser;
     

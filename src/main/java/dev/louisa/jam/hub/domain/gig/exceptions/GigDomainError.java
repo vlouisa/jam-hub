@@ -12,7 +12,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public enum GigDomainError implements JamHubError {
     GIG_ID_CANNOT_BE_EMPTY( "001", "GigId cannot be empty", BAD_REQUEST),
     GIG_ID_MUST_BE_A_VALID_UUID( "002", "GigId must be a valid UUID", BAD_REQUEST),
-    GIG_CANNOT_BE_PROMOTED( "020", "Only óptions' can be promoted", BAD_REQUEST);
+    GIG_CANNOT_BE_PROMOTED( "020", "Only 'options' can be promoted", BAD_REQUEST);
     
     
     private static final String DOMAIN_CODE = "GIG";

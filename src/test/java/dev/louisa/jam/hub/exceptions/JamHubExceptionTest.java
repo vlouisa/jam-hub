@@ -4,14 +4,20 @@ import dev.louisa.jam.hub.domain.BaseDomainTest;
 import dev.louisa.jam.hub.domain.band.exceptions.BandDomainError;
 import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainError;
 import dev.louisa.jam.hub.domain.shared.Id;
+import dev.louisa.jam.hub.domain.user.exceptions.UserDomainError;
 import lombok.Builder;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +27,7 @@ class JamHubExceptionTest extends BaseDomainTest {
 
 
     @ParameterizedTest
-    @EnumSource(GigDomainError.class)
+    @ArgumentsSource(AllDomainErrorProvider.class)
     void messageIncludesErrorCodeAndMessage(JamHubError error) {
         TestException ex = new TestException(error, List.of(), null);
 
@@ -39,6 +45,22 @@ class JamHubExceptionTest extends BaseDomainTest {
         assertThat(ex.getCause()).isNull();
     }
 
+    private static class AllDomainErrorProvider implements ArgumentsProvider {
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+            // List all DomainError enums manually or use reflection if package scanning is available
+            Class<?>[] domainErrorEnums = {
+                    BandDomainError.class,
+                    GigDomainError.class,
+                    UserDomainError.class
+            };
+
+            return Stream.of(domainErrorEnums)
+                    .flatMap(clazz -> Stream.of(clazz.getEnumConstants()))
+                    .map(Arguments::of);
+        }
+    }
+    
     @ParameterizedTest
     @EnumSource(BandDomainError.class)
     void messageIncludesContexts(BandDomainError error) {
