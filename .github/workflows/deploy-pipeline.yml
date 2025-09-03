@@ -6,7 +6,7 @@ on:
       - ci-test
 
 jobs:
-  bump-version:
+  deploy-service:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +45,12 @@ jobs:
             echo "Error: Branch '$merged_branch' has invalid prefix. Use feature/, fix/, or release/."
             exit 1
 
-      # Step 6: Get current Maven version
+      # Step 6: Run Maven tests
+      - name: Run Maven tests
+        run: |
+          mvn clean test
+
+      # Step 7: Get current Maven version
       - name: Get current Maven version
         id: read_version
         run: |
@@ -53,7 +58,7 @@ jobs:
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_ENV
           echo "Current version: $CURRENT_VERSION"
 
-      # Step 7: Compute new version
+      # Step 8: Compute new version
       - name: Compute new version
         id: bump_version
         run: |
@@ -77,28 +82,28 @@ jobs:
           echo "tag_version=$TAG_VERSION" >> $GITHUB_ENV
           echo "Bumped version to $NEW_VERSION, tag: $TAG_VERSION"
 
-      # Step 8: Set Maven version
+      # Step 9: Set Maven version
       - name: Set Maven version
         run: |
           mvn versions:set -DnewVersion=$new_version -DgenerateBackupPoms=false
 
-      # Step 9: Commit and push changes
+      # Step 10: Commit and push changes
       - name: Commit and push
         run: |
           git add pom.xml
           git commit -m "Bump version to $new_version [skip ci]" || echo "No changes to commit"
           git push origin main
 
-      # Step 10: Create and push Git tag
+      # Step 11: Create and push Git tag
       - name: Create and push tag
         run: |
           git tag -a "$tag_version" -m "Release $tag_version"
           git push origin "$tag_version"
 
-      # Step 11: Create GitHub release
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.tag_version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Step 12: Create GitHub release
+#      - name: Create GitHub release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: ${{ env.tag_version }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
