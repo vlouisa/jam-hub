@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static dev.louisa.jam.hub.Factory.*;
+import static dev.louisa.jam.hub.testsupport.Factory.*;
 import static dev.louisa.jam.hub.domain.gig.ExternalRole.*;
 import static dev.louisa.jam.hub.domain.gig.GigStatus.*;
 import static dev.louisa.jam.hub.domain.gig.exceptions.GigDomainError.GIG_CANNOT_BE_PROMOTED;
@@ -26,12 +26,12 @@ class GigTest extends BaseDomainTest {
     
     @BeforeEach
     void setUp() {
-        gig = gigFactory.create();
+        gig = domain.aGig.create();
     }
     
     @Test
     void shouldPlanNewGig() {
-        var band = bandFactory.create();
+        var band = domain.aBand.create();
         var gigDetails = GigDetails.builder()
                 .title("My Gig")
                 .eventDate(LocalDate.of(2024, 12, 31))
@@ -68,7 +68,7 @@ class GigTest extends BaseDomainTest {
 
     @Test
     void shouldPromoteGig() {
-        gig = gigFactory.create(g -> g.status(OPTION));
+        gig = domain.aGig.create(g -> g.status(OPTION));
         
         gig.promote();
 
@@ -81,7 +81,7 @@ class GigTest extends BaseDomainTest {
             "CANCELED"
     })
     void shouldNotPromoteGig(GigStatus gigStatus) {
-        gig = gigFactory.create(g -> g.status(gigStatus));
+        gig = domain.aGig.create(g -> g.status(gigStatus));
         
         assertThatCode(() -> gig.promote())
                 .isInstanceOf(GigDomainException.class)

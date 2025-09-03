@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.application.exceptions;
 
+import dev.louisa.jam.hub.application.BaseApplicationTest;
 import dev.louisa.jam.hub.domain.band.BandId;
 import dev.louisa.jam.hub.domain.user.UserId;
 import org.junit.jupiter.api.Test;
@@ -9,15 +10,16 @@ import java.util.List;
 import static dev.louisa.jam.hub.application.exceptions.ApplicationError.ENTITY_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ApplicationExceptionTest {
+class ApplicationExceptionTest extends BaseApplicationTest {
     @Test
     void shouldFormatFullMessage() {
         var exception = new ApplicationException(ENTITY_NOT_FOUND);
 
         assertThat(exception.getCause()).isNull();
         assertThat(exception.getMessage())
-                .isEqualTo("APP-001 | Entity not found");
-
+                .contains("APP-001")
+                .contains("404 NOT_FOUND")
+                .contains("Entity not found");
     }
 
     @Test
@@ -29,8 +31,11 @@ class ApplicationExceptionTest {
 
         assertThat(exception.getCause()).isNull();
         assertThat(exception.getMessage())
-                .isEqualTo("APP-001 | Entity not found | Context: UserId[id=f9dd0882-b033-4e7c-bb62-a807aa576ee0], BandId[id=33b7d3a8-ced3-4d08-ad15-2886f46526ae]");
-
+                .contains("APP-001")
+                .contains("404 NOT_FOUND")
+                .contains("Entity not found")
+                .contains("UserId[id=f9dd0882-b033-4e7c-bb62-a807aa576ee0]")
+                .contains("BandId[id=33b7d3a8-ced3-4d08-ad15-2886f46526ae]");
     }
 
     @Test
@@ -41,7 +46,9 @@ class ApplicationExceptionTest {
 
         assertThat(exception.getCause()).isEqualTo(rootCauseException);
         assertThat(exception.getMessage())
-                .isEqualTo("APP-001 | Entity not found");
+                .contains("APP-001")
+                .contains("404 NOT_FOUND")
+                .contains("Entity not found");
     }
 
     @Test
@@ -54,6 +61,10 @@ class ApplicationExceptionTest {
 
         assertThat(exception.getCause()).isEqualTo(rootCauseException);
         assertThat(exception.getMessage())
-                .isEqualTo("APP-001 | Entity not found | Context: UserId[id=f9dd0882-b033-4e7c-bb62-a807aa576ee0], BandId[id=33b7d3a8-ced3-4d08-ad15-2886f46526ae]");
+                .contains("APP-001")
+                .contains("404 NOT_FOUND")
+                .contains("Entity not found")
+                .contains("UserId[id=f9dd0882-b033-4e7c-bb62-a807aa576ee0]")
+                .contains("BandId[id=33b7d3a8-ced3-4d08-ad15-2886f46526ae]");
     }
 }

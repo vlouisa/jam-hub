@@ -14,6 +14,5 @@ public record GigDetails (
         LocalDate eventDate,
         LocalTime getInTime,
         LocalTime startTime,
-        Duration duration,
-        String status
+        Duration duration
 ) {}
