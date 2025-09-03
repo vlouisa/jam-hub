@@ -3,7 +3,7 @@ name: Bump Maven Version
 on:
   push:
     branches:
-      - ci-test
+      - main
 
 jobs:
   deploy-service:
@@ -102,9 +102,9 @@ jobs:
           git push origin "$tag_version"
 
       # Step 12: Create GitHub release
-#      - name: Create GitHub release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          tag_name: ${{ env.tag_version }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.tag_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
