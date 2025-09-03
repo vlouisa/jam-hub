@@ -10,6 +10,8 @@ import dev.louisa.jam.hub.domain.shared.Address;
 import dev.louisa.jam.hub.domain.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -65,8 +67,10 @@ public class Gig implements AuditableEntity {
     @Builder.Default
     private final List<GigRoleAssignment> assignments = new ArrayList<>();
 
+    @CreationTimestamp
     private Instant recordCreationDateTime;
     private String recordCreationUser;
+    @UpdateTimestamp
     private Instant recordModificationDateTime;
     private String recordModificationUser;
 
