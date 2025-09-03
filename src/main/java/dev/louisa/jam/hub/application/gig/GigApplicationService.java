@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.application.gig;
 
+import dev.louisa.jam.hub.application.exceptions.ApplicationException;
 import dev.louisa.jam.hub.domain.band.Band;
 import dev.louisa.jam.hub.domain.band.BandId;
 import dev.louisa.jam.hub.domain.band.persistence.BandRepository;
@@ -11,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static dev.louisa.jam.hub.application.exceptions.ApplicationError.*;
+
 @Service
 @RequiredArgsConstructor
 public class GigApplicationService {
@@ -21,13 +26,11 @@ public class GigApplicationService {
     @Transactional
     public GigId planGigForBand(UserId userId, BandId bandId, GigDetails details) {
         Band band = bandRepository.findById(bandId)
-//                .orElseThrow(() -> new BandNotFoundException(bandId));
-                .orElseThrow(() -> new RuntimeException("Band not found")); // Temporary exception handling
+                .orElseThrow(() -> new ApplicationException(ENTITY_NOT_FOUND)); 
 
         // Check authorization
         if (!band.hasMember(userId)) {
-//            throw new UnauthorizedException(userId);
-            throw new RuntimeException("User not authorized"); // Temporary exception handling
+            throw new ApplicationException(USER_NOT_AUTHORIZED, List.of(userId, bandId));
         }
 
         // Create gig

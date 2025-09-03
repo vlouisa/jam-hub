@@ -19,11 +19,11 @@ public class GigController {
     @PostMapping
     public ResponseEntity<GigId> planGig(@PathVariable("bandId") UUID bandId, @RequestBody GigRequest request) {
         // TODO: Replace with actual user ID from authentication context
-        UUID uswerUUID = UUID.fromString("07072e02-819a-4f6f-8639-d349d29c72c0");
+        UUID userUUID = UUID.fromString("07072e02-819a-4f6f-8639-d349d29c72c0");
 
         GigId gigId = gigService.planGigForBand(
-                UserId.generate(uswerUUID),
-                BandId.generate(bandId), 
+                UserId.fromUUID(userUUID),
+                BandId.fromUUID(bandId), 
                 request.toDetails());
         return ResponseEntity.ok(gigId);
     }

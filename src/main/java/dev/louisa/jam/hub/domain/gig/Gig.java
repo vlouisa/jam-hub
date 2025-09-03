@@ -2,6 +2,7 @@ package dev.louisa.jam.hub.domain.gig;
 
 import dev.louisa.jam.hub.application.gig.GigDetails;
 import dev.louisa.jam.hub.domain.band.BandId;
+import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainException;
 import dev.louisa.jam.hub.domain.gig.persistence.DurationConverter;
 import dev.louisa.jam.hub.domain.gig.persistence.GigStatusConverter;
 import dev.louisa.jam.hub.domain.user.UserId;
@@ -9,6 +10,8 @@ import dev.louisa.jam.hub.domain.shared.Address;
 import dev.louisa.jam.hub.domain.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static dev.louisa.jam.hub.domain.gig.exceptions.GigDomainError.*;
+
 @Getter
 @Setter
 @Entity
@@ -25,9 +30,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Gig implements AuditableEntity {
 
     @EmbeddedId
+    @EqualsAndHashCode.Include
     private GigId id;
 
     private String title;
@@ -60,18 +67,19 @@ public class Gig implements AuditableEntity {
     @Builder.Default
     private final List<GigRoleAssignment> assignments = new ArrayList<>();
 
+    @CreationTimestamp
     private Instant recordCreationDateTime;
     private String recordCreationUser;
+    @UpdateTimestamp
     private Instant recordModificationDateTime;
     private String recordModificationUser;
 
 
     // --- `Domain Behaviour methods ---
     public static Gig planNewGig(BandId bandId, GigDetails details) {
-
         return Gig.builder()
                 .id(GigId.generate())
-                .bandId(bandId.getId())
+                .bandId(bandId.id())
                 .title(details.title())
                 .venueAddress(details.address())
                 .eventDate(details.eventDate())
@@ -84,17 +92,19 @@ public class Gig implements AuditableEntity {
     
     public void promote() {
         if (status != GigStatus.OPTION) {
-            throw new IllegalStateException("Only 'options' can be promoted.");
+            throw new GigDomainException(GIG_CANNOT_BE_PROMOTED);
         }
         this.status = GigStatus.CONFIRMED;
     }
 
     public void assignRole(UserId userId, ExternalRole role) {
         GigRoleAssignment assignment = GigRoleAssignment.builder()
-                .userId(userId.getId())
+                .id(UUID.randomUUID())
+                .userId(userId.id())
                 .role(role)
                 .build();
         assignments.add(assignment);
         assignment.setGig(this);
     }
+
 }

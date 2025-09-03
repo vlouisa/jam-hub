@@ -1,24 +1,33 @@
 package dev.louisa.jam.hub.domain.gig;
 
+import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainException;
 import dev.louisa.jam.hub.domain.shared.Id;
-import jakarta.persistence.Embeddable;
 import lombok.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import static dev.louisa.jam.hub.domain.gig.exceptions.GigDomainError.GIG_ID_CANNOT_BE_EMPTY;
 
-@Value
-@Embeddable
-@NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class GigId implements Id {
-    UUID id;
-    
-    public static GigId generate() {
-        return generate(UUID.randomUUID());
+@Builder
+public record GigId(UUID id) implements Id {
+
+    public GigId {
+        id = Optional.of(id)
+                .orElseThrow(() -> new GigDomainException(GIG_ID_CANNOT_BE_EMPTY));
     }
 
-    public static GigId generate(UUID uuid) {
-        return new GigId(uuid);
+    public static GigId generate() {
+        return GigId.fromUUID(UUID.randomUUID());
+    }
+
+    public static GigId fromUUID(UUID uuid) {
+        return GigId.builder()
+                .id(uuid)
+                .build();
+    }
+
+    public static GigId fromString(String value) {
+        return GigId.fromUUID(UUID.fromString(value));
     }
 }

@@ -1,24 +1,34 @@
 package dev.louisa.jam.hub.domain.user;
 
 import dev.louisa.jam.hub.domain.shared.Id;
-import jakarta.persistence.Embeddable;
+import dev.louisa.jam.hub.domain.user.exceptions.UserDomainException;
 import lombok.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import static dev.louisa.jam.hub.domain.user.exceptions.UserDomainError.USER_ID_CANNOT_BE_EMPTY;
 
-@Value
-@Embeddable
-@NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserId implements Id {
-    UUID id;
-    
-    public static UserId generate() {
-        return generate(UUID.randomUUID());
+
+@Builder
+public record UserId(UUID id) implements Id {
+
+    public UserId {
+        id = Optional.of(id)
+                .orElseThrow(() -> new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
     }
 
-    public static UserId generate(UUID uuid) {
-        return new UserId(uuid);
+    public static UserId generate() {
+        return UserId.fromUUID(UUID.randomUUID());
+    }
+
+    public static UserId fromUUID(UUID uuid) {
+        return UserId.builder()
+                .id(uuid)
+                .build();
+    }
+
+    public static UserId fromString(String value) {
+        return UserId.fromUUID(UUID.fromString(value));
     }
 }
