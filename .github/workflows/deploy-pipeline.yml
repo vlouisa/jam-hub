@@ -1,4 +1,4 @@
-name: Deploy Pipeline
+name: Deploy / Release Pipeline
 
 on:
   pull_request:
