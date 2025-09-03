@@ -1,4 +1,4 @@
-name: Bump Maven Version
+name: Deploy / Release Pipeline
 
 on:
   pull_request:
@@ -87,18 +87,18 @@ jobs:
       - name: Set Maven version
         run: mvn versions:set -DnewVersion=$new_version -DgenerateBackupPoms=false
 
-      # Step 10: Commit and push changes
+      # Step 10: Commit and push changes using GITHUB_TOKEN
       - name: Commit and push
         run: |
           git add pom.xml
           git commit -m "Bump version to $new_version [skip ci]" || echo "No changes to commit"
-          git push origin HEAD
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD
 
-      # Step 11: Create and push Git tag
+      # Step 11: Create and push Git tag using GITHUB_TOKEN
       - name: Create and push tag
         run: |
           git tag -a "$tag_version" -m "Release $tag_version"
-          git push origin "$tag_version"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$tag_version"
 
       # Step 12: Create GitHub release
       - name: Create GitHub release
