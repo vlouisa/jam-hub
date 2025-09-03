@@ -29,15 +29,23 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Get last merged branch
+      - name: Get merged branch
         id: get_branch
         run: |
+          # Get the latest merge commit on main
           MERGE_COMMIT=$(git log -1 --merges --pretty=format:%H)
-          BRANCH_NAME=$(git show -s --pretty=%P $MERGE_COMMIT | awk '{print $2}' | xargs git name-rev --name-only)
-          # Remove 'remotes/origin/' prefix if present
-          BRANCH_NAME=${BRANCH_NAME#remotes/origin/}
-          echo "merged_branch=$BRANCH_NAME" >> $GITHUB_ENV
-          echo "Merged branch: $BRANCH_NAME"
+          # Get the commit message
+          MERGE_MSG=$(git log -1 --pretty=%B $MERGE_COMMIT)
+          # Extract branch name from GitHub default merge commit message
+          # Usually: "Merge branch 'feature/implement-pipeline' into main"
+          if [[ "$MERGE_MSG" =~ Merge\ branch\ \'([^\']+)\'\ into\ main ]]; then
+            MERGED_BRANCH="${BASH_REMATCH[1]}"
+            echo "Merged branch: $MERGED_BRANCH"
+            echo "merged_branch=$MERGED_BRANCH" >> $GITHUB_ENV
+          else
+            echo "Error: Could not determine merged branch from commit message."
+            exit 1
+          fi
 
       - name: Validate branch prefix
         run: |
