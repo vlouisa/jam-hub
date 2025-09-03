@@ -29,12 +29,13 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      # Step 4: Get last merged branch
       - name: Get last merged branch
         id: get_branch
         run: |
           MERGE_COMMIT=$(git log -1 --merges --pretty=format:%H)
-          BRANCH_NAME=$(git show -s --pretty=%P $MERGE_COMMIT | awk '{print $2}' | xargs git name-rev --name-only | sed 's#^origin/##')
+          BRANCH_NAME=$(git show -s --pretty=%P $MERGE_COMMIT | awk '{print $2}' | xargs git name-rev --name-only)
+          # Remove 'remotes/origin/' prefix if present
+          BRANCH_NAME=${BRANCH_NAME#remotes/origin/}
           echo "merged_branch=$BRANCH_NAME" >> $GITHUB_ENV
           echo "Merged branch: $BRANCH_NAME"
 
