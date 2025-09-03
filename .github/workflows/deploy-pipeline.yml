@@ -1,0 +1,104 @@
+name: Bump Maven Version
+
+on:
+  push:
+    branches:
+      - ci-test
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Required to push tags
+
+      # Step 2: Configure Git for automated commits and tags
+      - name: Configure Git
+        run: |
+          git config user.name "Version Bump Bot"
+          git config user.email "version-bump@users.noreply.github.com"
+
+      # Step 3: Set up JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # Step 4: Get last merged branch
+      - name: Get last merged branch
+        id: get_branch
+        run: |
+          MERGE_COMMIT=$(git log -1 --merges --pretty=format:%H)
+          BRANCH_NAME=$(git show -s --pretty=%P $MERGE_COMMIT | awk '{print $2}' | xargs git name-rev --name-only | sed 's#^origin/##')
+          echo "merged_branch=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "Merged branch: $BRANCH_NAME"
+
+      # Step 5: Validate branch prefix
+      - name: Validate branch prefix
+        run: |
+          if [[ "$merged_branch" != feature/* && "$merged_branch" != fix/* && "$merged_branch" != release/* ]]; then
+            echo "Error: Branch '$merged_branch' has invalid prefix. Use feature/, fix/, or release/."
+            exit 1
+
+      # Step 6: Get current Maven version
+      - name: Get current Maven version
+        id: read_version
+        run: |
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_ENV
+          echo "Current version: $CURRENT_VERSION"
+
+      # Step 7: Compute new version
+      - name: Compute new version
+        id: bump_version
+        run: |
+          VERSION=${current_version%-SNAPSHOT}  # Remove -SNAPSHOT if exists
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+
+          if [[ "$merged_branch" == feature/* ]]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif [[ "$merged_branch" == fix/* ]]; then
+            PATCH=$((PATCH + 1))
+          elif [[ "$merged_branch" == release/* ]]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          fi
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH-SNAPSHOT"
+          TAG_VERSION="$MAJOR.$MINOR.$PATCH"  # Tag without -SNAPSHOT
+          echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
+          echo "tag_version=$TAG_VERSION" >> $GITHUB_ENV
+          echo "Bumped version to $NEW_VERSION, tag: $TAG_VERSION"
+
+      # Step 8: Set Maven version
+      - name: Set Maven version
+        run: |
+          mvn versions:set -DnewVersion=$new_version -DgenerateBackupPoms=false
+
+      # Step 9: Commit and push changes
+      - name: Commit and push
+        run: |
+          git add pom.xml
+          git commit -m "Bump version to $new_version [skip ci]" || echo "No changes to commit"
+          git push origin main
+
+      # Step 10: Create and push Git tag
+      - name: Create and push tag
+        run: |
+          git tag -a "$tag_version" -m "Release $tag_version"
+          git push origin "$tag_version"
+
+      # Step 11: Create GitHub release
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.tag_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
