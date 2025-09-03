@@ -38,12 +38,12 @@ jobs:
           echo "merged_branch=$BRANCH_NAME" >> $GITHUB_ENV
           echo "Merged branch: $BRANCH_NAME"
 
-      # Step 5: Validate branch prefix
       - name: Validate branch prefix
         run: |
           if [[ "$merged_branch" != feature/* && "$merged_branch" != fix/* && "$merged_branch" != release/* ]]; then
             echo "Error: Branch '$merged_branch' has invalid prefix. Use feature/, fix/, or release/."
             exit 1
+          fi
 
       # Step 6: Run Maven tests
       - name: Run Maven tests
