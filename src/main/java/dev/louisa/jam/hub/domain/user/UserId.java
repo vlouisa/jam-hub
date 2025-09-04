@@ -4,9 +4,9 @@ import dev.louisa.jam.hub.domain.shared.Id;
 import dev.louisa.jam.hub.domain.user.exceptions.UserDomainException;
 import lombok.*;
 
-import java.util.Optional;
 import java.util.UUID;
 
+import static dev.louisa.jam.hub.domain.shared.Validator.validate;
 import static dev.louisa.jam.hub.domain.user.exceptions.UserDomainError.USER_ID_CANNOT_BE_EMPTY;
 
 
@@ -14,8 +14,8 @@ import static dev.louisa.jam.hub.domain.user.exceptions.UserDomainError.USER_ID_
 public record UserId(UUID id) implements Id {
 
     public UserId {
-        id = Optional.of(id)
-                .orElseThrow(() -> new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
+        validate(id)
+                .ifNullThrow(new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
     }
 
     public static UserId generate() {
@@ -23,12 +23,18 @@ public record UserId(UUID id) implements Id {
     }
 
     public static UserId fromUUID(UUID uuid) {
+        validate(uuid)
+                .ifNullThrow(new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
+
         return UserId.builder()
                 .id(uuid)
                 .build();
     }
 
     public static UserId fromString(String value) {
+        validate(value)
+                .ifNullOrEmptyThrow(new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
+        
         return UserId.fromUUID(UUID.fromString(value));
     }
 }
