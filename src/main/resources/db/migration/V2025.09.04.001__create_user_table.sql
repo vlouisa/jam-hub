@@ -9,3 +9,14 @@ CREATE TABLE jhb_users (
     record_modification_user VARCHAR(255)
 );
 
+CREATE TABLE jhb_user_registrations (
+    id UUID PRIMARY KEY,
+    email VARCHAR(255) UNIQUE,
+    expiration_date_time TIMESTAMP,
+    revocation_date_time TIMESTAMP,
+    record_creation_date_time TIMESTAMP,
+    record_creation_user VARCHAR(255),
+    record_modification_date_time TIMESTAMP,
+    record_modification_user VARCHAR(255)
+);
+
