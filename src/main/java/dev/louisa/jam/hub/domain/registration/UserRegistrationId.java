@@ -12,10 +12,11 @@ import static dev.louisa.jam.hub.domain.shared.Validator.validate;
 
 @Builder
 public record UserRegistrationId(UUID id) implements Id {
+    private static final UserRegistrationDomainException EMPTY_ID_EXCEPTION = new UserRegistrationDomainException(USER_REGISTRATION_ID_CANNOT_BE_EMPTY);
 
     public UserRegistrationId {
         validate(id)
-                .ifNullThrow(new UserRegistrationDomainException(USER_REGISTRATION_ID_CANNOT_BE_EMPTY));
+                .ifNullThrow(EMPTY_ID_EXCEPTION);
     }
 
     public static UserRegistrationId generate() {
@@ -24,7 +25,7 @@ public record UserRegistrationId(UUID id) implements Id {
 
     public static UserRegistrationId fromUUID(UUID uuid) {
         validate(uuid)
-                .ifNullThrow(new UserRegistrationDomainException(USER_REGISTRATION_ID_CANNOT_BE_EMPTY));
+                .ifNullThrow(EMPTY_ID_EXCEPTION);
 
         return UserRegistrationId.builder()
                 .id(uuid)
@@ -33,7 +34,7 @@ public record UserRegistrationId(UUID id) implements Id {
 
     public static UserRegistrationId fromString(String value) {
         validate(value)
-                .ifNullOrEmptyThrow(new UserRegistrationDomainException(USER_REGISTRATION_ID_CANNOT_BE_EMPTY));
+                .ifNullOrEmptyThrow(EMPTY_ID_EXCEPTION);
 
         return UserRegistrationId.fromUUID(UUID.fromString(value));
     }

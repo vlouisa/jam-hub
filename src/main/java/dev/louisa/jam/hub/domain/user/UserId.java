@@ -12,10 +12,11 @@ import static dev.louisa.jam.hub.domain.user.exceptions.UserDomainError.USER_ID_
 
 @Builder
 public record UserId(UUID id) implements Id {
+    private static final UserDomainException EMPTY_ID_EXCEPTION = new UserDomainException(USER_ID_CANNOT_BE_EMPTY);
 
     public UserId {
         validate(id)
-                .ifNullThrow(new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
+                .ifNullThrow(EMPTY_ID_EXCEPTION);
     }
 
     public static UserId generate() {
@@ -24,7 +25,7 @@ public record UserId(UUID id) implements Id {
 
     public static UserId fromUUID(UUID uuid) {
         validate(uuid)
-                .ifNullThrow(new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
+                .ifNullThrow(EMPTY_ID_EXCEPTION);
 
         return UserId.builder()
                 .id(uuid)
@@ -33,7 +34,7 @@ public record UserId(UUID id) implements Id {
 
     public static UserId fromString(String value) {
         validate(value)
-                .ifNullOrEmptyThrow(new UserDomainException(USER_ID_CANNOT_BE_EMPTY));
+                .ifNullOrEmptyThrow(EMPTY_ID_EXCEPTION);
         
         return UserId.fromUUID(UUID.fromString(value));
     }
