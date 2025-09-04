@@ -36,8 +36,8 @@ public class GigRoleAssignment implements AuditableEntity {
 
     @CreationTimestamp
     private Instant recordCreationDateTime;
-    private String recordCreationUser;
+    private UUID recordCreationUser;
     @UpdateTimestamp
     private Instant recordModificationDateTime;
-    private String recordModificationUser;
+    private UUID recordModificationUser;
 }

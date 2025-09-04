@@ -42,9 +42,9 @@ public class BandMemberFactory {
                 .userId(UserId.generate().id())
                 .role(randomBandRole())
                 .recordCreationDateTime(Instant.now())
-                .recordCreationUser(UUID.randomUUID().toString())
+                .recordCreationUser(UUID.randomUUID())
                 .recordModificationDateTime(Instant.now())
-                .recordModificationUser(UUID.randomUUID().toString());
+                .recordModificationUser(UUID.randomUUID());
     }
 
     private BandRole randomBandRole() {

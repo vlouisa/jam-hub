@@ -69,10 +69,10 @@ public class Gig implements AuditableEntity {
 
     @CreationTimestamp
     private Instant recordCreationDateTime;
-    private String recordCreationUser;
+    private UUID recordCreationUser;
     @UpdateTimestamp
     private Instant recordModificationDateTime;
-    private String recordModificationUser;
+    private UUID recordModificationUser;
 
 
     // --- `Domain Behaviour methods ---
@@ -86,7 +86,7 @@ public class Gig implements AuditableEntity {
                 .getInTime(details.getInTime())
                 .startTime(details.startTime())
                 .duration(details.duration())
-                .status(GigStatus.OPTION) // New gigs start as 'options'
+                .status(GigStatus.OPTION)
                 .build();
     }
     
@@ -106,5 +106,4 @@ public class Gig implements AuditableEntity {
         assignments.add(assignment);
         assignment.setGig(this);
     }
-
 }

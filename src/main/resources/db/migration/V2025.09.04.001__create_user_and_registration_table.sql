@@ -12,8 +12,9 @@ CREATE TABLE jhb_users (
 CREATE TABLE jhb_user_registrations (
     id UUID PRIMARY KEY,
     email VARCHAR(255) UNIQUE,
-    expiration_date_time TIMESTAMP,
-    revocation_date_time TIMESTAMP,
+    verified_at TIMESTAMP,
+    expired_at TIMESTAMP,
+    revoked_at TIMESTAMP,
     record_creation_date_time TIMESTAMP,
     record_creation_user VARCHAR(255),
     record_modification_date_time TIMESTAMP,

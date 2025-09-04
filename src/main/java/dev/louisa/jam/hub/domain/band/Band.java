@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -34,10 +35,10 @@ public class Band implements AuditableEntity {
 
     @CreationTimestamp
     private Instant recordCreationDateTime;
-    private String recordCreationUser;
+    private UUID recordCreationUser;
     @UpdateTimestamp
     private Instant recordModificationDateTime;
-    private String recordModificationUser;
+    private UUID recordModificationUser;
     
     // Domain behavior
     public void addMember(BandMember member) {

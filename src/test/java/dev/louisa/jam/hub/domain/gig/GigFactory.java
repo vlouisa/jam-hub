@@ -57,8 +57,8 @@ public class GigFactory {
                 .bandId(UUID.randomUUID())
                 .status(faker.options().option(GigStatus.values()))
                 .recordCreationDateTime(Instant.now())
-                .recordCreationUser(UUID.randomUUID().toString())
+                .recordCreationUser(UUID.randomUUID())
                 .recordModificationDateTime(Instant.now())
-                .recordModificationUser(UUID.randomUUID().toString());
+                .recordModificationUser(UUID.randomUUID());
     }
 }

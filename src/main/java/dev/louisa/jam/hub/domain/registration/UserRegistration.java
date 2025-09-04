@@ -2,13 +2,13 @@ package dev.louisa.jam.hub.domain.registration;
 
 import dev.louisa.jam.hub.domain.shared.AuditableEntity;
 import dev.louisa.jam.hub.domain.shared.EmailAddress;
-import dev.louisa.jam.hub.domain.shared.Password;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,25 +24,23 @@ public class UserRegistration implements AuditableEntity {
     @EqualsAndHashCode.Include
     private UserRegistrationId id;
 
-    @Column(nullable = false)
-    private String displayName;
-
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "email", column = @Column(name = "email")),
     })
     private EmailAddress email;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "password", column = @Column(name = "password")),
-    })
-    private Password password;
+    @Column
+    private Instant verifiedAt;
+    @Column
+    private Instant expiredAt;
+    @Column
+    private Instant revokedAt;
 
     @CreationTimestamp
     private Instant recordCreationDateTime;
-    private String recordCreationUser;
+    private UUID recordCreationUser;
     @UpdateTimestamp
     private Instant recordModificationDateTime;
-    private String recordModificationUser;
+    private UUID recordModificationUser;
 }
