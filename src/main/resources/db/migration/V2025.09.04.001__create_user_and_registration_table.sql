@@ -4,9 +4,9 @@ CREATE TABLE jhb_users (
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255) NOT NULL ,
     record_creation_date_time TIMESTAMP,
-    record_creation_user VARCHAR(255),
+    record_creation_user UUID,
     record_modification_date_time TIMESTAMP,
-    record_modification_user VARCHAR(255)
+    record_modification_user UUID
 );
 
 CREATE TABLE jhb_user_registrations (
@@ -16,8 +16,8 @@ CREATE TABLE jhb_user_registrations (
     expired_at TIMESTAMP,
     revoked_at TIMESTAMP,
     record_creation_date_time TIMESTAMP,
-    record_creation_user VARCHAR(255),
+    record_creation_user UUID,
     record_modification_date_time TIMESTAMP,
-    record_modification_user VARCHAR(255)
+    record_modification_user UUID
 );
 

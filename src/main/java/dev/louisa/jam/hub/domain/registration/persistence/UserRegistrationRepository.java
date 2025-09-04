@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.interfaces.registration.persistence;
+package dev.louisa.jam.hub.domain.registration.persistence;
 
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;

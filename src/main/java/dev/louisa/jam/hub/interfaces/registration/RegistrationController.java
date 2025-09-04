@@ -1,6 +1,7 @@
 package dev.louisa.jam.hub.interfaces.registration;
 
 import dev.louisa.jam.hub.application.registration.RegistrationApplicationService;
+import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,6 @@ public class RegistrationController {
     @PatchMapping("/verify/{registrationId}")
     @ResponseStatus(NO_CONTENT)
     public void verify(@PathVariable String registrationId) {
-            registrationApplicationService.verifyOtp(registrationId);
+            registrationApplicationService.verifyOtp(UserRegistrationId.fromString(registrationId));
     }
 }
