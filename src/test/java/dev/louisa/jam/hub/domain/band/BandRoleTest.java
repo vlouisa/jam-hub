@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.band;
 
-import dev.louisa.jam.hub.domain.BaseDomainTest;
+import dev.louisa.jam.hub.testsupport.BaseDomainTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;

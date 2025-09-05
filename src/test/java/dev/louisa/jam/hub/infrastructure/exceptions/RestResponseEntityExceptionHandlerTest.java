@@ -2,8 +2,7 @@ package dev.louisa.jam.hub.infrastructure.exceptions;
 
 import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.domain.user.exceptions.UserDomainException;
-import dev.louisa.jam.hub.exceptions.JamHubException;
-import dev.louisa.jam.hub.infrastructure.BaseInfraStructureTest;
+import dev.louisa.jam.hub.testsupport.BaseInfraStructureTest;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
 import dev.louisa.jam.hub.testsupport.LoggerSpy;
 import org.junit.jupiter.api.Test;
@@ -28,8 +27,7 @@ class RestResponseEntityExceptionHandlerTest extends BaseInfraStructureTest {
 
     @Test
     void shouldHandleJamHubException() {
-        JamHubException ex = new UserDomainException(USER_ID_MUST_BE_A_VALID_UUID, List.of(VALID_USER_ID));
-
+        var ex = new UserDomainException(USER_ID_MUST_BE_A_VALID_UUID, List.of(VALID_USER_ID));
         ResponseEntity<Object> response = handler.handleJamHubException(ex, REQUEST);
 
         assertThat(response).isNotNull();
@@ -50,9 +48,8 @@ class RestResponseEntityExceptionHandlerTest extends BaseInfraStructureTest {
 
     @Test
     void shouldHandleGenericException() {
-        Exception ex = new Exception("fail");
-
-        ResponseEntity<Object> response = handler.handleGenericException(ex, REQUEST);
+        var fail = new Exception("fail");
+        ResponseEntity<Object> response = handler.handleGenericException(fail, REQUEST);
 
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);

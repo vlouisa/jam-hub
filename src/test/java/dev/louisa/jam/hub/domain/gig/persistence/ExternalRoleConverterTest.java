@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.gig.persistence;
 
-import dev.louisa.jam.hub.domain.BaseDomainTest;
+import dev.louisa.jam.hub.testsupport.BaseDomainTest;
 import dev.louisa.jam.hub.domain.gig.ExternalRole;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.application;
+package dev.louisa.jam.hub.testsupport;
 
 import org.junit.jupiter.api.Tag;
 

@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.registration;
 
-import dev.louisa.jam.hub.domain.BaseDomainTest;
+import dev.louisa.jam.hub.testsupport.BaseDomainTest;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
 import org.junit.jupiter.api.Test;
 

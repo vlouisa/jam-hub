@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.application.exceptions;
 
-import dev.louisa.jam.hub.application.BaseApplicationTest;
+import dev.louisa.jam.hub.testsupport.BaseApplicationTest;
 import dev.louisa.jam.hub.domain.band.BandId;
 import dev.louisa.jam.hub.domain.user.UserId;
 import org.junit.jupiter.api.Test;
