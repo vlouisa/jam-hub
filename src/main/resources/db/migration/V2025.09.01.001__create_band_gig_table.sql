@@ -2,9 +2,9 @@ CREATE TABLE jhb_bands (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     record_creation_date_time TIMESTAMP,
-    record_creation_user VARCHAR(255),
+    record_creation_user UUID,
     record_modification_date_time TIMESTAMP,
-    record_modification_user VARCHAR(255)
+    record_modification_user UUID
 );
 
 CREATE TABLE jhb_band_members (
@@ -13,9 +13,9 @@ CREATE TABLE jhb_band_members (
     user_id UUID NOT NULL,
     role VARCHAR(50) NOT NULL,
     record_creation_date_time TIMESTAMP,
-    record_creation_user VARCHAR(255),
+    record_creation_user UUID,
     record_modification_date_time TIMESTAMP,
-    record_modification_user VARCHAR(255),    
+    record_modification_user UUID,    
         CONSTRAINT fk_band FOREIGN KEY (band_id) REFERENCES jhb_bands(id)
 );
 
@@ -39,9 +39,9 @@ CREATE TABLE jhb_gigs (
     band_id UUID NOT NULL,
     status VARCHAR(50),
     record_creation_date_time TIMESTAMP,
-    record_creation_user VARCHAR(255),
+    record_creation_user UUID,
     record_modification_date_time TIMESTAMP,
-    record_modification_user VARCHAR(255),
+    record_modification_user UUID,
         CONSTRAINT fk_band FOREIGN KEY (band_id) REFERENCES jhb_bands(id)
 );
 
@@ -51,9 +51,9 @@ CREATE TABLE jhb_gig_role_assignments (
     user_id UUID NOT NULL,
     role VARCHAR(50) NOT NULL,
     record_creation_date_time TIMESTAMP,
-    record_creation_user VARCHAR(255),
+    record_creation_user UUID,
     record_modification_date_time TIMESTAMP,
-    record_modification_user VARCHAR(255),
+    record_modification_user UUID,
         CONSTRAINT fk_gig FOREIGN KEY (gig_id) REFERENCES jhb_gigs(id)
 );
 

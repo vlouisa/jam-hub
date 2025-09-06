@@ -1,15 +1,16 @@
 package dev.louisa.jam.hub.domain.shared;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public interface AuditableEntity {
     void setRecordCreationDateTime(Instant dateTime);
-    void setRecordCreationUser(String userId);
+    void setRecordCreationUser(UUID userId);
     void setRecordModificationDateTime(Instant dateTime);
-    void setRecordModificationUser(String userId);
+    void setRecordModificationUser(UUID userId);
 
     Instant getRecordCreationDateTime();
-    String getRecordCreationUser();
+    UUID getRecordCreationUser();
     Instant getRecordModificationDateTime();
-    String getRecordModificationUser();
+    UUID getRecordModificationUser();
 }

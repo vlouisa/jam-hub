@@ -44,8 +44,8 @@ public class GigRoleAssignmentFactory {
                 .userId(UserId.generate().id())
                 .role(faker.options().option(ExternalRole.values()))
                 .recordCreationDateTime(Instant.now())
-                .recordCreationUser(UUID.randomUUID().toString())
+                .recordCreationUser(UUID.randomUUID())
                 .recordModificationDateTime(Instant.now())
-                .recordModificationUser(UUID.randomUUID().toString());
+                .recordModificationUser(UUID.randomUUID());
     }
 }

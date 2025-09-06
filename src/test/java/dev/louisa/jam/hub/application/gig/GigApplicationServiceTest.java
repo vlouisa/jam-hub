@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.application.gig;
 
-import dev.louisa.jam.hub.application.BaseApplicationTest;
+import dev.louisa.jam.hub.testsupport.BaseApplicationTest;
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
 import dev.louisa.jam.hub.domain.band.Band;
 import dev.louisa.jam.hub.domain.band.BandId;

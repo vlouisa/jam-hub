@@ -1,7 +1,8 @@
-package dev.louisa.jam.hub.domain.gig;
+package dev.louisa.jam.hub.domain.user;
 
-import dev.louisa.jam.hub.domain.gig.persistence.ExternalRoleConverter;
 import dev.louisa.jam.hub.domain.shared.AuditableEntity;
+import dev.louisa.jam.hub.domain.shared.EmailAddress;
+import dev.louisa.jam.hub.domain.shared.Password;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,26 +14,31 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "jhb_gig_role_assignments")
+@Table(name = "jhb_users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class GigRoleAssignment implements AuditableEntity {
-    @Id
+public class User implements AuditableEntity {
+
+    @EmbeddedId
     @EqualsAndHashCode.Include
-    private UUID id = UUID.randomUUID();
+    private UserId id;
 
     @Column(nullable = false)
-    private UUID userId;
+    private String displayName;
 
-    @Convert(converter = ExternalRoleConverter.class)
-    @Column(nullable = false) 
-    private ExternalRole role;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "email", column = @Column(name = "email")),
+    })
+    private EmailAddress email;
 
-    @ManyToOne
-    @JoinColumn(name = "gig_id")
-    private Gig gig;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "password", column = @Column(name = "password")),
+    })
+    private Password password;
 
     @CreationTimestamp
     private Instant recordCreationDateTime;
