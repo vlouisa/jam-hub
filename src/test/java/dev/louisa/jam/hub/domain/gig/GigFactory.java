@@ -1,20 +1,26 @@
 package dev.louisa.jam.hub.domain.gig;
 
+import dev.louisa.jam.hub.domain.gig.persistence.GigRepository;
 import dev.louisa.jam.hub.domain.shared.Address;
+import dev.louisa.jam.hub.domain.shared.Guard;
 import dev.louisa.jam.hub.domain.user.UserId;
+import lombok.RequiredArgsConstructor;
 import net.datafaker.Faker;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GigFactory {
-
-    private static final Faker faker = new Faker();
-
+    private final Faker faker = new Faker();
+    private final GigRoleAssignmentFactory roleAssignmentFactory = new GigRoleAssignmentFactory();
+    
     public Gig create() {
         return create(g -> {});
     }
@@ -24,15 +30,45 @@ public class GigFactory {
         customizer.accept(builder);
         return builder.build();
     }
+    
+    public Gig createWithAssignments(int assignmentCount) {
+        return createWithAssignments(assignmentCount, g -> {});
+    }
 
-    public GigRoleAssignment createAssignment(Gig gig, UserId userId, ExternalRole role) {
-        GigRoleAssignment assignment = GigRoleAssignment.builder()
-                .userId(userId.id())
-                .role(role)
-                .build();
-        gig.getAssignments().add(assignment);
-        assignment.setGig(gig);
-        return assignment;
+    public Gig createWithAssignments(int assignmentCount, Consumer<Gig.GigBuilder> customizer) {
+        Gig gig = create(customizer);
+        List<GigRoleAssignment> assignments = randomAssignments(assignmentCount);
+        assignments.forEach(a -> gig.assignRole(UserId.fromUUID(a.getUserId()), a.getRole()));
+        return gig;
+    }
+
+    // --- Switch into persistence mode ---
+    public Persistent usingRepository(GigRepository repository) {
+        Guard.when(repository == null)
+                .thenThrow(() -> new RuntimeException("Repository must not be null"));
+        
+        return new Persistent(repository);
+    }
+    
+    @RequiredArgsConstructor
+    public class Persistent {
+        private final GigRepository repository;
+
+        public Gig create() {
+            return repository.save(GigFactory.this.create());
+        }
+
+        public Gig create(Consumer<Gig.GigBuilder> customizer) {
+            return repository.save(GigFactory.this.create(customizer));
+        }
+        
+        public Gig createWithAssignments(int assignmentCount) {
+            return repository.save(GigFactory.this.createWithAssignments(assignmentCount));
+        }
+        
+        public Gig createWithAssignments(int assignmentCount, Consumer<Gig.GigBuilder> customizer) {
+            return repository.save(GigFactory.this.createWithAssignments(assignmentCount, customizer));
+        }
     }
 
     /**
@@ -60,5 +96,11 @@ public class GigFactory {
                 .recordCreationUser(UUID.randomUUID())
                 .recordModificationDateTime(Instant.now())
                 .recordModificationUser(UUID.randomUUID());
+    }
+
+    private List<GigRoleAssignment> randomAssignments(int count) {
+        return IntStream.range(0,count)
+                .mapToObj(i -> roleAssignmentFactory.create())
+                .collect(Collectors.toList());
     }
 }

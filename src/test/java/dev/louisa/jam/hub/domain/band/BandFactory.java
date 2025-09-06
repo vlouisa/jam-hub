@@ -1,5 +1,8 @@
 package dev.louisa.jam.hub.domain.band;
 
+import dev.louisa.jam.hub.domain.band.persistence.BandRepository;
+import dev.louisa.jam.hub.domain.shared.Guard;
+import lombok.RequiredArgsConstructor;
 import net.datafaker.Faker;
 
 import java.time.Instant;
@@ -14,7 +17,7 @@ public class BandFactory {
     private final BandMemberFactory memberFactory = new BandMemberFactory();
 
     public Band create() {
-        return baseBuilder().build();
+        return create(b -> {});
     }
 
     public Band create(Consumer<Band.BandBuilder> customizer) {
@@ -24,10 +27,7 @@ public class BandFactory {
     }
 
     public Band createWithMembers(int memberCount) {
-        Band band = create();
-        List<BandMember> members = randomMembers(memberCount);
-        members.forEach(band::addMember); // ensures invariant is respected
-        return band;
+        return createWithMembers(memberCount, b -> {});
     }
 
     public Band createWithMembers(int memberCount, Consumer<Band.BandBuilder> customizer) {
@@ -37,6 +37,35 @@ public class BandFactory {
         return band;
     }
 
+    // --- Switch into persistence mode ---
+    public Persistent usingRepository(BandRepository repository) {
+        Guard.when(repository == null)
+                .thenThrow(() -> new RuntimeException("Repository must not be null"));
+        
+        return new Persistent(repository);
+    }
+
+    @RequiredArgsConstructor
+    public class Persistent {
+        private final BandRepository repository;
+
+        public Band create() {
+            return repository.save(BandFactory.this.create());
+        }
+
+        public Band create(Consumer<Band.BandBuilder> customizer) {
+            return repository.save(BandFactory.this.create(customizer));
+        }
+
+        public Band createWithMembers(int memberCount) {
+            return repository.save(BandFactory.this.createWithMembers(memberCount));
+        }
+
+        public Band createWithMembers(int memberCount, Consumer<Band.BandBuilder> customizer) {
+            return repository.save(BandFactory.this.createWithMembers(memberCount, customizer));
+        }
+    }
+    
     private List<BandMember> randomMembers(int count) {
         return IntStream.range(0, count)
                 .mapToObj(i -> memberFactory.create())

@@ -1,6 +1,5 @@
 package dev.louisa.jam.hub.domain.shared;
 
-import dev.louisa.jam.hub.exceptions.JamHubException;
 import java.util.function.Supplier;
 
 public class Guard {
@@ -23,7 +22,7 @@ public class Guard {
     }
 
     // Eager exception
-    public Guard thenThrow(JamHubException exception) {
+    public Guard thenThrow(RuntimeException exception) {
         if (currentCondition) {
             throw exception;
         }
@@ -31,7 +30,7 @@ public class Guard {
     }
 
     // Lazy exception
-    public Guard thenThrow(Supplier<JamHubException> exceptionSupplier) {
+    public Guard thenThrow(Supplier<RuntimeException> exceptionSupplier) {
         if (currentCondition) {
             throw exceptionSupplier.get();
         }

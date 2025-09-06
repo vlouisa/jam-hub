@@ -13,11 +13,14 @@ public final class Factory {
     }
 
     public static final class domain {
+        // factories for aggregate roots 
         public static final BandFactory aBand = new BandFactory();
-        public static final BandMemberFactory aBandMember = new BandMemberFactory();
         public static final GigFactory aGig = new GigFactory();
-        public static final GigRoleAssignmentFactory aGigRoleAssignment = new GigRoleAssignmentFactory();
         public static final UserRegistrationFactory aUserRegistration = new UserRegistrationFactory();
+
+        // factories for entities and value objects
+        public static final BandMemberFactory aBandMember = new BandMemberFactory();
+        public static final GigRoleAssignmentFactory aGigRoleAssignment = new GigRoleAssignmentFactory();
     }
 
     private Factory() {} // prevent instantiation
