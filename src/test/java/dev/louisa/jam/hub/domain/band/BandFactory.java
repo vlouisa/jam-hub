@@ -37,6 +37,19 @@ public class BandFactory {
         return band;
     }
 
+    public Band createWithMembers( String... userIds) {
+        return createWithMembers(b -> {}, userIds);
+    }
+
+    public Band createWithMembers(Consumer<Band.BandBuilder> customizer, String... userUUIDs) {
+        Band band = create(customizer);
+        for (String userUUID : userUUIDs) {
+            BandMember member = memberFactory.create(u -> u.userId(UUID.fromString(userUUID)));
+            band.addMember(member);
+        }
+        return band;
+    }
+
     // --- Switch into persistence mode ---
     public Persistent usingRepository(BandRepository repository) {
         Guard.when(repository == null)
@@ -63,6 +76,14 @@ public class BandFactory {
 
         public Band createWithMembers(int memberCount, Consumer<Band.BandBuilder> customizer) {
             return repository.save(BandFactory.this.createWithMembers(memberCount, customizer));
+        }
+        
+        public  Band createWithMembers(String... userIds) {
+            return repository.save(BandFactory.this.createWithMembers(userIds));
+        }
+        
+        public Band createWithMembers(Consumer<Band.BandBuilder> customizer, String... userIds) {
+            return repository.save(BandFactory.this.createWithMembers(customizer, userIds));
         }
     }
     

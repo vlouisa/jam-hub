@@ -1,7 +1,9 @@
 package dev.louisa.jam.hub.interfaces.gig;
 
 import dev.louisa.jam.hub.domain.shared.Address;
+import lombok.Builder;
 
+@Builder
 public record AddressDto(
         String street,
         Long number,

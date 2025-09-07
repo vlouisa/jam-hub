@@ -19,11 +19,9 @@ class BandRepositoryIT extends BaseIntegrationIT {
 
         var retrievedBand = bandRepository.findById(band.getId()).orElseThrow();
         assertThat(retrievedBand.getName()).isEqualTo(band.getName());
-        assertThat(retrievedBand.getMembers()).hasSize(3);
-        
-        retrievedBand.getMembers()
-                .forEach(member -> assertThat(member.getBand()).isEqualTo(retrievedBand));
-        
+        assertThat(retrievedBand.getMembers())
+                .hasSize(3)
+                .allSatisfy(member -> assertThat(member.getBand()).isEqualTo(band));
     }
 
     @Test

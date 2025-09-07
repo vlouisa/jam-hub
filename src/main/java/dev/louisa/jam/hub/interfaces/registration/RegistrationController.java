@@ -15,7 +15,7 @@ public class RegistrationController {
     private final RegistrationApplicationService registrationApplicationService;
 
 
-    @PatchMapping("/verify/{registrationId}")
+    @PostMapping ("/{registrationId}/verify")
     @ResponseStatus(NO_CONTENT)
     public void verify(@PathVariable String registrationId) {
             registrationApplicationService.verifyOtp(UserRegistrationId.fromString(registrationId));

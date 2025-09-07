@@ -9,6 +9,7 @@ import dev.louisa.jam.hub.domain.gig.Gig;
 import dev.louisa.jam.hub.domain.gig.GigId;
 import dev.louisa.jam.hub.domain.gig.persistence.GigRepository;
 import dev.louisa.jam.hub.domain.user.UserId;
+import dev.louisa.jam.hub.testsupport.Factory.application;
 import dev.louisa.jam.hub.testsupport.GigAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static dev.louisa.jam.hub.testsupport.Factory.application.*;
 import static dev.louisa.jam.hub.testsupport.Factory.domain.*;
 import static dev.louisa.jam.hub.domain.gig.GigStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +53,7 @@ class GigApplicationServiceTest extends BaseApplicationTest {
     @Test
     void shouldPlanNewGig() {
         var gig = aGig.create();
-        var gigDetails = gigDetailsFactory.create();
+        var gigDetails = application.gigDetails.create();
 
         when(bandRepository.findById(rollingStones.getId())).thenReturn(Optional.of(rollingStones));
         when(gigRepository.save(any())).thenReturn(gig);
@@ -75,7 +75,7 @@ class GigApplicationServiceTest extends BaseApplicationTest {
 
     @Test
     void shouldThrowExceptionWhenBandNotFound() {
-        var gigDetails = gigDetailsFactory.create();
+        var gigDetails = application.gigDetails.create();
 
         assertThatCode(() -> gigApplicationService.planGigForBand(MICK, rollingStones.getId(), gigDetails))
                 .isInstanceOf(ApplicationException.class)
@@ -85,7 +85,7 @@ class GigApplicationServiceTest extends BaseApplicationTest {
 
     @Test
     void shouldThrowExceptionWhenNonBandMemberIsPlanningTheGig() {
-        var gigDetails = gigDetailsFactory.create();
+        var gigDetails = application.gigDetails.create();
         when(bandRepository.findById(rollingStones.getId())).thenReturn(Optional.of(rollingStones));
 
         assertThatCode(() -> gigApplicationService.planGigForBand(LENNY, rollingStones.getId(), gigDetails))

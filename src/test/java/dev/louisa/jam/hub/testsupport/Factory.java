@@ -6,10 +6,17 @@ import dev.louisa.jam.hub.domain.band.BandMemberFactory;
 import dev.louisa.jam.hub.domain.gig.GigFactory;
 import dev.louisa.jam.hub.domain.gig.GigRoleAssignmentFactory;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationFactory;
+import dev.louisa.jam.hub.interfaces.gig.GigRequestFactory;
 
 public final class Factory {
+    public static final class web {
+        // factories for web layer DTOs
+        public static final GigRequestFactory aGigRequest = new GigRequestFactory();
+        
+    }
+
     public static final class application {
-        public static final GigDetailsFactory gigDetailsFactory = new GigDetailsFactory();
+        public static final GigDetailsFactory gigDetails = new GigDetailsFactory();
     }
 
     public static final class domain {
