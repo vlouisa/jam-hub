@@ -26,8 +26,8 @@ class GigControllerIT extends BaseInterfaceIT {
         var response = api.post("/api/v1/bands/{bandId}/gigs", band.getId().toValue())
                 .body(aGigRequest.create())
                 .withJwt(create().aDefaultToken(withSubject("b3aaf1f0-5e2e-4c3a-9f0a-1d2b3c4d5e6f")))
-                .expectStatus(OK)
-                .expectBody(GigId.class);
+                .expectResponseStatus(OK)
+                .expectResponseBody(GigId.class);
 
         var gigUuid = response.toValue();
         assertThat(gigUuid).isNotNull();

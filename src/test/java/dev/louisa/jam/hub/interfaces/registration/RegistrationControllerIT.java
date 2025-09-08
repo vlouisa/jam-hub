@@ -25,8 +25,8 @@ class RegistrationControllerIT extends BaseInterfaceIT {
 
         api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
                 .withJwt(create().aDefaultToken())
-                .expectStatus(NO_CONTENT)
-                .expectNoBody();
+                .expectResponseStatus(NO_CONTENT)
+                .expectNoResponseBody();
 
     }
 
@@ -38,8 +38,8 @@ class RegistrationControllerIT extends BaseInterfaceIT {
 
         api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
                 .withJwt(create().aDefaultToken())
-                .expectStatus(NO_CONTENT)
-                .expectNoBody();
+                .expectResponseStatus(NO_CONTENT)
+                .expectNoResponseBody();
 
         var retrievedRegistration = userRegistrationRepository.findById(registration.getId()).orElseThrow();
         assertThat(retrievedRegistration.getVerifiedAt()).isEqualTo(registration.getVerifiedAt());
@@ -53,8 +53,8 @@ class RegistrationControllerIT extends BaseInterfaceIT {
 
         var response = api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
                 .withJwt(create().aDefaultToken())
-                .expectStatus(BAD_REQUEST)
-                .expectBody(ErrorResponse.class);
+                .expectResponseStatus(BAD_REQUEST)
+                .expectResponseBody(ErrorResponse.class);
         assertThat(response).isEqualTo(errorResponse(OTP_CODE_EXPIRED));
     }
 
@@ -66,8 +66,8 @@ class RegistrationControllerIT extends BaseInterfaceIT {
 
         var response = api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
                 .withJwt(create().aDefaultToken())
-                .expectStatus(BAD_REQUEST)
-                .expectBody(ErrorResponse.class);
+                .expectResponseStatus(BAD_REQUEST)
+                .expectResponseBody(ErrorResponse.class);
         assertThat(response).isEqualTo(errorResponse(OTP_CODE_REVOKED));
     }
 }

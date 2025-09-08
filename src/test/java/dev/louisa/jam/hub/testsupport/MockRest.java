@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Component
 @RequiredArgsConstructor
-public class ApiClient {
+public class MockRest {
     private final MockMvc mockMvc;
     private final ObjectMapper mapper;
 
@@ -64,7 +64,7 @@ public class ApiClient {
             return this;
         }
 
-        public RequestBuilder header(String name, String value) {
+        public RequestBuilder withRequestHeader(String name, String value) {
             request.header(name, value);
             return this;
         }
@@ -83,7 +83,7 @@ public class ApiClient {
         }
 
 
-        public RequestBuilder expectStatus(HttpStatus status) {
+        public RequestBuilder expectResponseStatus(HttpStatus status) {
             this.expectedStatus = status;
             return this;
         }
@@ -102,7 +102,7 @@ public class ApiClient {
             return actions;
         }
 
-        public void expectNoBody() throws Exception {
+        public void expectNoResponseBody() throws Exception {
             ResultActions actions = exchange();
             MvcResult result = actions.andReturn();
             String content = result.getResponse().getContentAsString();
@@ -111,7 +111,7 @@ public class ApiClient {
             }
         }
 
-        public <T> T expectBody(Class<T> type) throws Exception {
+        public <T> T expectResponseBody(Class<T> type) throws Exception {
             ResultActions actions = exchange(); // ensures status check runs if configured
             MvcResult result = actions.andReturn();
             String json = result.getResponse().getContentAsString();

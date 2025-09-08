@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,8 +24,7 @@ import java.util.List;
 public class BaseInterfaceIT {
     
     @Autowired
-    protected ApiClient api;
-    
+    protected MockRest api;
     protected ErrorResponse errorResponse(JamHubError error) {
         return errorResponse(error, List.of());
     }
