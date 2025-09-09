@@ -47,8 +47,10 @@ jobs:
             exit 1
           fi
 
-      # Step 6: Setup Maven authentication
-      - name: Build with Maven
+      # Step 6: Setup Maven authentication for GitHub Packages
+      - name: Setup Maven authentication
+        env:
+          GH_PACKAGES_PAT: ${{ secrets.GH_PACKAGES_PAT }}
         run: |
           mkdir -p $HOME/.m2
           cat <<EOF > $HOME/.m2/settings.xml
@@ -57,16 +59,13 @@ jobs:
             xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
             <servers>
               <server>
-                <id>github-vlouisa</id>
+                <id>github-vlouisa</id> <!-- must match <id> in your pom.xml repository -->
                 <username>vlouisa</username>
-                <password>${GITHUB_TOKEN}</password>
-                </server>
-                </servers>
-              </settings>
+                <password>${GH_PACKAGES_PAT}</password>
+              </server>
+            </servers>
+          </settings>
           EOF
-          mvn clean test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_PAT }}
 
       # Step 7: Get current Maven version
       - name: Get current Maven version
