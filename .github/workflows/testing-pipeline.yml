@@ -2,8 +2,9 @@ name: CI Build
 
 on:
   push:
-    branches:
-      - '**'  # triggers on all branches
+    branches-ignore:
+      - main   # do not run on main
+        
 
 jobs:
   build:
