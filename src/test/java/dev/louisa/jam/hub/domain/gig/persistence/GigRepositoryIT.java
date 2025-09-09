@@ -14,15 +14,14 @@ class GigRepositoryIT extends BaseIntegrationIT {
     @Test
     void shouldSaveGigWithAssignments() {
         var gig = aGig.createWithAssignments(4);
-    
+
         gigRepository.save(gig);
-        
+
         var retrievedGig = gigRepository.findById(gig.getId()).orElseThrow();
         assertThat(retrievedGig.getTitle()).isEqualTo(gig.getTitle());
-        assertThat(retrievedGig.getAssignments()).hasSize(4);
-        
-        retrievedGig.getAssignments()
-                .forEach(assignment -> assertThat(assignment.getGig()).isEqualTo(retrievedGig));
+        assertThat(retrievedGig.getAssignments())
+                .hasSize(4)
+                .allSatisfy(assignment -> assertThat(assignment.getGig()).isEqualTo(gig));
     }
 
     @Test
