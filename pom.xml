@@ -16,13 +16,21 @@
     <description>jam-hub-service</description>
     <packaging>jar</packaging>
 
+    <repositories>
+        <repository>
+            <id>github-vlouisa</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/vlouisa/mock-rest</url>
+        </repository>
+    </repositories>
+    
     <properties>
         <java.version>21</java.version>
         <java-jwt.version>4.5.0</java-jwt.version>
         <datafaker.version>2.4.4</datafaker.version>
         <flyway-core.version>10.15.2</flyway-core.version>
         <flyway-database-postgresql.version>10.14.0</flyway-database-postgresql.version>
-        <mock-rest.version>0.2.0-SNAPSHOT</mock-rest.version>
+        <mock-rest.version>0.5.0</mock-rest.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <wiremock.version>3.5.2</wiremock.version>
     </properties>
