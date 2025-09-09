@@ -22,6 +22,7 @@
         <datafaker.version>2.4.4</datafaker.version>
         <flyway-core.version>10.15.2</flyway-core.version>
         <flyway-database-postgresql.version>10.14.0</flyway-database-postgresql.version>
+        <mock-rest.version>0.2.0-SNAPSHOT</mock-rest.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <wiremock.version>3.5.2</wiremock.version>
     </properties>
@@ -120,7 +121,12 @@
             <artifactId>jdbc</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>dev.louisa.victor</groupId>
+            <artifactId>mock-rest</artifactId>
+            <version>${mock-rest.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

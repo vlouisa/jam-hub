@@ -26,8 +26,7 @@ class RegistrationControllerIT extends BaseInterfaceIT {
         api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
                 .withJwt(create().aDefaultToken())
                 .expectResponseStatus(NO_CONTENT)
-                .expectNoResponseBody();
-
+                .send();
     }
 
     @Test
@@ -39,7 +38,7 @@ class RegistrationControllerIT extends BaseInterfaceIT {
         api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
                 .withJwt(create().aDefaultToken())
                 .expectResponseStatus(NO_CONTENT)
-                .expectNoResponseBody();
+                .send();
 
         var retrievedRegistration = userRegistrationRepository.findById(registration.getId()).orElseThrow();
         assertThat(retrievedRegistration.getVerifiedAt()).isEqualTo(registration.getVerifiedAt());
@@ -54,7 +53,9 @@ class RegistrationControllerIT extends BaseInterfaceIT {
         var response = api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
                 .withJwt(create().aDefaultToken())
                 .expectResponseStatus(BAD_REQUEST)
-                .expectResponseBody(ErrorResponse.class);
+                .send()
+                .andReturn(ErrorResponse.class);
+        
         assertThat(response).isEqualTo(errorResponse(OTP_CODE_EXPIRED));
     }
 
@@ -67,7 +68,9 @@ class RegistrationControllerIT extends BaseInterfaceIT {
         var response = api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
                 .withJwt(create().aDefaultToken())
                 .expectResponseStatus(BAD_REQUEST)
-                .expectResponseBody(ErrorResponse.class);
+                .send()
+                .andReturn(ErrorResponse.class);
+
         assertThat(response).isEqualTo(errorResponse(OTP_CODE_REVOKED));
     }
 }

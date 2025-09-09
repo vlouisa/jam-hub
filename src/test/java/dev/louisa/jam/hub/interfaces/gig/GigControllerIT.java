@@ -27,7 +27,8 @@ class GigControllerIT extends BaseInterfaceIT {
                 .body(aGigRequest.create())
                 .withJwt(create().aDefaultToken(withSubject("b3aaf1f0-5e2e-4c3a-9f0a-1d2b3c4d5e6f")))
                 .expectResponseStatus(OK)
-                .expectResponseBody(GigId.class);
+                .send()
+                .andReturn(GigId.class);
 
         var gigUuid = response.toValue();
         assertThat(gigUuid).isNotNull();
