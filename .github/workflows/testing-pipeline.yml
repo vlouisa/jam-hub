@@ -1,40 +1,49 @@
-name: Testing Pipeline
+name: CI Build
 
 on:
   push:
     branches:
-      - '**'  # triggers on push to any branch
+      - '**'  # triggers on all branches
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Set up JDK
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 21  # change to your required Java version
+          java-version: 21
 
-      - name: Build with Maven
+      # Step 3: Setup Maven authentication for GitHub Packages
+      - name: Setup Maven authentication
         env:
           GH_PACKAGES_PAT: ${{ secrets.GH_PACKAGES_PAT }}
         run: |
           mkdir -p $HOME/.m2
           cat <<EOF > $HOME/.m2/settings.xml
           <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
             <servers>
               <server>
-                <id>github-vlouisa</id>
+                <id>github-vlouisa</id> <!-- must match <id> in your pom.xml repository -->
                 <username>vlouisa</username>
                 <password>${GH_PACKAGES_PAT}</password>
               </server>
             </servers>
           </settings>
           EOF
-          mvn clean verify
+
+      # Step 4: Build and test project
+      - name: Build with Maven
+        run: mvn clean verify
