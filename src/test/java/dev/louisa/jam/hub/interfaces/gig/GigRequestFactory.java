@@ -32,7 +32,7 @@ public class GigRequestFactory {
         LocalTime getInTime = randomTime(14, 19);
 
         // Random start time 1-3 hours after get-in
-        LocalTime startTime = getInTime.plusMinutes(faker.number().numberBetween(30, 180));
+        LocalTime startTime = getInTime.plusHours(faker.number().numberBetween(1, 3));
 
         // Random duration between 1 and 3 hours, format HH:mm
         int hours = faker.number().numberBetween(1, 3);
@@ -54,8 +54,12 @@ public class GigRequestFactory {
     }
 
     private LocalTime randomTime(int startHourInclusive, int endHourInclusive) {
+        // Random hour between startHourInclusive and endHourInclusive
         int hour = ThreadLocalRandom.current().nextInt(startHourInclusive, endHourInclusive + 1);
-        int minute = ThreadLocalRandom.current().nextInt(0, 60);
-        return LocalTime.of(hour, minute);
-    }
+
+        // Random minute from the allowed set {0, 15, 30, 45}
+        int[] minutes = {0, 15, 30, 45};
+        int minute = minutes[ThreadLocalRandom.current().nextInt(minutes.length)];
+
+        return LocalTime.of(hour, minute);    }
 }

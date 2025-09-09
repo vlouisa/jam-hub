@@ -19,14 +19,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 public class SecurityConfig {
-    
+
     //TODO: Make a Bean/Config for the custom filters.
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, 
+    public SecurityFilterChain filterChain(HttpSecurity http,
                                            JwtAuthenticationFilter jwtAuthenticationFilter,
                                            UnauthorizedExceptionHandler unauthorizedExceptionHandler,
-                                             ForbiddenExceptionHandler forbiddenExceptionHandler
-                                           ) throws Exception {
+                                           ForbiddenExceptionHandler forbiddenExceptionHandler) throws Exception {
+        
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(management -> management.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .exceptionHandling(conf -> conf.authenticationEntryPoint(unauthorizedExceptionHandler))
                 .exceptionHandling(conf -> conf.accessDeniedHandler(forbiddenExceptionHandler))
                 .securityMatcher("/api/**")
-                .authorizeHttpRequests( registry ->
+                .authorizeHttpRequests(registry ->
                         registry.anyRequest().authenticated()
                 );
 
