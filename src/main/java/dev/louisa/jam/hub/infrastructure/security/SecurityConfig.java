@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.infrastructure.security;
 
+import dev.louisa.jam.hub.infrastructure.logging.MDCLoggingFilter;
 import dev.louisa.jam.hub.infrastructure.security.exception.ForbiddenExceptionHandler;
 import dev.louisa.jam.hub.infrastructure.security.exception.UnauthorizedExceptionHandler;
 import dev.louisa.jam.hub.infrastructure.security.jwt.JHubJwtValidator;
@@ -23,12 +24,14 @@ public class SecurityConfig {
     //TODO: Make a Bean/Config for the custom filters.
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
+                                           MDCLoggingFilter mdcLoggingFilter,
                                            JwtAuthenticationFilter jwtAuthenticationFilter,
                                            UnauthorizedExceptionHandler unauthorizedExceptionHandler,
                                            ForbiddenExceptionHandler forbiddenExceptionHandler) throws Exception {
         
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(management -> management.sessionCreationPolicy(STATELESS))
+                .addFilterBefore(mdcLoggingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(conf -> conf.authenticationEntryPoint(unauthorizedExceptionHandler))
