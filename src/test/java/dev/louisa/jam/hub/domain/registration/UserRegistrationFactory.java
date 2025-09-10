@@ -71,6 +71,7 @@ public class UserRegistrationFactory {
     private UserRegistration.UserRegistrationBuilder baseBuilder() {
         return UserRegistration.builder()
                 .id(UserRegistrationId.generate())
+                .otp(UUID.randomUUID())
                 .email(new EmailAddress(faker.internet().emailAddress()))
                 .verifiedAt(null)
                 .expiredAt(null)

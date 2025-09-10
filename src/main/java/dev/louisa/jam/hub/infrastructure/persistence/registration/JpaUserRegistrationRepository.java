@@ -6,5 +6,10 @@ import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationReposi
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
-public interface JpaUserRegistrationRepository extends JpaRepository<UserRegistration, UserRegistrationId>, UserRegistrationRepository {}
+public interface JpaUserRegistrationRepository extends JpaRepository<UserRegistration, UserRegistrationId>, UserRegistrationRepository {
+    Optional<UserRegistration> findByOtp(UUID otp);
+}

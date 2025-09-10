@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.IncorrectClaimException;
 import com.auth0.jwt.exceptions.MissingClaimException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import dev.louisa.jam.hub.infrastructure.security.SecurityLevelResolver;
 import dev.louisa.jam.hub.infrastructure.security.UserPrincipalAuthenticationToken;
 import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
 import dev.louisa.jam.hub.infrastructure.security.util.BearerTokenUtil;
@@ -28,6 +29,7 @@ import static dev.louisa.jam.hub.infrastructure.security.exception.SecurityError
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtConverter jwtConverter;
+    private final SecurityLevelResolver securityLevelResolver;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -74,6 +76,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return Optional.of(
                 BearerTokenUtil.extractTokenFrom(request)
                         .orElseThrow(() -> new SecurityException(NO_BEARER_TOKEN)));
+    }
+    
+    @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        return securityLevelResolver.isUnsecured(request.getRequestURI(), request.getMethod());
     }
 }
 

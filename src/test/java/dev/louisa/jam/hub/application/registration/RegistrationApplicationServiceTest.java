@@ -3,7 +3,6 @@ package dev.louisa.jam.hub.application.registration;
 import dev.louisa.jam.hub.testsupport.BaseApplicationTest;
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
-import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
 import dev.louisa.jam.hub.testsupport.Factory.domain;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static dev.louisa.jam.hub.application.exceptions.ApplicationError.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,10 +38,10 @@ class RegistrationApplicationServiceTest extends BaseApplicationTest {
     @Test
     void shouldVerifyRegistration() {
         registration = domain.aUserRegistration.create();
-        when(userRegistrationRepository.findById(registration.getId()))
+        when(userRegistrationRepository.findByOtp(registration.getOtp()))
                 .thenReturn(Optional.of(registration));
         
-        registrationApplicationService.verifyOtp(registration.getId());
+        registrationApplicationService.verifyOtp(registration.getOtp());
 
         assertThat(registration.isVerified()).isTrue();
         verify(userRegistrationRepository).save(registration);
@@ -52,10 +52,10 @@ class RegistrationApplicationServiceTest extends BaseApplicationTest {
         registration = domain.aUserRegistration.createVerified();
         var verificationAt= registration.getVerifiedAt();
         
-        when(userRegistrationRepository.findById(registration.getId()))
+        when(userRegistrationRepository.findByOtp(registration.getOtp()))
                 .thenReturn(Optional.of(registration));
         
-        registrationApplicationService.verifyOtp(registration.getId());
+        registrationApplicationService.verifyOtp(registration.getOtp());
 
         assertThat(registration.isVerified()).isTrue();
         assertThat(registration.getVerifiedAt()).isEqualTo(verificationAt);
@@ -64,11 +64,11 @@ class RegistrationApplicationServiceTest extends BaseApplicationTest {
 
     @Test
     void shouldThrowWhenRegistrationDoesNotExist() {
-        UserRegistrationId registrationId = UserRegistrationId.generate();
-        when(userRegistrationRepository.findById(registrationId))
+        UUID otp = UUID.randomUUID();
+        when(userRegistrationRepository.findByOtp(otp))
                 .thenReturn(Optional.empty());
         
-        assertThatCode(() -> registrationApplicationService.verifyOtp(registrationId))
+        assertThatCode(() -> registrationApplicationService.verifyOtp(otp))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessageContaining(ENTITY_NOT_FOUND.getMessage());
         
