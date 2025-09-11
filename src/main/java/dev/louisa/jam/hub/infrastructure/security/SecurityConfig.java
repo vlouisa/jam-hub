@@ -16,21 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.security.interfaces.RSAPublicKey;
-import java.util.List;
-import java.util.Map;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    public static final List<Map.Entry<String, String>> UNSECURED_URI_LIST =  List.of(
-            Map.entry("/api/v1/registrations", "POST")
-    );
-
     private final SecurityLevelResolver securityLevelResolver;
-
-
 
     //TODO: Make a Bean/Config for the custom filters.
     @Bean

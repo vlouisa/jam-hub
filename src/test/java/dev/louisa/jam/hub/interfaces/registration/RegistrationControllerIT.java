@@ -40,7 +40,6 @@ class RegistrationControllerIT extends BaseInterfaceIT {
                 .create();
 
         api.post("/api/v1/registrations/{registrationId}/verify", registration.getOtp())
-                .withJwt(create().aDefaultToken())
                 .expectResponseStatus(NO_CONTENT)
                 .send();
         

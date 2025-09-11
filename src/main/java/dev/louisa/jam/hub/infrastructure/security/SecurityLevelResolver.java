@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.infrastructure.security;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -8,23 +9,22 @@ import org.springframework.util.PathMatcher;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import static dev.louisa.jam.hub.infrastructure.security.SecurityConfig.UNSECURED_URI_LIST;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class SecurityLevelResolver {
+    
+    @Lazy
     private final PathMatcher pathMatcher;
-
-    public SecurityLevelResolver(@Lazy PathMatcher pathMatcher) {
-        this.pathMatcher = pathMatcher;
-    }
+    private final UnsecuredEndpoints unsecuredEndpoints;
 
     public boolean isUnsecured(String requestUri, String method) {
         if (!requestUri.startsWith("/api")) {
             return true;
         }
 
-        return UNSECURED_URI_LIST.stream()
+        return unsecuredEndpoints.list().stream()
                 .anyMatch(endpointInList(requestUri, method));
     }
 
