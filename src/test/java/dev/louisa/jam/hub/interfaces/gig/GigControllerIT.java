@@ -23,14 +23,13 @@ class GigControllerIT extends BaseInterfaceIT {
                 .usingRepository(bandRepository)
                 .createWithMembers("b3aaf1f0-5e2e-4c3a-9f0a-1d2b3c4d5e6f");
 
-        var response = api.post("/api/v1/bands/{bandId}/gigs", band.getId().toValue())
+        var gigId = api.post("/api/v1/bands/{bandId}/gigs", band.getId().toValue())
                 .body(aGigRequest.create())
                 .withJwt(create().aDefaultToken(withSubject("b3aaf1f0-5e2e-4c3a-9f0a-1d2b3c4d5e6f")))
                 .expectResponseStatus(OK)
                 .send()
                 .andReturn(GigId.class);
 
-        var gigUuid = response.toValue();
-        assertThat(gigUuid).isNotNull();
+        assertThat(gigId).isNotNull();
     }
 }

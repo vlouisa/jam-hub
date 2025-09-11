@@ -36,6 +36,9 @@ public class UserRegistration implements AuditableEntity {
     private EmailAddress email;
 
     @Column
+    private UUID otp;
+    
+    @Column
     private Instant verifiedAt;
     @Column
     private Instant expiredAt;
@@ -48,6 +51,15 @@ public class UserRegistration implements AuditableEntity {
     @UpdateTimestamp
     private Instant recordModificationDateTime;
     private UUID recordModificationUser;
+
+    public static UserRegistration createNewRegistration(EmailAddress emailAddress) {
+        return UserRegistration.builder()
+                .id(UserRegistrationId.generate())
+                .email(emailAddress)
+                .otp(UUID.randomUUID())
+                .expiredAt(Instant.now().plusSeconds(15 * 60)) // OTP valid for 15 minutes
+                .build();
+    }
 
     public void verify() {
         Guard.when(registrationExpired())

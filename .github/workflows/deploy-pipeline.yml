@@ -78,7 +78,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_ENV
-          echo "Current version: $CURRENT_VERSION"
+          echo "Current development version: $CURRENT_VERSION"
 
       # Step 8: Compute new version
       - name: Compute new version
@@ -98,7 +98,7 @@ jobs:
             PATCH=$((PATCH + 1))
           fi
 
-          NEW_VERSION="$MAJOR.$MINOR.$PATCH-SNAPSHOT"
+          NEW_VERSION="$MAJOR.$MINOR.$((PATCH +1))-SNAPSHOT"
           TAG_VERSION="$MAJOR.$MINOR.$PATCH"
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
           echo "tag_version=$TAG_VERSION" >> $GITHUB_ENV
