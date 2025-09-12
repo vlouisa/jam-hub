@@ -24,8 +24,10 @@ public class RegistrationApplicationService {
 
     @Transactional
     public UserRegistrationId register(EmailAddress emailAddress) {
-        final UserRegistration userRegistration = UserRegistration.createNewRegistration(emailAddress);
-        return userRegistrationRepository.save(userRegistration).getId();
+        final UserRegistration registration = UserRegistration.createNewRegistration(emailAddress);
+        userRegistrationRepository.save(registration);
+        registration.pullDomainEvents().forEach(publisher::publish);
+        return registration.getId();
     }
     
     @Transactional
