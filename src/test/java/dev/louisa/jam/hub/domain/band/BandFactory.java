@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.domain.band;
 
 import dev.louisa.jam.hub.domain.band.persistence.BandRepository;
-import dev.louisa.jam.hub.domain.shared.Guard;
+import dev.louisa.jam.hub.domain.common.Guard;
 import lombok.RequiredArgsConstructor;
 import net.datafaker.Faker;
 

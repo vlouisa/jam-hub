@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.user.exceptions;
 
-import dev.louisa.jam.hub.domain.shared.Id;
+import dev.louisa.jam.hub.domain.common.Id;
 import dev.louisa.jam.hub.exceptions.JamHubError;
 import dev.louisa.jam.hub.exceptions.JamHubException;
 

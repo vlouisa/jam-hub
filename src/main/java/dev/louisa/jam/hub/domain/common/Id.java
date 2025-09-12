@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.domain.shared;
+package dev.louisa.jam.hub.domain.common;
 
 import java.util.UUID;
 

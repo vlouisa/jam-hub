@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.interfaces.registration;
 
-import dev.louisa.jam.hub.domain.shared.EmailAddress;
+import dev.louisa.jam.hub.domain.common.EmailAddress;
 import lombok.Builder;
 
 @Builder

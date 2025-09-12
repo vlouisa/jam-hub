@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.domain.registration;
 
 import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
-import dev.louisa.jam.hub.domain.shared.EmailAddress;
+import dev.louisa.jam.hub.domain.common.EmailAddress;
 import lombok.RequiredArgsConstructor;
 import net.datafaker.Faker;
 

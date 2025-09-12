@@ -3,7 +3,7 @@ package dev.louisa.jam.hub.exceptions;
 import dev.louisa.jam.hub.testsupport.BaseDomainTest;
 import dev.louisa.jam.hub.domain.band.exceptions.BandDomainError;
 import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainError;
-import dev.louisa.jam.hub.domain.shared.Id;
+import dev.louisa.jam.hub.domain.common.Id;
 import dev.louisa.jam.hub.domain.user.exceptions.UserDomainError;
 import lombok.Builder;
 import org.junit.jupiter.api.extension.ExtensionContext;

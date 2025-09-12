@@ -4,7 +4,7 @@ import dev.louisa.jam.hub.application.exceptions.ApplicationException;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
-import dev.louisa.jam.hub.domain.shared.EmailAddress;
+import dev.louisa.jam.hub.domain.common.EmailAddress;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

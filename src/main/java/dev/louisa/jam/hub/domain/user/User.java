@@ -1,8 +1,8 @@
 package dev.louisa.jam.hub.domain.user;
 
-import dev.louisa.jam.hub.domain.shared.AuditableEntity;
-import dev.louisa.jam.hub.domain.shared.EmailAddress;
-import dev.louisa.jam.hub.domain.shared.Password;
+import dev.louisa.jam.hub.domain.common.AuditableEntity;
+import dev.louisa.jam.hub.domain.common.EmailAddress;
+import dev.louisa.jam.hub.domain.common.Password;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

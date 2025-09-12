@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain;
 
-import dev.louisa.jam.hub.domain.shared.Id;
+import dev.louisa.jam.hub.domain.common.Id;
 import dev.louisa.jam.hub.exceptions.JamHubException;
 import dev.louisa.jam.hub.testsupport.BaseDomainTest;
 import org.junit.jupiter.api.Test;

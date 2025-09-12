@@ -1,9 +1,9 @@
 package dev.louisa.jam.hub.domain.registration;
 
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
-import dev.louisa.jam.hub.domain.shared.AuditableEntity;
-import dev.louisa.jam.hub.domain.shared.EmailAddress;
-import dev.louisa.jam.hub.domain.shared.Guard;
+import dev.louisa.jam.hub.domain.common.AuditableEntity;
+import dev.louisa.jam.hub.domain.common.EmailAddress;
+import dev.louisa.jam.hub.domain.common.Guard;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
