@@ -27,7 +27,7 @@ public abstract class AggregateRoot<T extends Id> implements AuditableEntity {
     private T id;
 
     @Transient
-    private final List<DomainEvent<T>> domainEvents = new ArrayList<>();
+    private final List<DomainEvent> domainEvents = new ArrayList<>();
 
     @CreationTimestamp
     private Instant recordCreationDateTime;
@@ -35,4 +35,14 @@ public abstract class AggregateRoot<T extends Id> implements AuditableEntity {
     @UpdateTimestamp
     private Instant recordModificationDateTime;
     private UUID recordModificationUser;
+
+    protected void recordDomainEvent(DomainEvent event) {
+        domainEvents.add(event);
+    }
+
+    public List<DomainEvent> pullDomainEvents() {
+        var events = new ArrayList<>(domainEvents);
+        domainEvents.clear();
+        return events;
+    }
 }

@@ -12,7 +12,7 @@ import java.util.UUID;
 public record UserVerifiedEvent(
         UserRegistrationId userRegistrationId,
         EmailAddress emailAddress
-) implements DomainEvent<UserRegistrationId> {
+) implements DomainEvent {
 
     @Override
     public UUID id() {
@@ -22,10 +22,5 @@ public record UserVerifiedEvent(
     @Override
     public Instant occurredOn() {
         return Instant.now();
-    }
-
-    @Override
-    public UserRegistrationId aggregateId() {
-        return userRegistrationId;
     }
 }

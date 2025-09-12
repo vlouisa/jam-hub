@@ -1,6 +1,7 @@
 package dev.louisa.jam.hub.domain.registration;
 
 import dev.louisa.jam.hub.domain.common.AggregateRoot;
+import dev.louisa.jam.hub.domain.registration.event.UserVerifiedEvent;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.common.Guard;
@@ -31,7 +32,7 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
 
     @Column
     private UUID otp;
-    
+
     @Column
     private Instant verifiedAt;
     @Column
@@ -56,7 +57,11 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
 
         this.verifiedAt = Instant.now();
 
-        // TODO: Publish domain event
+        recordDomainEvent(
+                UserVerifiedEvent.builder()
+                        .userRegistrationId(this.getId())
+                        .emailAddress(this.getEmail())
+                        .build());
     }
 
     public boolean isVerified() {
