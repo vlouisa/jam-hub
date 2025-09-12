@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.domain.registration;
 
+import dev.louisa.jam.hub.domain.registration.UserRegistration.UserRegistrationBuilder;
 import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class UserRegistrationFactory {
     }
 
     // Random registration with customization
-    public UserRegistration create(Consumer<UserRegistration.UserRegistrationBuilder> customizer) {
-        UserRegistration.UserRegistrationBuilder builder = baseBuilder();
+    public UserRegistration create(Consumer<UserRegistrationBuilder<?, ?>> customizer) {
+        UserRegistrationBuilder<?, ?> builder = baseBuilder();
         customizer.accept(builder);
         return builder.build();
     }
@@ -52,7 +53,7 @@ public class UserRegistrationFactory {
             return repository.save(UserRegistrationFactory.this.create());
         }
 
-        public UserRegistration create(Consumer<UserRegistration.UserRegistrationBuilder> customizer) {
+        public UserRegistration create(Consumer<UserRegistrationBuilder<?, ?>> customizer) {
             return repository.save(UserRegistrationFactory.this.create(customizer));
         }
         
@@ -68,7 +69,7 @@ public class UserRegistrationFactory {
     }
     
     // Base builder
-    private UserRegistration.UserRegistrationBuilder baseBuilder() {
+    private UserRegistrationBuilder<?, ?> baseBuilder() {
         return UserRegistration.builder()
                 .id(UserRegistrationId.generate())
                 .otp(UUID.randomUUID())

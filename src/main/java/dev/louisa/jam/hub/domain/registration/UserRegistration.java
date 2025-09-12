@@ -1,13 +1,12 @@
 package dev.louisa.jam.hub.domain.registration;
 
+import dev.louisa.jam.hub.domain.common.AggregateRoot;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
-import dev.louisa.jam.hub.domain.common.AuditableEntity;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.common.Guard;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -21,13 +20,8 @@ import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistration
 @Table(name = "jhb_user_registrations")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UserRegistration implements AuditableEntity {
-
-    @EmbeddedId
-    @EqualsAndHashCode.Include
-    private UserRegistrationId id;
+@SuperBuilder
+public class UserRegistration extends AggregateRoot<UserRegistrationId> {
 
     @Embedded
     @AttributeOverrides({
@@ -44,13 +38,6 @@ public class UserRegistration implements AuditableEntity {
     private Instant expiredAt;
     @Column
     private Instant revokedAt;
-
-    @CreationTimestamp
-    private Instant recordCreationDateTime;
-    private UUID recordCreationUser;
-    @UpdateTimestamp
-    private Instant recordModificationDateTime;
-    private UUID recordModificationUser;
 
     public static UserRegistration createNewRegistration(EmailAddress emailAddress) {
         return UserRegistration.builder()

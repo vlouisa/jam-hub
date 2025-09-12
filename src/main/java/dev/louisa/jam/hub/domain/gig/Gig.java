@@ -2,19 +2,17 @@ package dev.louisa.jam.hub.domain.gig;
 
 import dev.louisa.jam.hub.application.gig.GigDetails;
 import dev.louisa.jam.hub.domain.band.BandId;
+import dev.louisa.jam.hub.domain.common.AggregateRoot;
 import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainException;
 import dev.louisa.jam.hub.domain.gig.persistence.DurationConverter;
 import dev.louisa.jam.hub.domain.gig.persistence.GigStatusConverter;
 import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.domain.common.Address;
-import dev.louisa.jam.hub.domain.common.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -29,14 +27,9 @@ import static dev.louisa.jam.hub.domain.gig.exceptions.GigDomainError.*;
 @Table(name = "jhb_gigs")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Gig implements AuditableEntity {
-
-    @EmbeddedId
-    @EqualsAndHashCode.Include
-    private GigId id;
-
+@SuperBuilder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+public class Gig extends AggregateRoot<GigId> {
     private String title;
 
     @Embedded
@@ -66,14 +59,6 @@ public class Gig implements AuditableEntity {
     @OneToMany(mappedBy = "gig", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private final List<GigRoleAssignment> assignments = new ArrayList<>();
-
-    @CreationTimestamp
-    private Instant recordCreationDateTime;
-    private UUID recordCreationUser;
-    @UpdateTimestamp
-    private Instant recordModificationDateTime;
-    private UUID recordModificationUser;
-
 
     // --- `Domain Behaviour methods ---
     public static Gig planNewGig(BandId bandId, GigDetails details) {

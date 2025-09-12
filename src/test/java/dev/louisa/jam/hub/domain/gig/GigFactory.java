@@ -25,8 +25,8 @@ public class GigFactory {
         return create(g -> {});
     }
 
-    public Gig create(Consumer<Gig.GigBuilder> customizer) {
-        Gig.GigBuilder builder = baseBuilder();
+    public Gig create(Consumer<Gig.GigBuilder<?, ?>> customizer) {
+        Gig.GigBuilder<?, ?> builder = baseBuilder();
         customizer.accept(builder);
         return builder.build();
     }
@@ -35,7 +35,7 @@ public class GigFactory {
         return createWithAssignments(assignmentCount, g -> {});
     }
 
-    public Gig createWithAssignments(int assignmentCount, Consumer<Gig.GigBuilder> customizer) {
+    public Gig createWithAssignments(int assignmentCount, Consumer<Gig.GigBuilder<?, ?>> customizer) {
         Gig gig = create(customizer);
         List<GigRoleAssignment> assignments = randomAssignments(assignmentCount);
         assignments.forEach(a -> gig.assignRole(UserId.fromUUID(a.getUserId()), a.getRole()));
@@ -58,7 +58,7 @@ public class GigFactory {
             return repository.save(GigFactory.this.create());
         }
 
-        public Gig create(Consumer<Gig.GigBuilder> customizer) {
+        public Gig create(Consumer<Gig.GigBuilder<?, ?>> customizer) {
             return repository.save(GigFactory.this.create(customizer));
         }
         
@@ -66,7 +66,7 @@ public class GigFactory {
             return repository.save(GigFactory.this.createWithAssignments(assignmentCount));
         }
         
-        public Gig createWithAssignments(int assignmentCount, Consumer<Gig.GigBuilder> customizer) {
+        public Gig createWithAssignments(int assignmentCount, Consumer<Gig.GigBuilder<?, ?>> customizer) {
             return repository.save(GigFactory.this.createWithAssignments(assignmentCount, customizer));
         }
     }
@@ -74,7 +74,7 @@ public class GigFactory {
     /**
      * Returns a pre-populated Gig builder with fake but valid data.
      */
-    public Gig.GigBuilder baseBuilder() {
+    public Gig.GigBuilder<?, ?> baseBuilder() {
         return Gig.builder()
                 .id(GigId.generate())
                 .title(faker.rockBand().name() + " Live")
