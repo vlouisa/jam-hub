@@ -1,8 +1,8 @@
 package dev.louisa.jam.hub.domain.gig;
 
 import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainException;
-import dev.louisa.jam.hub.domain.shared.Guard;
-import dev.louisa.jam.hub.domain.shared.Id;
+import dev.louisa.jam.hub.domain.common.Guard;
+import dev.louisa.jam.hub.domain.common.Id;
 import lombok.*;
 
 import java.util.UUID;

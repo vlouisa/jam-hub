@@ -1,13 +1,11 @@
 package dev.louisa.jam.hub.domain.band;
 
 import dev.louisa.jam.hub.domain.band.persistence.BandRoleConverter;
-import dev.louisa.jam.hub.domain.shared.AuditableEntity;
+import dev.louisa.jam.hub.domain.common.DomainEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -16,11 +14,9 @@ import java.util.UUID;
 @Table(name = "jhb_band_members")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class BandMember implements AuditableEntity {
-    @Id
-    private UUID id = UUID.randomUUID();
-
+@SuperBuilder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+public class BandMember extends DomainEntity {
     @Column(nullable = false)
     private UUID userId;
 
@@ -32,10 +28,4 @@ public class BandMember implements AuditableEntity {
     @JoinColumn(name = "band_id")
     private Band band;
     
-    @CreationTimestamp
-    private Instant recordCreationDateTime;
-    private UUID recordCreationUser;
-    @UpdateTimestamp
-    private Instant recordModificationDateTime;
-    private UUID recordModificationUser;
 }

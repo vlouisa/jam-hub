@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.domain.user;
 
-import dev.louisa.jam.hub.domain.shared.Guard;
-import dev.louisa.jam.hub.domain.shared.Id;
+import dev.louisa.jam.hub.domain.common.Guard;
+import dev.louisa.jam.hub.domain.common.Id;
 import dev.louisa.jam.hub.domain.user.exceptions.UserDomainException;
 import lombok.*;
 

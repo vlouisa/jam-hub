@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.interfaces.gig;
 
-import dev.louisa.jam.hub.domain.shared.Address;
+import dev.louisa.jam.hub.domain.common.Address;
 import lombok.Builder;
 
 @Builder

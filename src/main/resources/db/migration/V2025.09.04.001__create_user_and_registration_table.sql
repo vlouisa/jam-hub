@@ -11,7 +11,8 @@ CREATE TABLE jhb_users (
 
 CREATE TABLE jhb_user_registrations (
     id UUID PRIMARY KEY,
-    email VARCHAR(255) UNIQUE,
+    email VARCHAR(255),
+    otp UUID UNIQUE,
     verified_at TIMESTAMP,
     expired_at TIMESTAMP,
     revoked_at TIMESTAMP,

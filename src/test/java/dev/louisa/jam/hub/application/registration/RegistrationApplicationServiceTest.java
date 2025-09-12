@@ -1,5 +1,7 @@
 package dev.louisa.jam.hub.application.registration;
 
+import dev.louisa.jam.hub.domain.event.DomainEventPublisher;
+import dev.louisa.jam.hub.domain.registration.event.UserVerifiedEvent;
 import dev.louisa.jam.hub.testsupport.BaseApplicationTest;
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
@@ -26,13 +28,15 @@ class RegistrationApplicationServiceTest extends BaseApplicationTest {
     private UserRegistration registration;
     @Mock
     private UserRegistrationRepository userRegistrationRepository;
+    @Mock
+    private DomainEventPublisher publisher;
     
     
     private RegistrationApplicationService registrationApplicationService;
 
     @BeforeEach
     void setUp() {
-        registrationApplicationService = new RegistrationApplicationService(userRegistrationRepository);
+        registrationApplicationService = new RegistrationApplicationService(userRegistrationRepository, publisher);
     }
     
     @Test
@@ -45,6 +49,7 @@ class RegistrationApplicationServiceTest extends BaseApplicationTest {
 
         assertThat(registration.isVerified()).isTrue();
         verify(userRegistrationRepository).save(registration);
+        verify(publisher, times(1)).publish(any(UserVerifiedEvent.class));
     }
 
     @Test

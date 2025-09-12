@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.application.gig;
 
-import dev.louisa.jam.hub.domain.shared.Address;
+import dev.louisa.jam.hub.domain.common.Address;
 import net.datafaker.Faker;
 
 import java.time.Duration;

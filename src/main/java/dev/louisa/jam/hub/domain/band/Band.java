@@ -1,16 +1,13 @@
 package dev.louisa.jam.hub.domain.band;
 
+import dev.louisa.jam.hub.domain.common.AggregateRoot;
 import dev.louisa.jam.hub.domain.user.UserId;
-import dev.louisa.jam.hub.domain.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,13 +15,9 @@ import java.util.UUID;
 @Table(name = "jhb_bands")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Band implements AuditableEntity {
-
-    @EmbeddedId
-    @EqualsAndHashCode.Include
-    private BandId id;
+@SuperBuilder()
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+public class Band extends AggregateRoot<BandId>  {
 
     @Column(nullable = false)
     private String name;
@@ -32,13 +25,6 @@ public class Band implements AuditableEntity {
     @OneToMany(mappedBy = "band", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<BandMember> members = new ArrayList<>();
-
-    @CreationTimestamp
-    private Instant recordCreationDateTime;
-    private UUID recordCreationUser;
-    @UpdateTimestamp
-    private Instant recordModificationDateTime;
-    private UUID recordModificationUser;
     
     // Domain behavior
     public void addMember(BandMember member) {
