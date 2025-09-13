@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.infrastructure.event.listener;
+package dev.louisa.jam.hub.application.common;
 
 import dev.louisa.jam.hub.domain.common.DomainEvent;
 

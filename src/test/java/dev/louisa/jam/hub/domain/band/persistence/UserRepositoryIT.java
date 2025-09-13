@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static dev.louisa.jam.hub.testsupport.Factory.domain.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class BandRepositoryIT extends BaseIntegrationIT {
+class UserRepositoryIT extends BaseIntegrationIT {
     @Autowired
     private BandRepository bandRepository;
 

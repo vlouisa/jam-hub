@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.OTP_CODE_EXPIRED;
 import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.OTP_CODE_REVOKED;
+import static java.time.temporal.ChronoUnit.*;
 
 @Getter
 @Setter
@@ -46,7 +47,7 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
                 .id(UserRegistrationId.generate())
                 .email(emailAddress)
                 .otp(UUID.randomUUID())
-                .expiredAt(Instant.now().plusSeconds(15 * 60)) // OTP valid for 15 minutes
+                .expiredAt(Instant.now().plus(24, HOURS))
                 .build();
         
         registration.recordDomainEvent(RegistrationCreatedEvent.builder()

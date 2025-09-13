@@ -31,4 +31,12 @@ public class User extends AggregateRoot<UserId> {
             @AttributeOverride(name = "password", column = @Column(name = "password")),
     })
     private Password password;
+    
+    public static User createNewUser(EmailAddress email) {
+        return User.builder()
+                .id(UserId.generate())
+                .email(email)
+                .displayName(email.email())
+                .build();
+    }
 }
