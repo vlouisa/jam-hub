@@ -2,14 +2,14 @@ package dev.louisa.jam.hub.testsupport;
 
 import dev.louisa.jam.hub.exceptions.JamHubError;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
-import dev.louisa.jam.hub.testsupport.config.InterfaceLayerTestConfig;
+import dev.louisa.jam.hub.testsupport.config.InterfaceLayerITConfig;
 import dev.louisa.victor.mock.rest.MockRest;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,11 +18,8 @@ import java.util.List;
 @Tag("interface-layer")
 @Transactional
 @SpringBootTest
-@Import(InterfaceLayerTestConfig.class)
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:tc:postgresql:16.4-alpine:///databasename",
-        "spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver",
-})
+@ActiveProfiles("interface-it")
+@Import(InterfaceLayerITConfig.class)
 @AutoConfigureMockMvc
 public class BaseInterfaceIT {
     

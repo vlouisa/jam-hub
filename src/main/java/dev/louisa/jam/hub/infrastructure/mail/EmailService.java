@@ -1,8 +1,7 @@
 package dev.louisa.jam.hub.infrastructure.mail;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
+import dev.louisa.jam.hub.infrastructure.mail.exception.MailException;
+import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +9,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+
+import static dev.louisa.jam.hub.infrastructure.mail.exception.MailError.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,12 @@ public class EmailService {
         try {
             final MimeMessage message = createMessage(email, session);
             Transport.send(message);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            log.error("Error sending email: {} ", e.getMessage(), e);
+        } catch (AuthenticationFailedException e) {
+            throw new MailException(SMTP_AUTHENTICATION_ERROR, e);
+        } catch (MessagingException e) {
+            throw new MailException(SMTP_SENDER_ERROR, e);
+        } catch (UnsupportedEncodingException e) {
+            throw new MailException(SMTP_ERROR, e);
         }
     }
 

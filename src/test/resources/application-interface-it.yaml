@@ -1,0 +1,16 @@
+mail:
+  user: mail-pit-user
+  password: mail-pit-password
+  smtp:
+    host: localhost
+    port: 2525
+    auth: true
+    starttls:
+      enable: true
+    ssl:
+      protocol: TLSv1.2
+                  
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:16.4-alpine:///databasename
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver

@@ -6,10 +6,12 @@ import dev.louisa.victor.mock.rest.MockRest;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.web.servlet.MockMvc;
 
 @Configuration
-public class InterfaceLayerTestConfig {
+@Profile("interface-it")
+public class InterfaceLayerITConfig {
 
     @Bean
     public MockRest mockRest(MockMvc mockMvc, ObjectMapper mapper) {
