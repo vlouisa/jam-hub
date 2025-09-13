@@ -4,11 +4,6 @@ import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
 import dev.louisa.jam.hub.testsupport.BaseInterfaceIT;
-import dev.louisa.victor.mail.pit.api.MailPitApi;
-import dev.louisa.victor.mail.pit.docker.MailPitContainer;
-import dev.louisa.victor.mail.pit.model.MailPitResponse;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,23 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 
 class RegistrationControllerIT extends BaseInterfaceIT {
-    @Autowired
-    private MailPitContainer mailPitContainer;
     
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;
 
-    @BeforeEach
-    void setUp() {
-        mailPitContainer.start();
-    }
-    
-    @AfterEach
-    void tearDown() {
-        mailPitContainer.stop();
-    }
-    
-    
     @Test
     void shouldCreateUserRegistration() throws Exception {
         var userRegistrationId =
@@ -47,10 +29,6 @@ class RegistrationControllerIT extends BaseInterfaceIT {
                         .expectResponseStatus(CREATED)
                         .send()
                         .andReturn(UserRegistrationId.class);
-
-        final MailPitResponse response = MailPitApi.fetchMessages(mailPitContainer.baseUri());
-        
-        
         
         var retrievedRegistration = userRegistrationRepository.findById(userRegistrationId).orElseThrow();
         assertThat(retrievedRegistration.getEmail().email()).isEqualTo("guybrush.threepwood@lucas-arts.com");

@@ -2,8 +2,7 @@ package dev.louisa.jam.hub.testsupport;
 
 import dev.louisa.jam.hub.exceptions.JamHubError;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
-import dev.louisa.jam.hub.testsupport.config.MailPitTestConfiguration;
-import dev.louisa.jam.hub.testsupport.config.MockRestTestConfiguration;
+import dev.louisa.jam.hub.testsupport.config.InterfaceLayerTestConfig;
 import dev.louisa.victor.mock.rest.MockRest;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,10 @@ import java.util.List;
 @Tag("interface-layer")
 @Transactional
 @SpringBootTest
-@Import({MailPitTestConfiguration.class,MockRestTestConfiguration.class})
+@Import(InterfaceLayerTestConfig.class)
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:tc:postgresql:16.4-alpine:///databasename",
-        "spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver"
+        "spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver",
 })
 @AutoConfigureMockMvc
 public class BaseInterfaceIT {
