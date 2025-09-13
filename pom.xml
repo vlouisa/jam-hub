@@ -18,6 +18,11 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
             <id>github-vlouisa</id>
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/vlouisa/mock-rest</url>
@@ -31,6 +36,7 @@
         <flyway-core.version>10.15.2</flyway-core.version>
         <flyway-database-postgresql.version>10.14.0</flyway-database-postgresql.version>
         <mock-rest.version>0.5.3</mock-rest.version>
+        <mail-pit.version>0.0.1-SNAPSHOT</mail-pit.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <wiremock.version>3.5.2</wiremock.version>
     </properties>
@@ -135,6 +141,12 @@
             <version>${mock-rest.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>dev.louisa.victor</groupId>
+            <artifactId>mail-pit</artifactId>
+            <version>${mail-pit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -145,5 +157,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
