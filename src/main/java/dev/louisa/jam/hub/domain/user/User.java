@@ -2,7 +2,6 @@ package dev.louisa.jam.hub.domain.user;
 
 import dev.louisa.jam.hub.domain.common.AggregateRoot;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
-import dev.louisa.jam.hub.domain.common.Password;
 import dev.louisa.jam.hub.domain.user.event.UserCreatedEvent;
 import jakarta.persistence.*;
 import lombok.*;
