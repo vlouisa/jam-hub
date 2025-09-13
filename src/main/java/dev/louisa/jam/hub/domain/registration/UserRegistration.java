@@ -1,6 +1,7 @@
 package dev.louisa.jam.hub.domain.registration;
 
 import dev.louisa.jam.hub.domain.common.AggregateRoot;
+import dev.louisa.jam.hub.domain.registration.event.RegistrationCreatedEvent;
 import dev.louisa.jam.hub.domain.registration.event.UserVerifiedEvent;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
@@ -41,12 +42,19 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
     private Instant revokedAt;
 
     public static UserRegistration createNewRegistration(EmailAddress emailAddress) {
-        return UserRegistration.builder()
+        final UserRegistration registration = UserRegistration.builder()
                 .id(UserRegistrationId.generate())
                 .email(emailAddress)
                 .otp(UUID.randomUUID())
                 .expiredAt(Instant.now().plusSeconds(15 * 60)) // OTP valid for 15 minutes
                 .build();
+        
+        registration.recordDomainEvent(RegistrationCreatedEvent.builder()
+                .emailAddress(registration.getEmail())
+                .otp(registration.getOtp())
+                .build());
+        
+        return registration;
     }
 
     public void verify() {

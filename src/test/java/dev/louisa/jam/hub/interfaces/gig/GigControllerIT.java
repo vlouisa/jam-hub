@@ -6,10 +6,10 @@ import dev.louisa.jam.hub.testsupport.BaseInterfaceIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static dev.louisa.jam.hub.infrastructure.exceptions.security.TokenCreator.*;
-import static dev.louisa.jam.hub.infrastructure.exceptions.security.TokenCustomizer.*;
 import static dev.louisa.jam.hub.testsupport.Factory.domain.*;
 import static dev.louisa.jam.hub.testsupport.Factory.web.*;
+import static dev.louisa.jam.hub.testsupport.security.TokenCreator.create;
+import static dev.louisa.jam.hub.testsupport.security.TokenCustomizer.withSubject;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 

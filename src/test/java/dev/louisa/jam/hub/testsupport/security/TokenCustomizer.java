@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.infrastructure.exceptions.security;
+package dev.louisa.jam.hub.testsupport.security;
 
 import com.auth0.jwt.JWTCreator;
 
