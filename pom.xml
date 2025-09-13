@@ -37,7 +37,7 @@
         <flyway-core.version>10.15.2</flyway-core.version>
         <flyway-database-postgresql.version>10.14.0</flyway-database-postgresql.version>
         <mock-rest.version>0.5.3</mock-rest.version>
-        <mail-pit.version>0.0.1-SNAPSHOT</mail-pit.version>
+        <mail-pit.version>0.1.0</mail-pit.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <wiremock.version>3.5.2</wiremock.version>
     </properties>

@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.infrastructure.exceptions.security;
+package dev.louisa.jam.hub.testsupport.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
@@ -8,7 +8,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.time.Instant;
 import java.util.UUID;
 
-import static dev.louisa.jam.hub.infrastructure.exceptions.security.TokenCustomizer.withExpires;
+import static dev.louisa.jam.hub.testsupport.security.TokenCustomizer.withExpires;
 import static dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReader.readPrivateKeyFromFile;
 import static java.time.temporal.ChronoUnit.MINUTES;
 

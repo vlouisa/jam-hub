@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.OTP_CODE_EXPIRED;
 import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.OTP_CODE_REVOKED;
-import static dev.louisa.jam.hub.infrastructure.exceptions.security.TokenCreator.*;
 import static dev.louisa.jam.hub.testsupport.Factory.domain.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
