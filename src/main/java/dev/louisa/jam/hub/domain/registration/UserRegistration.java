@@ -49,12 +49,13 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
                 .otp(UUID.randomUUID())
                 .expiredAt(Instant.now().plus(24, HOURS))
                 .build();
-        
-        registration.recordDomainEvent(RegistrationCreatedEvent.builder()
-                .emailAddress(registration.getEmail())
-                .otp(registration.getOtp())
-                .build());
-        
+
+        registration.recordDomainEvent(
+                RegistrationCreatedEvent.builder()
+                        .emailAddress(registration.getEmail())
+                        .otp(registration.getOtp())
+                        .build());
+
         return registration;
     }
 
@@ -76,7 +77,7 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
     public boolean isVerified() {
         return this.verifiedAt != null;
     }
-    
+
     private boolean registrationRevoked() {
         return this.revokedAt != null;
     }

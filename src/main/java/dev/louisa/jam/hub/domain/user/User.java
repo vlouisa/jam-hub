@@ -3,6 +3,7 @@ package dev.louisa.jam.hub.domain.user;
 import dev.louisa.jam.hub.domain.common.AggregateRoot;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.common.Password;
+import dev.louisa.jam.hub.domain.user.event.UserCreatedEvent;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -31,12 +32,20 @@ public class User extends AggregateRoot<UserId> {
             @AttributeOverride(name = "password", column = @Column(name = "password")),
     })
     private Password password;
-    
+
     public static User createNewUser(EmailAddress email) {
-        return User.builder()
+        final User user = User.builder()
                 .id(UserId.generate())
                 .email(email)
                 .displayName(email.email())
                 .build();
+
+        user.recordDomainEvent(
+                UserCreatedEvent.builder()
+                        .userId(user.getId())
+                        .emailAddress(user.getEmail())
+                        .build());
+
+        return user;
     }
 }
