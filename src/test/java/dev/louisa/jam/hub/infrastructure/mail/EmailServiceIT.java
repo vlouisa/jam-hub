@@ -6,7 +6,6 @@ import dev.louisa.jam.hub.infrastructure.mail.exception.MailException;
 import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureIT;
 import dev.louisa.victor.mail.pit.api.MailPitApi;
 import dev.louisa.victor.mail.pit.api.MailPitChaosTrigger;
-import dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert;
 import dev.louisa.victor.mail.pit.docker.MailPitContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert.mailPitMessages;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 class EmailServiceIT extends BaseInfraStructureIT {
@@ -58,17 +58,15 @@ class EmailServiceIT extends BaseInfraStructureIT {
     void shouldSendMail() throws JsonProcessingException {
         emailService.sendEmail(EMAIL);
 
-        final var response = MailPitApi.fetchMessages(mailPitContainer.baseUri());
-        MailPitResponseAssert.assertThatMailPitResponse(response)
-                .numberOfMessages().isEqualTo(1);
-        MailPitResponseAssert.assertThatMailPitResponse(response)
+        mailPitMessages()
+                .fromBaseUri(mailPitContainer.baseUri())
+                .assertThat()
                 .message(1)
                 .hasSender("elaine.marley@mêléeisland.com")
                 .hasRecipient("guybrush.threepwood@lechuck.com")
                 .hasSubject("Monkey Island II, the best game ever")
                 .bodySnippetContains("Ahoy Guybrush")
-                .bodySnippetContains("Stay swashbuckling,")
-        ;
+                .bodySnippetContains("Stay swashbuckling,");
     }
 
     @ParameterizedTest

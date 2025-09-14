@@ -11,7 +11,6 @@ import dev.louisa.jam.hub.domain.user.User;
 import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
 import dev.louisa.jam.hub.testsupport.base.BaseApplicationIT;
 import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
-import dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert;
 import dev.louisa.victor.mail.pit.docker.MailPitContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +30,7 @@ import static dev.louisa.jam.hub.testsupport.Factory.domain.aUser;
 import static dev.louisa.jam.hub.testsupport.Factory.domain.aUserRegistration;
 import static dev.louisa.jam.hub.testsupport.asserts.RegistrationAssert.assertThatRegistration;
 import static dev.louisa.jam.hub.testsupport.asserts.UserAssert.assertThatUser;
-import static dev.louisa.victor.mail.pit.api.MailPitApi.*;
+import static dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert.*;
 import static java.time.Instant.now;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
@@ -40,7 +39,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 class RegistrationApplicationServiceIT extends BaseApplicationIT {
     @Autowired
     private MailPitContainer mailPitContainer;
-    
+
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;
     @Autowired
@@ -57,7 +56,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
     void setUp() {
         mailPitContainer.start();
     }
-    
+
     @AfterEach
     void tearDown() {
         mailPitContainer.stop();
@@ -76,11 +75,10 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
                 .hasOtp(registration.getOtp())
                 .hasExpiryAfter(now());
 
-
-        awaitMessages(1);
-
-        var response = fetchMessages(mailPitContainer.baseUri());
-        MailPitResponseAssert.assertThatMailPitResponse(response)        
+        mailPitMessages()
+                .fromBaseUri(mailPitContainer.baseUri())
+                .awaitMessages(1)
+                .assertThat()
                 .message(1)
                 .hasRecipient("kate.capsize@mi-2.nl")
                 .hasSubject("Welcome to JAM Hub! Please verify your email address");
@@ -122,13 +120,13 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
                 .hasEmail(registration.getEmail());
 
 
-        awaitMessages(1);
-        var response = fetchMessages(mailPitContainer.baseUri());
-        MailPitResponseAssert.assertThatMailPitResponse(response)
+        mailPitMessages()
+                .fromBaseUri(mailPitContainer.baseUri())
+                .awaitMessages(1)
+                .assertThat()
                 .message(1)
                 .hasRecipient(registration.getEmail().email())
                 .hasSubject("Welcome to JAM Hub! Your account has been created");
-
     }
 
     @Test
