@@ -2,6 +2,7 @@ package dev.louisa.jam.hub.interfaces.registration;
 
 import dev.louisa.jam.hub.application.registration.RegistrationApplicationService;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
+import dev.louisa.jam.hub.domain.registration.VerifyRegistrationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,9 @@ public class RegistrationController {
         return ResponseEntity.status(CREATED).body(userRegistrationId);
     }
 
-    @PostMapping("/{otp}/verify")
+    @PostMapping("/{registrationId}/verify")
     @ResponseStatus(NO_CONTENT)
-    public void verify(@PathVariable UUID otp) {
-        registrationApplicationService.verifyOtp(otp);
+    public void verify(@PathVariable UUID registrationId, @RequestBody VerifyRegistrationRequest request) {
+        registrationApplicationService.verifyOtp(UserRegistrationId.fromUUID(registrationId), request.otp(), request.password());
     }
 }

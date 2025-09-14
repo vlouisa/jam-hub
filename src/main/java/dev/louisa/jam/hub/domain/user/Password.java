@@ -1,9 +1,11 @@
 package dev.louisa.jam.hub.domain.user;
 
+import lombok.Builder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Objects;
 
+@Builder
 public record Password(String hash) {
 
     public Password {

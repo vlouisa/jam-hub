@@ -2,7 +2,7 @@ package dev.louisa.jam.hub.infrastructure.exceptions;
 
 import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.domain.user.exceptions.UserDomainException;
-import dev.louisa.jam.hub.testsupport.BaseInfraStructureTest;
+import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureTest;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
 import dev.louisa.jam.hub.testsupport.LoggerSpy;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static ch.qos.logback.classic.Level.*;
 import static dev.louisa.jam.hub.domain.user.exceptions.UserDomainError.*;
-import static dev.louisa.jam.hub.testsupport.ErrorResponseAssert.*;
+import static dev.louisa.jam.hub.testsupport.asserts.ErrorResponseAssert.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 

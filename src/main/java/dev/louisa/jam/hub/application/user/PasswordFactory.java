@@ -11,7 +11,7 @@ public class PasswordFactory {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Password fromPlainText(String plainText) {
+    public Password from(String plainText) {
         applyPolicy(plainText);
         return new Password(passwordEncoder.encode(plainText));
     }

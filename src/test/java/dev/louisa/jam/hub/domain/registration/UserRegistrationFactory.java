@@ -35,7 +35,7 @@ public class UserRegistrationFactory {
     }
 
     public UserRegistration createExpired() {
-        return create(registration -> registration.expiredAt(Instant.now().minusSeconds(3600)));
+        return create(registration -> registration.expiresAt(Instant.now().minusSeconds(3600)));
     }
     
     public Persistent usingRepository(UserRegistrationRepository repository) {
@@ -75,7 +75,7 @@ public class UserRegistrationFactory {
                 .otp(UUID.randomUUID())
                 .email(new EmailAddress(faker.internet().emailAddress()))
                 .verifiedAt(null)
-                .expiredAt(null)
+                .expiresAt(null)
                 .revokedAt(null)
                 .recordCreationDateTime(Instant.now())
                 .recordCreationUser(UUID.randomUUID())

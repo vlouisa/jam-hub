@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.testsupport;
+package dev.louisa.jam.hub.testsupport.asserts;
 
 import dev.louisa.jam.hub.application.gig.GigDetails;
 import dev.louisa.jam.hub.domain.band.BandId;

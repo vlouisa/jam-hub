@@ -2,7 +2,7 @@ package dev.louisa.jam.hub.domain.registration;
 
 import dev.louisa.jam.hub.domain.common.AggregateRoot;
 import dev.louisa.jam.hub.domain.registration.event.RegistrationCreatedEvent;
-import dev.louisa.jam.hub.domain.registration.event.UserVerifiedEvent;
+import dev.louisa.jam.hub.domain.registration.event.RegistrationVerifiedEvent;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.common.Guard;
@@ -13,8 +13,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.Instant;
 import java.util.UUID;
 
-import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.OTP_CODE_EXPIRED;
-import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.OTP_CODE_REVOKED;
+import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.*;
 import static java.time.temporal.ChronoUnit.*;
 
 @Getter
@@ -38,7 +37,7 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
     @Column
     private Instant verifiedAt;
     @Column
-    private Instant expiredAt;
+    private Instant expiresAt;
     @Column
     private Instant revokedAt;
 
@@ -47,11 +46,12 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
                 .id(UserRegistrationId.generate())
                 .email(emailAddress)
                 .otp(UUID.randomUUID())
-                .expiredAt(Instant.now().plus(24, HOURS))
+                .expiresAt(Instant.now().plus(24, HOURS))
                 .build();
 
         registration.recordDomainEvent(
                 RegistrationCreatedEvent.builder()
+                        .userRegistrationId(registration.getId())
                         .emailAddress(registration.getEmail())
                         .otp(registration.getOtp())
                         .build());
@@ -59,22 +59,22 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
         return registration;
     }
 
-    public void verify() {
-        Guard.when(registrationExpired())
-                .thenThrow(() -> new UserRegistrationDomainException(OTP_CODE_EXPIRED))
-                .orWhen(registrationRevoked())
-                .thenThrow(() -> new UserRegistrationDomainException(OTP_CODE_REVOKED));
+    public void verifyWithOtp(UUID otp) {
+        Guard.when(registrationExpired()).thenThrow(() -> new UserRegistrationDomainException(OTP_CODE_EXPIRED))
+                .orWhen(registrationRevoked()).thenThrow(() -> new UserRegistrationDomainException(OTP_CODE_REVOKED))
+                .orWhen(!otp.equals(this.otp)).thenThrow(() -> new UserRegistrationDomainException(OTP_CODE_DOES_NOT_MATCH))
+                .orWhen(isVerified()).thenThrow(() -> new UserRegistrationDomainException(OTP_CODE_ALREADY_VERIFIED));
 
         this.verifiedAt = Instant.now();
 
         recordDomainEvent(
-                UserVerifiedEvent.builder()
+                RegistrationVerifiedEvent.builder()
                         .userRegistrationId(this.getId())
                         .emailAddress(this.getEmail())
                         .build());
     }
 
-    public boolean isVerified() {
+    private boolean isVerified() {
         return this.verifiedAt != null;
     }
 
@@ -83,6 +83,6 @@ public class UserRegistration extends AggregateRoot<UserRegistrationId> {
     }
 
     private boolean registrationExpired() {
-        return this.expiredAt != null && Instant.now().isAfter(this.expiredAt);
+        return this.expiresAt != null && Instant.now().isAfter(this.expiresAt);
     }
 }

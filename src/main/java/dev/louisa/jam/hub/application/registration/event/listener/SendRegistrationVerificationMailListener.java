@@ -1,8 +1,8 @@
-package dev.louisa.jam.hub.application.registration;
+package dev.louisa.jam.hub.application.registration.event.listener;
 
-import dev.louisa.jam.hub.application.common.DomainEventListener;
-import dev.louisa.jam.hub.domain.user.event.UserCreatedEvent;
+import dev.louisa.jam.hub.domain.registration.event.RegistrationCreatedEvent;
 import dev.louisa.jam.hub.infrastructure.aop.AsyncEventListener;
+import dev.louisa.jam.hub.application.common.DomainEventListener;
 import dev.louisa.jam.hub.infrastructure.mail.Email;
 import dev.louisa.jam.hub.infrastructure.mail.EmailAddress;
 import dev.louisa.jam.hub.infrastructure.mail.EmailService;
@@ -13,13 +13,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SendPasswordSetupMailListener implements DomainEventListener<UserCreatedEvent> {
+public class SendRegistrationVerificationMailListener implements DomainEventListener<RegistrationCreatedEvent> {
     private final EmailService emailService;
 
 
     @AsyncEventListener
-    public void on(UserCreatedEvent event) {
-        log.info("Sending password setup e-mail [user-id={}] to '{}'", event.userId(), event.emailAddress().email());
+    public void on(RegistrationCreatedEvent event) {
+        log.info("Sending registration verification e-mail [registration-id={}, otp={}] to '{}'", 
+                event.userRegistrationId().toValue(),
+                event.otp(), 
+                event.emailAddress().email());
         emailService.sendEmail(
                 Email.builder()
                         .from(
@@ -33,15 +36,16 @@ public class SendPasswordSetupMailListener implements DomainEventListener<UserCr
                                         .personal(event.emailAddress().email())
                                         .build()
                         )
-                        .subject("Please set up your password for JAM Hub")
+                        .subject("Welcome to JAM Hub! Please verify your email address")
                         .body("""
                                 <p>Dear user,</p>
-                                <p>Welcome to JAM Hub! Your account has been created successfully.</p>
-                                <p>Please click this link to set up your password and complete your registration:</p>
-                                <h2><a href="https://jam-hub.test/set-password?userId=%s">Set Up Password</a></h2>
-                                <p>If you did not request this, please ignore this email.</p>
+                                <p>Thank you for registering at JAM Hub!</p>
+                                <p>Please use the following One-Time Password (OTP) to verify your email address:</p>
+                                <p>registration-id: %s</p>
+                                <p>otp: %s</p>
+                                <p>This OTP is valid for 24 hours. If you did not request this, please ignore this email.</p>
                                 <p>Best regards,<br/>The JAM Hub Team</p>
-                                """.formatted(event.userId()))
+                                """.formatted(event.userRegistrationId().toValue(), event.otp()))
                         .build()
 
         );

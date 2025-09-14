@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.testsupport;
+package dev.louisa.jam.hub.testsupport.base;
 
 import dev.louisa.jam.hub.exceptions.JamHubError;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;

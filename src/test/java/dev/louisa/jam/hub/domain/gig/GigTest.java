@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.domain.gig;
 
 import dev.louisa.jam.hub.application.gig.GigDetails;
-import dev.louisa.jam.hub.testsupport.BaseDomainTest;
+import dev.louisa.jam.hub.testsupport.base.BaseDomainTest;
 import dev.louisa.jam.hub.domain.gig.exceptions.GigDomainException;
 import dev.louisa.jam.hub.domain.common.Address;
 import dev.louisa.jam.hub.domain.user.UserId;

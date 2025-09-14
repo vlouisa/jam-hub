@@ -3,7 +3,7 @@ package dev.louisa.jam.hub.infrastructure.mail;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.louisa.jam.hub.infrastructure.mail.exception.MailError;
 import dev.louisa.jam.hub.infrastructure.mail.exception.MailException;
-import dev.louisa.jam.hub.testsupport.BaseInfraStructureIT;
+import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureIT;
 import dev.louisa.victor.mail.pit.api.MailPitApi;
 import dev.louisa.victor.mail.pit.api.MailPitChaosTrigger;
 import dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert;

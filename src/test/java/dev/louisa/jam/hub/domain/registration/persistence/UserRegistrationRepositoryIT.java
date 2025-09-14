@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.registration.persistence;
 
-import dev.louisa.jam.hub.testsupport.BaseIntegrationIT;
+import dev.louisa.jam.hub.testsupport.base.BaseIntegrationIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +20,7 @@ class UserRegistrationRepositoryIT extends BaseIntegrationIT {
         var retrieved = userRegistrationRepository.findById(registration.getId()).orElseThrow();
         assertThat(retrieved).isEqualTo(registration);
         assertThat(retrieved.getVerifiedAt()).isNull();
-        assertThat(retrieved.getExpiredAt()).isNotNull();
+        assertThat(retrieved.getExpiresAt()).isNotNull();
         assertThat(retrieved.getRevokedAt()).isNull();
     }
 
@@ -33,7 +33,7 @@ class UserRegistrationRepositoryIT extends BaseIntegrationIT {
         var retrieved = userRegistrationRepository.findById(registration.getId()).orElseThrow();
         assertThat(retrieved).isEqualTo(registration);
         assertThat(retrieved.getVerifiedAt()).isNull();
-        assertThat(retrieved.getExpiredAt()).isNull();
+        assertThat(retrieved.getExpiresAt()).isNull();
         assertThat(retrieved.getRevokedAt()).isNull();
     }
 }

@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Builder
-public record UserVerifiedEvent(
+public record RegistrationVerifiedEvent(
         UserRegistrationId userRegistrationId,
         EmailAddress emailAddress
 ) implements DomainEvent {

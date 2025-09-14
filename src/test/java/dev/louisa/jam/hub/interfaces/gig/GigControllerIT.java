@@ -2,7 +2,7 @@ package dev.louisa.jam.hub.interfaces.gig;
 
 import dev.louisa.jam.hub.domain.band.persistence.BandRepository;
 import dev.louisa.jam.hub.domain.gig.GigId;
-import dev.louisa.jam.hub.testsupport.BaseInterfaceIT;
+import dev.louisa.jam.hub.testsupport.base.BaseInterfaceIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

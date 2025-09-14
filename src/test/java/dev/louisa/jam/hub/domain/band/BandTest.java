@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.band;
 
-import dev.louisa.jam.hub.testsupport.BaseDomainTest;
+import dev.louisa.jam.hub.testsupport.base.BaseDomainTest;
 import dev.louisa.jam.hub.domain.user.UserId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

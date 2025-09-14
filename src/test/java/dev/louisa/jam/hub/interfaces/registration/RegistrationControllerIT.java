@@ -1,16 +1,18 @@
 package dev.louisa.jam.hub.interfaces.registration;
 
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
+import dev.louisa.jam.hub.domain.registration.VerifyRegistrationRequest;
 import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
-import dev.louisa.jam.hub.testsupport.BaseInterfaceIT;
+import dev.louisa.jam.hub.testsupport.base.BaseInterfaceIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.OTP_CODE_EXPIRED;
-import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.OTP_CODE_REVOKED;
+import java.util.UUID;
+
+import static dev.louisa.jam.hub.application.exceptions.ApplicationError.*;
+import static dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainError.*;
 import static dev.louisa.jam.hub.testsupport.Factory.domain.*;
-import static dev.louisa.jam.hub.testsupport.security.TokenCreator.create;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 
@@ -40,7 +42,11 @@ class RegistrationControllerIT extends BaseInterfaceIT {
                 .usingRepository(userRegistrationRepository)
                 .create();
 
-        api.post("/api/v1/registrations/{registrationId}/verify", registration.getOtp())
+        api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
+                .body(VerifyRegistrationRequest.builder()
+                        .otp(registration.getOtp())
+                        .password("A_strong_password1!")
+                        .build())
                 .expectResponseStatus(NO_CONTENT)
                 .send();
         
@@ -49,18 +55,35 @@ class RegistrationControllerIT extends BaseInterfaceIT {
     }
 
     @Test
-    void shouldRespondInIdempotentWayWhenUserRegistrationAlreadyVerified() throws Exception {
+    void shouldRespondNotFoundWhenUserRegistrationDoesNotExist() throws Exception {
+        var response = api.post("/api/v1/registrations/{registrationId}/verify",  UUID.randomUUID())
+                .body(VerifyRegistrationRequest.builder()
+                        .otp(UUID.randomUUID())
+                        .password("A_strong_password1!")
+                        .build())
+                .expectResponseStatus(NOT_FOUND)
+                .send()
+                .andReturn(ErrorResponse.class);
+        
+        assertThat(response).isEqualTo(errorResponse(ENTITY_NOT_FOUND));
+    }
+
+    @Test
+    void shouldRespondWithConflictWhenUserRegistrationAlreadyVerified() throws Exception {
         var registration = aUserRegistration
                 .usingRepository(userRegistrationRepository)
                 .createVerified();
 
-        api.post("/api/v1/registrations/{registrationId}/verify", registration.getOtp())
-                .withJwt(create().aDefaultToken())
-                .expectResponseStatus(NO_CONTENT)
-                .send();
-
-        var retrievedRegistration = userRegistrationRepository.findById(registration.getId()).orElseThrow();
-        assertThat(retrievedRegistration.getVerifiedAt()).isEqualTo(registration.getVerifiedAt());
+        var response = api.post("/api/v1/registrations/{registrationId}/verify",  registration.getId().toValue())
+                .body(VerifyRegistrationRequest.builder()
+                        .otp(registration.getOtp())
+                        .password("A_strong_password1!")
+                        .build())
+                .expectResponseStatus(CONFLICT)
+                .send()
+                .andReturn(ErrorResponse.class);
+        
+        assertThat(response).isEqualTo(errorResponse(OTP_CODE_ALREADY_VERIFIED));
     }
 
     @Test
@@ -69,8 +92,11 @@ class RegistrationControllerIT extends BaseInterfaceIT {
                 .usingRepository(userRegistrationRepository)
                 .createExpired();
 
-        var response = api.post("/api/v1/registrations/{registrationId}/verify", registration.getOtp())
-                .withJwt(create().aDefaultToken())
+        var response = api.post("/api/v1/registrations/{registrationId}/verify",  registration.getId().toValue())
+                .body(VerifyRegistrationRequest.builder()
+                        .otp(registration.getOtp())
+                        .password("A_strong_password1!")
+                        .build())
                 .expectResponseStatus(BAD_REQUEST)
                 .send()
                 .andReturn(ErrorResponse.class);
@@ -84,8 +110,11 @@ class RegistrationControllerIT extends BaseInterfaceIT {
                 .usingRepository(userRegistrationRepository)
                 .createRevoked();
 
-        var response = api.post("/api/v1/registrations/{registrationId}/verify", registration.getOtp())
-                .withJwt(create().aDefaultToken())
+        var response = api.post("/api/v1/registrations/{registrationId}/verify", registration.getId().toValue())
+                .body(VerifyRegistrationRequest.builder()
+                        .otp(registration.getOtp())
+                        .password("A_strong_password1!")
+                        .build())
                 .expectResponseStatus(BAD_REQUEST)
                 .send()
                 .andReturn(ErrorResponse.class);

@@ -2,7 +2,7 @@ package dev.louisa.jam.hub.domain;
 
 import dev.louisa.jam.hub.domain.common.Id;
 import dev.louisa.jam.hub.exceptions.JamHubException;
-import dev.louisa.jam.hub.testsupport.BaseDomainTest;
+import dev.louisa.jam.hub.testsupport.base.BaseDomainTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;

@@ -1,8 +1,8 @@
 package dev.louisa.jam.hub.application.registration.event.listener;
 
-import dev.louisa.jam.hub.domain.registration.event.RegistrationCreatedEvent;
-import dev.louisa.jam.hub.infrastructure.aop.AsyncEventListener;
 import dev.louisa.jam.hub.application.common.DomainEventListener;
+import dev.louisa.jam.hub.domain.registration.event.RegistrationVerifiedEvent;
+import dev.louisa.jam.hub.infrastructure.aop.AsyncEventListener;
 import dev.louisa.jam.hub.infrastructure.mail.Email;
 import dev.louisa.jam.hub.infrastructure.mail.EmailAddress;
 import dev.louisa.jam.hub.infrastructure.mail.EmailService;
@@ -13,13 +13,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SendWelcomeMailListener implements DomainEventListener<RegistrationCreatedEvent> {
+public class SendRegistrationWelcomeMailListener implements DomainEventListener<RegistrationVerifiedEvent> {
     private final EmailService emailService;
 
 
     @AsyncEventListener
-    public void on(RegistrationCreatedEvent event) {
-        log.info("Sending verification e-mail [otp={}] to '{}'", event.otp(), event.emailAddress().email());
+    public void on(RegistrationVerifiedEvent event) {
+        log.info("Sending welcome e-mail [registration-id={}] to '{}'", 
+                event.userRegistrationId().toValue(),
+                event.emailAddress().email());
+        
         emailService.sendEmail(
                 Email.builder()
                         .from(
@@ -33,15 +36,15 @@ public class SendWelcomeMailListener implements DomainEventListener<Registration
                                         .personal(event.emailAddress().email())
                                         .build()
                         )
-                        .subject("Welcome to JAM Hub! Please verify your email address")
+                        .subject("Welcome to JAM Hub! Your account has been created")
                         .body("""
                                 <p>Dear user,</p>
-                                <p>Thank you for registering at JAM Hub!</p>
-                                <p>Please use the following One-Time Password (OTP) to verify your email address:</p>
-                                <h2>%s</h2>
-                                <p>This OTP is valid for 24 hours. If you did not request this, please ignore this email.</p>
+                                <p>Welcome to JAM Hub! Your email address has been successfully verified.</p>
+                                <p>You can now log in and start using our services.</p>
+                                <p>If you have any questions or need assistance, feel free to contact our support team</p>.
+                                <p>We're excited to have you on board!</p>
                                 <p>Best regards,<br/>The JAM Hub Team</p>
-                                """.formatted(event.otp()))
+                                """)
                         .build()
 
         );

@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.band.persistence;
 
-import dev.louisa.jam.hub.testsupport.BaseDomainTest;
+import dev.louisa.jam.hub.testsupport.base.BaseDomainTest;
 import dev.louisa.jam.hub.domain.band.BandRole;
 import org.junit.jupiter.api.Test;
 

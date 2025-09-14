@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.testsupport;
+package dev.louisa.jam.hub.testsupport.asserts;
 
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
 import org.assertj.core.api.AbstractAssert;
