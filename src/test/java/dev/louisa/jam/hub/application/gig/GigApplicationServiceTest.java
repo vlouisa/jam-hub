@@ -66,11 +66,10 @@ class GigApplicationServiceTest extends BaseApplicationTest {
         verify(gigRepository).save(captor.capture());
 
         final Gig savedGig = captor.getValue();
-        GigAssert.assertThat(savedGig)
+        GigAssert.assertThatGig(savedGig)
                 .hasBandId(rollingStones.getId())
                 .hasStatus(OPTION)
-                .matchesDetails(gigDetails)
-        ;
+                .matchesDetails(gigDetails);
     }
 
     @Test
