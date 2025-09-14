@@ -6,6 +6,7 @@ import dev.louisa.jam.hub.domain.band.BandMemberFactory;
 import dev.louisa.jam.hub.domain.gig.GigFactory;
 import dev.louisa.jam.hub.domain.gig.GigRoleAssignmentFactory;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationFactory;
+import dev.louisa.jam.hub.domain.user.UserFactory;
 import dev.louisa.jam.hub.interfaces.gig.GigRequestFactory;
 
 public final class Factory {
@@ -24,6 +25,7 @@ public final class Factory {
         public static final BandFactory aBand = new BandFactory();
         public static final GigFactory aGig = new GigFactory();
         public static final UserRegistrationFactory aUserRegistration = new UserRegistrationFactory();
+        public static final UserFactory aUser = new UserFactory();
 
         // factories for entities and value objects
         public static final BandMemberFactory aBandMember = new BandMemberFactory();

@@ -11,3 +11,12 @@ services:
     command: >
       sh -c "echo 'CREATE EXTENSION IF NOT EXISTS lo;' > /docker-entrypoint-initdb.d/init-lo-extension.sql &&
       docker-entrypoint.sh postgres"
+  mailpit:
+    image: axllent/mailpit
+    container_name: jam-hub-smtp-local
+    ports:
+      - 8027:8025
+      - 2527:1025
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1

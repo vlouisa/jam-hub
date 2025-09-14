@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.application.gig;
 
-import dev.louisa.jam.hub.testsupport.BaseApplicationTest;
+import dev.louisa.jam.hub.testsupport.base.BaseApplicationTest;
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
 import dev.louisa.jam.hub.domain.band.Band;
 import dev.louisa.jam.hub.domain.band.BandId;
@@ -10,7 +10,7 @@ import dev.louisa.jam.hub.domain.gig.GigId;
 import dev.louisa.jam.hub.domain.gig.persistence.GigRepository;
 import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.testsupport.Factory.application;
-import dev.louisa.jam.hub.testsupport.GigAssert;
+import dev.louisa.jam.hub.testsupport.asserts.GigAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

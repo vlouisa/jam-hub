@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -54,5 +56,10 @@ public class SecurityConfig {
     public JwtValidator jwtValidator() {
         final RSAPublicKey key = RSAKeyReader.readPublicKeyFromFile("jwk-set/19b14038-11df-43c5-a03c-db39a55b4e5b.key.pub");
         return new JHubJwtValidator(key);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); // default strength 10
     }
 }

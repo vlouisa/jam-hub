@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.gig.persistence;
 
-import dev.louisa.jam.hub.testsupport.BaseIntegrationIT;
+import dev.louisa.jam.hub.testsupport.base.BaseIntegrationIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

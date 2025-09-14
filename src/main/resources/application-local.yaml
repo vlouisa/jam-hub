@@ -6,3 +6,17 @@ spring:
     show-sql: true
   datasource:
     url: jdbc:postgresql://localhost:54321/jam_hub_db?user=jam_hub_owner&password=jam_hub
+  config:
+    import: optional:classpath:local.env[.properties]
+    
+mail:
+  user: ${MAIL_PIT_USER}
+  password: ${MAIL_PIT_PASSWORD}
+  smtp:
+    host: localhost
+    port: 2527
+    auth: true
+    starttls:
+      enable: true
+    ssl:
+      protocol: TLSv1.2
