@@ -18,21 +18,13 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 public class TokenCreator {
     private static final RSAPrivateKey DEFAULT_PRIVATE_KEY = readPrivateKeyFromFile("jwk-set/19b14038-11df-43c5-a03c-db39a55b4e5b.key");
     private final Faker faker = new Faker();
-    
-    private final RSAPrivateKey privateKey;
 
+    private RSAPrivateKey rsaPrivateKey = DEFAULT_PRIVATE_KEY;
+    
     public static TokenCreator create() {
-        return new TokenCreator(DEFAULT_PRIVATE_KEY);
-    }
-
-    public static TokenCreator createUsing(RSAPrivateKey rsaPrivateKey) {
-        return new TokenCreator(rsaPrivateKey);
+        return new TokenCreator();
     }
     
-    private TokenCreator(RSAPrivateKey rsaPrivateKey) {
-        this.privateKey = rsaPrivateKey;
-    }
-
     public String anExpiredToken() {
         return anExpiredToken(noCustomization());
     }
@@ -55,8 +47,32 @@ public class TokenCreator {
         
         return sign(createToken(builder, tokenCustomizer));
     }
-    
 
+    // --- Switch into key selector mode ---
+    public TokenCreator.KeyMode using(RSAPrivateKey rsaPrivateKey) {
+        if (rsaPrivateKey == null) {
+            throw new RuntimeException("RSAKey must not be null");
+        }
+        this.rsaPrivateKey = rsaPrivateKey;
+        return new TokenCreator.KeyMode();
+    }
+    
+    public class KeyMode{
+        public String aToken() {
+            return TokenCreator.this.aToken();
+        }
+        public String aToken(TokenCustomizer tokenCustomizer) {
+            return TokenCreator.this.aToken(tokenCustomizer);
+        }
+        public String anExpiredToken() {
+            return TokenCreator.this.anExpiredToken();
+        }
+
+        public String anExpiredToken(TokenCustomizer tokenCustomizer) {
+            return TokenCreator.this.anExpiredToken(tokenCustomizer);
+        }
+    }
+    
     private JWTCreator.Builder createToken(JWTCreator.Builder jwtBuilder, TokenCustomizer tokenCustomizer) {
         JWTCreator.Builder builder =
                 jwtBuilder
@@ -72,6 +88,6 @@ public class TokenCreator {
 
     private String sign(JWTCreator.Builder customizedBuilder) {
         return customizedBuilder
-                .sign(Algorithm.RSA256(this.privateKey));
+                .sign(Algorithm.RSA256(this.rsaPrivateKey));
     }
 }

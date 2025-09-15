@@ -2,6 +2,7 @@ package dev.louisa.jam.hub.infrastructure.security.util;
 
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
+import dev.louisa.jam.hub.infrastructure.security.jwt.JwtKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,15 +17,15 @@ import static dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReaderParame
 @Slf4j
 public class RSAKeyBuilder {
 
-    public RSAKey createRSAKeyFromBundle(String bundleName) {
-        return createRSAKey(
-                keyIdFileLocation(bundleName),
-                privateKeyFileLocation(bundleName),
-                publicKeyFileLocation(bundleName));
+    public JwtKey createRSAKeyFromBundle(String bundleName) {
+        final String kid = keyIdFileLocation(bundleName);
+        return JwtKey.builder()
+                .kid(kid)
+                .rsaKey(createRSAKey(kid, privateKeyFileLocation(bundleName), publicKeyFileLocation(bundleName)))
+                .build();
     }
 
-    private RSAKey createRSAKey(String keyIdFileName, String privateKeyFileName, String publicKeyFileName) {
-        final String kid = RSAKeyReader.readKeyIdFromFile(keyIdFileName);
+    private RSAKey createRSAKey(String kid, String privateKeyFileName, String publicKeyFileName) {
         log.info("KID : {}", kid);
 
         final KeyPair keyPair = new KeyPair(

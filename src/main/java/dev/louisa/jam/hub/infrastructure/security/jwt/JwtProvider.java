@@ -19,32 +19,30 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 @RequiredArgsConstructor
 public class JwtProvider {
     private final JwtEncoder jwtEncoder;
-    private final JWKSourceService jwkSourceService;
+    private final JwtKeySource jwtKeySource;
 
     public String generate(UUID userId, List<UUID> bandIds, EmailAddress emailAddress) {
-        final Instant now = Instant.now();
-
-        final JwtClaimsSet.Builder claimsBuilder = JwtClaimsSet.builder()
-                .id(UUID.randomUUID().toString())
-                .subject(userId.toString())
-                .issuer("urn:jam-hub:auth")
-                .audience(List.of("jam-hub-service"))
-                .claim("jam-hub:email", emailAddress.address())
-                .claim("jam-hub:bands", bandIds)
-                .issuedAt(now)
-                .notBefore(now)
-                .expiresAt(now.plus(10, MINUTES));
-
-
-        final JwtClaimsSet claims = claimsBuilder.build();
-
         final JwsHeader jwsHeaders = JwsHeader
                 .with(SignatureAlgorithm.RS256)
-                .keyId(jwkSourceService.getKidFromFirstSigningKey())
+                .keyId(jwtKeySource.getFirstKeyId())
                 .type("JWT")
                 .build();
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeaders, claims)).getTokenValue();
+        final JwtClaimsSet claims =
+                JwtClaimsSet.builder()
+                        .id(UUID.randomUUID().toString())
+                        .subject(userId.toString())
+                        .issuer("urn:jam-hub:auth")
+                        .audience(List.of("jam-hub-service"))
+                        .claim("jam-hub:email", emailAddress.address())
+                        .claim("jam-hub:bands", bandIds)
+                        .issuedAt(Instant.now())
+                        .notBefore(Instant.now())
+                        .expiresAt(Instant.now().plus(10, MINUTES)).build();
+
+        return jwtEncoder
+                .encode(JwtEncoderParameters.from(jwsHeaders, claims))
+                .getTokenValue();
     }
 }
 
