@@ -3,20 +3,24 @@ package dev.louisa.jam.hub.testsupport.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import net.datafaker.Faker;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
+import static dev.louisa.jam.hub.testsupport.security.TokenCustomizer.noCustomization;
 import static dev.louisa.jam.hub.testsupport.security.TokenCustomizer.withExpires;
 import static dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReader.readPrivateKeyFromFile;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class TokenCreator {
     private static final RSAPrivateKey DEFAULT_PRIVATE_KEY = readPrivateKeyFromFile("jwk-set/19b14038-11df-43c5-a03c-db39a55b4e5b.key");
+    private final Faker faker = new Faker();
     
     private final RSAPrivateKey privateKey;
-    
+
     public static TokenCreator create() {
         return new TokenCreator(DEFAULT_PRIVATE_KEY);
     }
@@ -29,28 +33,24 @@ public class TokenCreator {
         this.privateKey = rsaPrivateKey;
     }
 
-    public String aBlankToken(TokenCustomizer tokenCustomizer) {
-        final JWTCreator.Builder builder = JWT.create();
-        return sign(createToken(builder, tokenCustomizer));
-    }
-
-
     public String anExpiredToken() {
-        return anExpiredToken(token -> {});
+        return anExpiredToken(noCustomization());
     }
 
     public String anExpiredToken(TokenCustomizer tokenCustomizer) {
-        return aDefaultToken(tokenCustomizer.andThen(withExpires(Instant.now().minus(1, MINUTES))));
+        return aToken(tokenCustomizer.andThen(withExpires(Instant.now().minus(1, MINUTES))));
     }
 
-    public String aDefaultToken() {
-        return aDefaultToken(token -> {});
+    public String aToken() {
+        return aToken(noCustomization());
     }
 
-    public String aDefaultToken(TokenCustomizer tokenCustomizer) {
+    public String aToken(TokenCustomizer tokenCustomizer) {
         final JWTCreator.Builder builder = JWT.create()
                 .withSubject(UUID.randomUUID().toString())
-                .withIssuer("jam-hub")
+                .withClaim("jam-hub:email", faker.internet().emailAddress())
+                .withClaim("jam-hub:bands", List.of(UUID.randomUUID().toString(), UUID.randomUUID().toString()))
+                .withIssuer("urn:jam-hub:auth")
                 .withAudience("jam-hub-service");
         
         return sign(createToken(builder, tokenCustomizer));

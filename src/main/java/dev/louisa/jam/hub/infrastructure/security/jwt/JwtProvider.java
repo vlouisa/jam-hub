@@ -27,12 +27,13 @@ public class JwtProvider {
         final JwtClaimsSet.Builder claimsBuilder = JwtClaimsSet.builder()
                 .id(UUID.randomUUID().toString())
                 .subject(userId.toString())
-                .claim("email", emailAddress.address())
-                .claim("bands", bandIds)
-                .issuer("jam-hub")
+                .issuer("urn:jam-hub:auth")
+                .audience(List.of("jam-hub-service"))
+                .claim("jam-hub:email", emailAddress.address())
+                .claim("jam-hub:bands", bandIds)
                 .issuedAt(now)
                 .notBefore(now)
-                .expiresAt(now.plus(4, MINUTES));
+                .expiresAt(now.plus(10, MINUTES));
 
 
         final JwtClaimsSet claims = claimsBuilder.build();
@@ -40,6 +41,7 @@ public class JwtProvider {
         final JwsHeader jwsHeaders = JwsHeader
                 .with(SignatureAlgorithm.RS256)
                 .keyId(jwkSourceService.getKidFromFirstSigningKey())
+                .type("JWT")
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeaders, claims)).getTokenValue();

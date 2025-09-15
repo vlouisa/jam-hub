@@ -56,7 +56,10 @@ public class GigRequestFactory {
     private LocalTime randomTime(int startHourInclusive, int endHourInclusive) {
         // Random hour between startHourInclusive and endHourInclusive
         int hour = ThreadLocalRandom.current().nextInt(startHourInclusive, endHourInclusive + 1);
-
+        if (hour == endHourInclusive) {
+            return LocalTime.of(hour, 0);
+        }
+        
         // Random minute from the allowed set {0, 15, 30, 45}
         int[] minutes = {0, 15, 30, 45};
         int minute = minutes[ThreadLocalRandom.current().nextInt(minutes.length)];

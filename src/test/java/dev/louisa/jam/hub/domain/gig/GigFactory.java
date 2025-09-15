@@ -20,9 +20,10 @@ import java.util.stream.IntStream;
 public class GigFactory {
     private final Faker faker = new Faker();
     private final GigRoleAssignmentFactory roleAssignmentFactory = new GigRoleAssignmentFactory();
-    
+
     public Gig create() {
-        return create(g -> {});
+        return create(g -> {
+        });
     }
 
     public Gig create(Consumer<Gig.GigBuilder<?, ?>> customizer) {
@@ -30,9 +31,10 @@ public class GigFactory {
         customizer.accept(builder);
         return builder.build();
     }
-    
+
     public Gig createWithAssignments(int assignmentCount) {
-        return createWithAssignments(assignmentCount, g -> {});
+        return createWithAssignments(assignmentCount, g -> {
+        });
     }
 
     public Gig createWithAssignments(int assignmentCount, Consumer<Gig.GigBuilder<?, ?>> customizer) {
@@ -42,14 +44,28 @@ public class GigFactory {
         return gig;
     }
 
+    public Gig createWithAssignments(UserId... userIds) {
+        return createWithAssignments(g -> {}, userIds);
+    }
+
+    public Gig createWithAssignments(Consumer<Gig.GigBuilder<?, ?>> customizer, UserId... userIds) {
+        Gig gig = create(customizer);
+        for (UserId userId : userIds) {
+            GigRoleAssignment assignment = roleAssignmentFactory.create(a -> a.userId(userId.id()));
+            gig.assignRole(userId, assignment.getRole());
+        }
+        return gig;
+    }
+
+
     // --- Switch into persistence mode ---
     public Persistent usingRepository(GigRepository repository) {
         Guard.when(repository == null)
                 .thenThrow(() -> new RuntimeException("Repository must not be null"));
-        
+
         return new Persistent(repository);
     }
-    
+
     @RequiredArgsConstructor
     public class Persistent {
         private final GigRepository repository;
@@ -61,13 +77,19 @@ public class GigFactory {
         public Gig create(Consumer<Gig.GigBuilder<?, ?>> customizer) {
             return repository.save(GigFactory.this.create(customizer));
         }
-        
+
         public Gig createWithAssignments(int assignmentCount) {
             return repository.save(GigFactory.this.createWithAssignments(assignmentCount));
         }
-        
+
         public Gig createWithAssignments(int assignmentCount, Consumer<Gig.GigBuilder<?, ?>> customizer) {
             return repository.save(GigFactory.this.createWithAssignments(assignmentCount, customizer));
+        }
+        public Gig createWithAssignments(UserId... userIds) {
+            return  repository.save(GigFactory.this.createWithAssignments(userIds));
+        }
+        public Gig createWithAssignments(Consumer<Gig.GigBuilder<?, ?>> customizer, UserId... userIds) {
+            return repository.save(GigFactory.this.createWithAssignments(customizer, userIds));
         }
     }
 
@@ -99,7 +121,7 @@ public class GigFactory {
     }
 
     private List<GigRoleAssignment> randomAssignments(int count) {
-        return IntStream.range(0,count)
+        return IntStream.range(0, count)
                 .mapToObj(i -> roleAssignmentFactory.create())
                 .collect(Collectors.toList());
     }

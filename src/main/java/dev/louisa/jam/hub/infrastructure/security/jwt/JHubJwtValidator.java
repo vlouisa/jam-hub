@@ -22,7 +22,7 @@ public class JHubJwtValidator implements JwtValidator{
         log.info("Validating the Jwt claims!");
 
         DecodedJWT jwt = JWT.require(RSA256(key))
-                .withIssuer("jam-hub")
+                .withIssuer("urn:jam-hub:auth")
                 .withAnyOfAudience("jam-hub-service")
                 .build()
                 .verify(token);

@@ -25,8 +25,6 @@ class JwtProviderIT extends BaseInfraStructureIT {
                 List.of(UUID.randomUUID(), UUID.randomUUID()),
                 EmailAddress.builder().address("herman.toothrot@dinky-island.mi2").build());
         assertThat(jwt).isNotNull();
-        System.out.println("CLAIMS: " + getJWTClaims(jwt));
-   
     }
 
     private List<String> getJWTClaims(String rawJwt) {

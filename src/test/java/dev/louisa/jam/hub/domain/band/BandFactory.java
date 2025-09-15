@@ -2,6 +2,7 @@ package dev.louisa.jam.hub.domain.band;
 
 import dev.louisa.jam.hub.domain.band.persistence.BandRepository;
 import dev.louisa.jam.hub.domain.common.Guard;
+import dev.louisa.jam.hub.domain.user.UserId;
 import lombok.RequiredArgsConstructor;
 import net.datafaker.Faker;
 
@@ -37,14 +38,14 @@ public class BandFactory {
         return band;
     }
 
-    public Band createWithMembers( String... userIds) {
+    public Band createWithMembers( UserId... userIds) {
         return createWithMembers(b -> {}, userIds);
     }
 
-    public Band createWithMembers(Consumer<Band.BandBuilder<?, ?>> customizer, String... userUUIDs) {
+    public Band createWithMembers(Consumer<Band.BandBuilder<?, ?>> customizer, UserId... userIds) {
         Band band = create(customizer);
-        for (String userUUID : userUUIDs) {
-            BandMember member = memberFactory.create(u -> u.userId(UUID.fromString(userUUID)));
+        for (UserId userId : userIds) {
+            BandMember member = memberFactory.create(m -> m.userId(userId.id()));
             band.addMember(member);
         }
         return band;
@@ -78,11 +79,11 @@ public class BandFactory {
             return repository.save(BandFactory.this.createWithMembers(memberCount, customizer));
         }
         
-        public  Band createWithMembers(String... userIds) {
+        public  Band createWithMembers(UserId... userIds) {
             return repository.save(BandFactory.this.createWithMembers(userIds));
         }
         
-        public Band createWithMembers(Consumer<Band.BandBuilder<?, ?>> customizer, String... userIds) {
+        public Band createWithMembers(Consumer<Band.BandBuilder<?, ?>> customizer, UserId... userIds) {
             return repository.save(BandFactory.this.createWithMembers(customizer, userIds));
         }
     }
