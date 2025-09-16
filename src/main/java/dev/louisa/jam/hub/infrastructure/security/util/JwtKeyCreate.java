@@ -25,8 +25,6 @@ public class JwtKeyCreate {
     }
 
     private static RSAKey createRSAKey(String kid, String privateKeyFileName, String publicKeyFileName) {
-        log.info("KID : {}", kid);
-
         final KeyPair keyPair = new KeyPair(
                 RSAKeyReader.readPublicKeyFromFile(publicKeyFileName),
                 RSAKeyReader.readPrivateKeyFromFile(privateKeyFileName)

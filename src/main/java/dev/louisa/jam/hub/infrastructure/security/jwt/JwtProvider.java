@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt;
 
+import dev.louisa.jam.hub.infrastructure.Clock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -19,6 +20,7 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 public class JwtProvider {
     private final JwtEncoder jwtEncoder;
     private final JwtKeys jwtKeys;
+    private final Clock clock;
 
     public String generate(UUID userId, JwtCustomClaimBuilder customClaims) {
         final JwsHeader jwsHeaders = JwsHeader
@@ -27,15 +29,16 @@ public class JwtProvider {
                 .type("JWT")
                 .build();
 
+        final Instant now = clock.now();
         final JwtClaimsSet.Builder claims =
                 JwtClaimsSet.builder()
                         .id(UUID.randomUUID().toString())
                         .subject(userId.toString())
                         .issuer("urn:jam-hub:auth")
-                        .audience(List.of("jam-hub-service"))
-                        .issuedAt(Instant.now())
-                        .notBefore(Instant.now())
-                        .expiresAt(Instant.now().plus(10, MINUTES));
+                        .audience(List.of("jam-hub-service", "jam-hub-gateway"))
+                        .issuedAt(now)
+                        .notBefore(now)
+                        .expiresAt(now.plus(10, MINUTES));
         
                 customClaims.build().forEach(claims::claim);        
         
