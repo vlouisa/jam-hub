@@ -17,8 +17,7 @@ public class JwtConverter {
     
     /**
      * Converts a Bearer JWT token (String) into a UserPrincipal. UserPrincipal is used by Spring Security to allow
-     * or deny access to a secured resource. The converter requests the proper validator. Once received it uses that
-     * validator to validate the token and create a UserPrincipal.
+     * or deny access to a secured resource. The validator validates the token and creates a UserPrincipal (based on the JWT).
      *
      * @param token String representation of the JWT Bearer token
      * @return UserPrincipal
