@@ -1,6 +1,5 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt;
 
-import dev.louisa.jam.hub.infrastructure.mail.EmailAddress;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -19,29 +18,29 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 @RequiredArgsConstructor
 public class JwtProvider {
     private final JwtEncoder jwtEncoder;
-    private final JwtKeySource jwtKeySource;
+    private final JwtKeys jwtKeys;
 
-    public String generate(UUID userId, List<UUID> bandIds, EmailAddress emailAddress) {
+    public String generate(UUID userId, JwtCustomClaimBuilder customClaims) {
         final JwsHeader jwsHeaders = JwsHeader
                 .with(SignatureAlgorithm.RS256)
-                .keyId(jwtKeySource.getFirstKeyId())
+                .keyId(jwtKeys.activeKey().kid())
                 .type("JWT")
                 .build();
 
-        final JwtClaimsSet claims =
+        final JwtClaimsSet.Builder claims =
                 JwtClaimsSet.builder()
                         .id(UUID.randomUUID().toString())
                         .subject(userId.toString())
                         .issuer("urn:jam-hub:auth")
                         .audience(List.of("jam-hub-service"))
-                        .claim("jam-hub:email", emailAddress.address())
-                        .claim("jam-hub:bands", bandIds)
                         .issuedAt(Instant.now())
                         .notBefore(Instant.now())
-                        .expiresAt(Instant.now().plus(10, MINUTES)).build();
-
+                        .expiresAt(Instant.now().plus(10, MINUTES));
+        
+                customClaims.build().forEach(claims::claim);        
+        
         return jwtEncoder
-                .encode(JwtEncoderParameters.from(jwsHeaders, claims))
+                .encode(JwtEncoderParameters.from(jwsHeaders, claims.build()))
                 .getTokenValue();
     }
 }

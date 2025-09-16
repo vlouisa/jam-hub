@@ -5,7 +5,7 @@ import dev.louisa.jam.hub.domain.gig.GigId;
 import dev.louisa.jam.hub.domain.gig.GigStatus;
 import dev.louisa.jam.hub.domain.gig.persistence.GigRepository;
 import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
-import dev.louisa.jam.hub.infrastructure.security.jwt.JwtKeySource;
+import dev.louisa.jam.hub.infrastructure.security.jwt.JwtKeys;
 import dev.louisa.jam.hub.interfaces.common.IdResponse;
 import dev.louisa.jam.hub.testsupport.base.BaseInterfaceIT;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class GigControllerIT extends BaseInterfaceIT {
     @Autowired
     private GigRepository gigRepository;
     @Autowired
-    private JwtKeySource jwtKeySource;
+    private JwtKeys jwtKeys;
 
     @Test
     void shouldPlanNewGig() throws Exception {
@@ -40,9 +40,9 @@ class GigControllerIT extends BaseInterfaceIT {
                 .body(gigRequest)
                 .withJwt(
                         create()
-                                .using(jwtKeySource.getFirstPrivateKey())
+                                .using(jwtKeys.activeKey().toPrivateKey())
                                 .aToken(
-                                forUser(user).andThen(withBands(List.of(band)))))
+                                        forUser(user).andThen(withBands(List.of(band)))))
                 .expectResponseStatus(OK)
                 .send()
                 .andReturn(IdResponse.class);
