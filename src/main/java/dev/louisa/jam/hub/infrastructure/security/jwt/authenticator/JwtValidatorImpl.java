@@ -1,8 +1,10 @@
-package dev.louisa.jam.hub.infrastructure.security.jwt;
+package dev.louisa.jam.hub.infrastructure.security.jwt.authenticator;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKey;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeys;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

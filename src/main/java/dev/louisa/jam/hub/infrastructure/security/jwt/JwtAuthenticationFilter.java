@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt;
 
-import com.auth0.jwt.exceptions.*;
 import dev.louisa.jam.hub.infrastructure.security.SecurityLevelResolver;
+import dev.louisa.jam.hub.infrastructure.security.jwt.authenticator.JwtAuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static dev.louisa.jam.hub.infrastructure.security.exception.SecurityError.*;
+import static dev.louisa.jam.hub.infrastructure.security.util.RequestTokenExtractor.bearerTokenFrom;
 
 /* Spring security core exceptions (e.g., AuthenticationException and AccessDeniedException) are thrown by the
  * authentication filters behind the DispatcherServlet and before invoking the controller methods. This means
@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        jwtAuthenticationService.authenticate(request);
+        jwtAuthenticationService.authenticate(bearerTokenFrom(request));
         filterChain.doFilter(request, response);
     }
 

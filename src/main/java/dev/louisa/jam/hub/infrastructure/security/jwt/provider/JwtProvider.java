@@ -1,6 +1,7 @@
-package dev.louisa.jam.hub.infrastructure.security.jwt;
+package dev.louisa.jam.hub.infrastructure.security.jwt.provider;
 
 import dev.louisa.jam.hub.infrastructure.Clock;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;

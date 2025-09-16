@@ -1,26 +1,27 @@
-package dev.louisa.jam.hub.infrastructure.security.jwt;
+package dev.louisa.jam.hub.infrastructure.security.jwt.authenticator;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import dev.louisa.jam.hub.infrastructure.security.UserPrincipalAuthenticationToken;
 import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import static dev.louisa.jam.hub.infrastructure.security.exception.SecurityError.JWT_VERIFICATION_ERROR;
-import static dev.louisa.jam.hub.infrastructure.security.util.BearerTokenUtil.tokenFrom;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationService {
+    private final JwtValidator jwtValidator;
     private final JwtConverter jwtConverter;
     
-    public void authenticate(HttpServletRequest request) {
+    public void authenticate(String token) {
         try {
-            var userPrincipal = jwtConverter.convert(tokenFrom(request));
+
+            var decodedJWT = jwtValidator.validate(token);
+            var userPrincipal= jwtConverter.convert(decodedJWT);
             SecurityContextHolder.getContext()
                     .setAuthentication(new UserPrincipalAuthenticationToken(userPrincipal));
 

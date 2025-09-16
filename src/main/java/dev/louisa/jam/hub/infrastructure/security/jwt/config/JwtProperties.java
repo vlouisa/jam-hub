@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.infrastructure.security.jwt;
+package dev.louisa.jam.hub.infrastructure.security.jwt.config;
 
 import lombok.Getter;
 import lombok.Setter;

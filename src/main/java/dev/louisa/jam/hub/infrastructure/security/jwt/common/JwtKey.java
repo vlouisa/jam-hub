@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.infrastructure.security.jwt;
+package dev.louisa.jam.hub.infrastructure.security.jwt.common;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.RSAKey;

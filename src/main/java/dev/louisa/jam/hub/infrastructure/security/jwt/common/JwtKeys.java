@@ -1,8 +1,9 @@
-package dev.louisa.jam.hub.infrastructure.security.jwt;
+package dev.louisa.jam.hub.infrastructure.security.jwt.common;
 
 import com.nimbusds.jose.jwk.*;
 import dev.louisa.jam.hub.domain.common.Guard;
 import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
+import dev.louisa.jam.hub.infrastructure.security.jwt.config.JwtProperties;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

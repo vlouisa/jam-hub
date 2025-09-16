@@ -1,6 +1,7 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt;
 
 import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
+import dev.louisa.jam.hub.infrastructure.security.jwt.provider.JwtCustomClaimBuilder;
 import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

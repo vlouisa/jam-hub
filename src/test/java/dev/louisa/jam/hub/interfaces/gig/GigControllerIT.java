@@ -5,7 +5,7 @@ import dev.louisa.jam.hub.domain.gig.GigId;
 import dev.louisa.jam.hub.domain.gig.GigStatus;
 import dev.louisa.jam.hub.domain.gig.persistence.GigRepository;
 import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
-import dev.louisa.jam.hub.infrastructure.security.jwt.JwtKeys;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeys;
 import dev.louisa.jam.hub.interfaces.common.IdResponse;
 import dev.louisa.jam.hub.testsupport.base.BaseInterfaceIT;
 import org.junit.jupiter.api.Test;

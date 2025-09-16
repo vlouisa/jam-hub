@@ -1,8 +1,8 @@
-package dev.louisa.jam.hub.infrastructure.security.util;
+package dev.louisa.jam.hub.infrastructure.security.jwt.common;
 
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
-import dev.louisa.jam.hub.infrastructure.security.jwt.JwtKey;
+import dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReader;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -14,7 +14,7 @@ import static dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReader.readK
 import static dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReaderParameters.*;
 
 @Slf4j
-public class JwtKeyCreate {
+public class JwtKeyCreator {
     public static JwtKey fromBundle(String bundleName) {
         final String kid = readKeyIdFromFile(keyIdFileLocation(bundleName));
         return JwtKey.builder()

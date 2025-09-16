@@ -2,6 +2,9 @@ package dev.louisa.jam.hub.infrastructure.security.jwt;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKey;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeys;
+import dev.louisa.jam.hub.infrastructure.security.jwt.config.JwtProperties;
 import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

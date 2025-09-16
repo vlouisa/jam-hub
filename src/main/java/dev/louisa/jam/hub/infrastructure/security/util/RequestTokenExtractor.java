@@ -9,11 +9,11 @@ import static dev.louisa.jam.hub.infrastructure.security.exception.SecurityError
 
 
 @Slf4j
-public class BearerTokenUtil {
+public class RequestTokenExtractor {
     private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
     private static final String AUTHORIZATION_HEADER_VALUE_PREFIX = "Bearer ";
 
-    public static String tokenFrom(HttpServletRequest request) {
+    public static String bearerTokenFrom(HttpServletRequest request) {
         var header = request.getHeader(AUTHORIZATION_HEADER_KEY);
         if (!isBearerToken(header)) {
             throw new SecurityException(NO_BEARER_TOKEN);

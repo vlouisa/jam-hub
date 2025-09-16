@@ -1,6 +1,7 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt;
 
 import dev.louisa.jam.hub.infrastructure.Clock;
+import dev.louisa.jam.hub.infrastructure.security.jwt.provider.JwtProvider;
 import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureIT;
 import dev.louisa.jam.hub.testsupport.security.JwtClaimUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import static dev.louisa.jam.hub.infrastructure.security.jwt.JwtCustomClaimBuilder.*;
+import static dev.louisa.jam.hub.infrastructure.security.jwt.provider.JwtCustomClaimBuilder.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
