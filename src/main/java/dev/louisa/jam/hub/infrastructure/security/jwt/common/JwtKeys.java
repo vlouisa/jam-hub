@@ -57,7 +57,18 @@ public class JwtKeys {
             return jwtKeys.stream()
                     .filter(jwtKey -> jwtKey.bundleName().equals(bundleName))
                     .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("No key found for bundle: " + bundleName));
+                    .orElseThrow(() -> new NoSuchElementException("No key found for bundle: %s".formatted(bundleName)));
+        } catch (NoSuchElementException e) {
+            throw new SecurityException(JWT_KEY_RESOLVER_ERROR, e);
+        }
+    }
+
+    public JwtKey keyForId(String kid) {
+        try {
+            return jwtKeys.stream()
+                    .filter(jwtKey -> jwtKey.kid().equals(kid))
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchElementException("No key found with kid: %s ".formatted(kid)));
         } catch (NoSuchElementException e) {
             throw new SecurityException(JWT_KEY_RESOLVER_ERROR, e);
         }

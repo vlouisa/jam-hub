@@ -40,7 +40,7 @@ class GigControllerIT extends BaseInterfaceIT {
                 .body(gigRequest)
                 .withJwt(
                         create()
-                                .using(jwtKeys.activeKey().toPrivateKey())
+                                .using(jwtKeys.activeKey())
                                 .aToken(
                                         forUser(user).andThen(withBands(List.of(band)))))
                 .expectResponseStatus(OK)

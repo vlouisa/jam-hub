@@ -3,41 +3,39 @@ package dev.louisa.jam.hub.testsupport.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKey;
 import net.datafaker.Faker;
 
-import java.security.interfaces.RSAPrivateKey;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 import static dev.louisa.jam.hub.testsupport.security.TokenCustomizer.noCustomization;
 import static dev.louisa.jam.hub.testsupport.security.TokenCustomizer.withExpires;
-import static dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReader.readPrivateKeyFromFile;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class TokenCreator {
-    private static final RSAPrivateKey DEFAULT_PRIVATE_KEY = readPrivateKeyFromFile("jwk-set/19b14038-11df-43c5-a03c-db39a55b4e5b.key");
     private final Faker faker = new Faker();
 
-    private RSAPrivateKey rsaPrivateKey = DEFAULT_PRIVATE_KEY;
+    private JwtKey jwtKey;
     
     public static TokenCreator create() {
         return new TokenCreator();
     }
     
-    public String anExpiredToken() {
+    private String anExpiredToken() {
         return anExpiredToken(noCustomization());
     }
 
-    public String anExpiredToken(TokenCustomizer tokenCustomizer) {
+    private String anExpiredToken(TokenCustomizer tokenCustomizer) {
         return aToken(tokenCustomizer.andThen(withExpires(Instant.now().minus(1, MINUTES))));
     }
 
-    public String aToken() {
+    private String aToken() {
         return aToken(noCustomization());
     }
 
-    public String aToken(TokenCustomizer tokenCustomizer) {
+    private String aToken(TokenCustomizer tokenCustomizer) {
         final JWTCreator.Builder builder = JWT.create()
                 .withSubject(UUID.randomUUID().toString())
                 .withClaim("jam-hub:email", faker.internet().emailAddress())
@@ -49,15 +47,16 @@ public class TokenCreator {
     }
 
     // --- Switch into key selector mode ---
-    public TokenCreator.KeyMode using(RSAPrivateKey rsaPrivateKey) {
-        if (rsaPrivateKey == null) {
-            throw new RuntimeException("RSAKey must not be null");
+    public TokenCreator.KeyMode using(JwtKey jwtKey) {
+        if (jwtKey == null) {
+            throw new RuntimeException("JwtKey must not be null");
         }
-        this.rsaPrivateKey = rsaPrivateKey;
+        this.jwtKey = jwtKey;
         return new TokenCreator.KeyMode();
     }
     
     public class KeyMode{
+        
         public String aToken() {
             return TokenCreator.this.aToken();
         }
@@ -76,7 +75,7 @@ public class TokenCreator {
     private JWTCreator.Builder createToken(JWTCreator.Builder jwtBuilder, TokenCustomizer tokenCustomizer) {
         JWTCreator.Builder builder =
                 jwtBuilder
-                        .withKeyId("19b14038-11df-43c5-a03c-db39a55b4e5b")
+                        .withKeyId(jwtKey.kid())
                         .withIssuedAt(Instant.now())
                         .withNotBefore(Instant.now())
                         .withExpiresAt(Instant.now().plus(10, MINUTES))
@@ -88,6 +87,6 @@ public class TokenCreator {
 
     private String sign(JWTCreator.Builder customizedBuilder) {
         return customizedBuilder
-                .sign(Algorithm.RSA256(this.rsaPrivateKey));
+                .sign(Algorithm.RSA256(jwtKey.toPrivateKey()));
     }
 }
