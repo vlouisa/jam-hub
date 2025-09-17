@@ -34,12 +34,11 @@ class JwtProviderIT extends BaseInfraStructureIT {
     void setUp() {
         userId = UUID.randomUUID();
         bandIds = List.of(UUID.randomUUID(), UUID.randomUUID());
+        when(clock.now()).thenReturn(TODAY);
     }
     
     @Test
     void shouldGenerateJwt() {
-        when(clock.now()).thenReturn(TODAY);
-        
         final String jwt = jwtProvider.generate(
                 userId,
                 customClaims()

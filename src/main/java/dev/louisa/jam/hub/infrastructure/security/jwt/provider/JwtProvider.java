@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -21,7 +22,12 @@ public class JwtProvider {
     private final JwtEncoder jwtEncoder;
     private final JwtKeys jwtKeys;
     private final Clock clock;
+    
+    
+    public String generate(UUID userId) {
+        return generate(userId, JwtCustomClaimBuilder.customClaims());
 
+    }
     public String generate(UUID userId, JwtCustomClaimBuilder customClaims) {
         final JwsHeader jwsHeaders = JwsHeader
                 .with(SignatureAlgorithm.RS256)
@@ -55,10 +61,7 @@ public class JwtProvider {
      * Encoder selects the correct private key based on the 'kid' in the header
      */
     private Jwt sign(JwtEncoderParameters jwt) {
-        String keyId = jwt.getJwsHeader().getKeyId() != null 
-                ? jwt.getJwsHeader().getKeyId()
-                : "N/A";
-        
+        final String keyId = Objects.requireNonNull(jwt.getJwsHeader()).getKeyId(); 
         log.info("Key with kid '{}' used for signing token", keyId);
         return jwtEncoder
                 .encode(jwt);

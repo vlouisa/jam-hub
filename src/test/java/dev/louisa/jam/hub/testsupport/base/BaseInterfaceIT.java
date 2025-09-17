@@ -2,6 +2,7 @@ package dev.louisa.jam.hub.testsupport.base;
 
 import dev.louisa.jam.hub.exceptions.JamHubError;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
+import dev.louisa.jam.hub.infrastructure.security.jwt.config.JwtTestConfig;
 import dev.louisa.jam.hub.testsupport.config.InterfaceLayerITConfig;
 import dev.louisa.victor.mock.rest.MockRest;
 import org.junit.jupiter.api.Tag;
@@ -19,7 +20,7 @@ import java.util.List;
 @Transactional
 @SpringBootTest
 @ActiveProfiles("interface-it")
-@Import(InterfaceLayerITConfig.class)
+@Import({InterfaceLayerITConfig.class, JwtTestConfig.class})
 @AutoConfigureMockMvc
 public class BaseInterfaceIT {
     
