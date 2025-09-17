@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static dev.louisa.jam.hub.infrastructure.security.exception.SecurityError.JWT_KEY_RESOLVER_ERROR;
@@ -42,7 +43,7 @@ public class JwtKeys {
     }
 
     private String formatLine(String bundleName, String kid) {
-        return String.format(" - %s (kid: %s)%s",
+        return String.format("-> %s (kid: %s)%s",
                 bundleName,
                 kid,
                 bundleName.equals(jwtProperties.getActiveBundle()) ? " [ACTIVE]" : "");
@@ -53,22 +54,19 @@ public class JwtKeys {
     }
 
     public JwtKey keyForBundle(String bundleName) {
-        try {
-            return jwtKeys.stream()
-                    .filter(jwtKey -> jwtKey.bundleName().equals(bundleName))
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("No key found for bundle: %s".formatted(bundleName)));
-        } catch (NoSuchElementException e) {
-            throw new SecurityException(JWT_KEY_RESOLVER_ERROR, e);
-        }
+        return findKey(JwtKey::bundleName, bundleName, "No key found for bundle: %s");
     }
 
     public JwtKey keyForId(String kid) {
+        return findKey(JwtKey::kid, kid, "No key found with kid: %s");
+    }
+
+    private JwtKey findKey(Function<JwtKey, String> extractor, String expected, String notFoundMessage) {
         try {
             return jwtKeys.stream()
-                    .filter(jwtKey -> jwtKey.kid().equals(kid))
+                    .filter(jwtKey -> extractor.apply(jwtKey).equals(expected))
                     .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("No key found with kid: %s ".formatted(kid)));
+                    .orElseThrow(() -> new NoSuchElementException(notFoundMessage.formatted(expected)));
         } catch (NoSuchElementException e) {
             throw new SecurityException(JWT_KEY_RESOLVER_ERROR, e);
         }

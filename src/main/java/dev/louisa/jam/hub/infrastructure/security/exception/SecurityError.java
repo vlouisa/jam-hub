@@ -15,7 +15,8 @@ public enum SecurityError implements JamHubError {
     NO_BEARER_TOKEN( "010", "No bearer token", UNAUTHORIZED),
     JWT_VERIFICATION_ERROR( "011", "JWT Verification error", UNAUTHORIZED),
     JWT_CLAIM_BUILDER_RESERVED_CLAIM("012", "JWT Claim Builder reserved claim", INTERNAL_SERVER_ERROR),
-    JWT_KEY_RESOLVER_ERROR("013", "JWT Key error while resolving", INTERNAL_SERVER_ERROR),
+    JWT_KEY_RESOLVER_ERROR("013", "JWTKey error while resolving", INTERNAL_SERVER_ERROR),
+    JWT_KEY_CONVERSION_ERROR("014", "JWTKey conversion error", INTERNAL_SERVER_ERROR),
     ;
     
     private static final String DOMAIN_CODE = "SEC";
