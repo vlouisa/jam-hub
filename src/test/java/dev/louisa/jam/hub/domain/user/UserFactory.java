@@ -7,12 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.datafaker.Faker;
 
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserFactory {
-
     private final Faker faker = new Faker();
     private PasswordFactory passwordFactory;
 
@@ -80,10 +81,32 @@ public class UserFactory {
 
     // --- Base builder with default/random values ---
     private User.UserBuilder<?, ?> baseBuilder() {
-        EmailAddress email = EmailAddress.builder().email(faker.internet().emailAddress()).build();
+        final String email = randomCustomEmail();
+        final String displayName = email.substring(0, email.indexOf('@'));
+        
         return User.builder()
                 .id(UserId.generate())
-                .email(email)
-                .displayName(faker.name().fullName());
+                .email(EmailAddress.from(email))
+                .displayName(displayName);
+    }
+
+    public String randomCustomEmail() {
+        final List<String> CUSTOM_DOMAINS = List.of(
+                "dinky-island.test", "mêlée-island.test", "scumm-bar.nl", "cannibal-village.me",
+                "woodtick.org", "ville-de-la-booty.test", "bloody-lip-bar.org", "le-chuck.com",
+                "the-voodoo-lounge.net", "the-pie-shop.org", "the-gilded-trout.com","the-scurvy-dog.net",
+                "fluffysock.org","house-of-mojo.io","the-voodoo-lady.net","threepwood.test","grog-shop.com",
+                "the-ink-pit.org", "the-kraken.net", "the-evil-wench.test", "the-leaning-tower-of-pizza.com",
+                "the-melty-molars.test", "the-screaming-fish.net", "the-ghost-of-mcclintock.org",
+                "the-plundered-pup.test", "the-sunken-treasure.org", "the-walrus-and-the-carpenter.net",
+                "thimble-island.test", "tri-island.test", "isla-solos.test", "isla-de-muerta.test",
+                "marley-mansion.org", "the-ship-of-fools.test", "the-jolly-buccaneer.net", "the-crow's-nest.org",
+                "bluebanana.com","cloudytoast.net","maytheforcebewithyou.com","sendmorecoffee.net","mykeyboardissticky.org"
+                );
+        
+        final var email = faker.internet().emailAddress();
+        final var localPart = email.substring(0, email.indexOf('@'));
+        final String domain = CUSTOM_DOMAINS.get(ThreadLocalRandom.current().nextInt(CUSTOM_DOMAINS.size()));
+        return localPart + "@" + domain;
     }
 }

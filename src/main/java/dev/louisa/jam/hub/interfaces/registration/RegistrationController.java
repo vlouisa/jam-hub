@@ -3,6 +3,7 @@ package dev.louisa.jam.hub.interfaces.registration;
 import dev.louisa.jam.hub.application.registration.RegistrationApplicationService;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.VerifyRegistrationRequest;
+import dev.louisa.jam.hub.interfaces.common.IdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +22,9 @@ public class RegistrationController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public ResponseEntity<UserRegistrationId> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<IdResponse> register(@RequestBody RegistrationRequest request) {
         final UserRegistrationId userRegistrationId = registrationApplicationService.register(request.toDomain());
-        return ResponseEntity.status(CREATED).body(userRegistrationId);
+        return ResponseEntity.status(CREATED).body(IdResponse.from(userRegistrationId));
     }
 
     @PostMapping("/{registrationId}/verify")

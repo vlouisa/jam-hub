@@ -12,7 +12,7 @@ public class GigAssert extends AbstractAssert<GigAssert, Gig> {
         super(actual, GigAssert.class);
     }
 
-    public static GigAssert assertThat(Gig actual) {
+    public static GigAssert assertThatGig(Gig actual) {
         return new GigAssert(actual);
     }
 

@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.testsupport.base;
 
+import dev.louisa.jam.hub.infrastructure.security.jwt.config.JwtTestConfig;
 import dev.louisa.jam.hub.testsupport.config.InfrastructureLayerITConfig;
 import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,6 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 @Tag("infrastructure-layer")
 @SpringBootTest
 @ActiveProfiles("infrastructure-it")
-@Import(InfrastructureLayerITConfig.class)
+@Import({InfrastructureLayerITConfig.class, JwtTestConfig.class})
 @AutoConfigureMockMvc
 public class BaseInfraStructureIT {}

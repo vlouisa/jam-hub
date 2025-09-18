@@ -4,6 +4,7 @@ import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.VerifyRegistrationRequest;
 import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
+import dev.louisa.jam.hub.interfaces.common.IdResponse;
 import dev.louisa.jam.hub.testsupport.base.BaseInterfaceIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +24,16 @@ class RegistrationControllerIT extends BaseInterfaceIT {
 
     @Test
     void shouldCreateUserRegistration() throws Exception {
-        var userRegistrationId =
+        var idResponse =
                 api.post("/api/v1/registrations")
                         .body(RegistrationRequest.builder()
                                 .email("guybrush.threepwood@lucas-arts.com")
-                                        .build())
+                                .build())
                         .expectResponseStatus(CREATED)
                         .send()
-                        .andReturn(UserRegistrationId.class);
+                        .andReturn(IdResponse.class);
         
-        var retrievedRegistration = userRegistrationRepository.findById(userRegistrationId).orElseThrow();
+        var retrievedRegistration = userRegistrationRepository.findById(UserRegistrationId.fromUUID(idResponse.id())).orElseThrow();
         assertThat(retrievedRegistration.getEmail().email()).isEqualTo("guybrush.threepwood@lucas-arts.com");
     }
 

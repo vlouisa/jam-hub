@@ -1,13 +1,13 @@
 package dev.louisa.jam.hub.domain.registration.persistence;
 
-import dev.louisa.jam.hub.testsupport.base.BaseIntegrationIT;
+import dev.louisa.jam.hub.testsupport.base.BaseRepositoryIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static dev.louisa.jam.hub.testsupport.Factory.domain.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserRegistrationRepositoryIT extends BaseIntegrationIT {
+class UserRegistrationRepositoryIT extends BaseRepositoryIT {
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;
 

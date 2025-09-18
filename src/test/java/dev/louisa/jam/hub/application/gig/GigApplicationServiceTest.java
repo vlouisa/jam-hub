@@ -66,11 +66,10 @@ class GigApplicationServiceTest extends BaseApplicationTest {
         verify(gigRepository).save(captor.capture());
 
         final Gig savedGig = captor.getValue();
-        GigAssert.assertThat(savedGig)
+        GigAssert.assertThatGig(savedGig)
                 .hasBandId(rollingStones.getId())
                 .hasStatus(OPTION)
-                .matchesDetails(gigDetails)
-        ;
+                .matchesDetails(gigDetails);
     }
 
     @Test
@@ -96,5 +95,4 @@ class GigApplicationServiceTest extends BaseApplicationTest {
                 .hasMessageContaining("UserId[id=da7c1e2b-3f4a-5b6c-7d8e-9f0a1b2c3d4e]")
                 .hasMessageContaining("BandId[id=903fec94-652a-4ed5-aeaf-79d9181b9ffb]");
     }
-
 }

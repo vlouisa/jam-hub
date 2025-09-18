@@ -5,6 +5,7 @@ import dev.louisa.jam.hub.domain.band.BandId;
 import dev.louisa.jam.hub.domain.gig.GigId;
 import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.infrastructure.security.UserPrincipal;
+import dev.louisa.jam.hub.interfaces.common.IdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,11 +20,11 @@ public class GigController {
     private final GigApplicationService gigService;
 
     @PostMapping("/{bandId}/gigs")
-    public ResponseEntity<GigId> planGig(@PathVariable("bandId") UUID bandId, @RequestBody GigRequest request, @AuthenticationPrincipal UserPrincipal user) {
-        GigId gigId = gigService.planGigForBand(
+    public ResponseEntity<IdResponse> planGig(@PathVariable("bandId") UUID bandId, @RequestBody GigRequest request, @AuthenticationPrincipal UserPrincipal user) {
+        final GigId gigId = gigService.planGigForBand(
                 UserId.fromUUID(user.userId()),
                 BandId.fromUUID(bandId), 
                 request.toDetails());
-        return ResponseEntity.ok(gigId);
+        return ResponseEntity.ok(IdResponse.from(gigId));
     }
 }
