@@ -2,7 +2,6 @@ package dev.louisa.jam.hub.infrastructure.security.jwt.authenticator;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import dev.louisa.jam.hub.infrastructure.security.UserPrincipalAuthenticationToken;
-import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,12 +24,6 @@ public class JwtAuthenticationService {
             SecurityContextHolder.getContext()
                     .setAuthentication(new UserPrincipalAuthenticationToken(userPrincipal));
 
-        } catch (SecurityException ex) {
-            log.error("Error occurred: [{}-{}, {}, HttpStatus={}]",
-                    ex.getError().getDomainCode(),
-                    ex.getError().getErrorCode(),
-                    ex.getError().getMessage(),
-                    ex.getHttpStatus());
         } catch (JWTVerificationException ex) {
             log.error(
                     "Error occurred: [{}-{}, {}, HttpStatus={}]",

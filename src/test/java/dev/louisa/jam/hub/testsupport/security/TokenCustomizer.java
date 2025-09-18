@@ -2,7 +2,6 @@ package dev.louisa.jam.hub.testsupport.security;
 
 import com.auth0.jwt.JWTCreator;
 import dev.louisa.jam.hub.domain.band.Band;
-import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.user.User;
 
 import java.time.Instant;
@@ -30,8 +29,7 @@ public interface TokenCustomizer extends Consumer<JWTCreator.Builder> {
     }
 
     static TokenCustomizer forUser(User user) {
-        return withSubject(user.getId().id().toString())
-                .andThen(withEmail(user.getEmail()));
+        return withSubject(user.getId().id().toString());
     }
 
     static TokenCustomizer withBands(List<Band> bands) {
@@ -42,8 +40,8 @@ public interface TokenCustomizer extends Consumer<JWTCreator.Builder> {
                         .toList());
     }
     
-    static TokenCustomizer withEmail(EmailAddress emailAddress) {
-        return builder -> builder.withClaim("jam-hub:email", emailAddress.email());
+    static TokenCustomizer withClaim(String claim,  String value) {
+        return builder -> builder.withClaim(claim, value);
     }
 
     static TokenCustomizer withIssuer(String issuer) {

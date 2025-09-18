@@ -15,8 +15,6 @@ import static dev.louisa.jam.hub.testsupport.security.TokenCustomizer.withExpire
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class TokenCreator {
-    private final Faker faker = new Faker();
-
     private JwtKey jwtKey;
     
     public static TokenCreator create() {
@@ -38,7 +36,6 @@ public class TokenCreator {
     private String aToken(TokenCustomizer tokenCustomizer) {
         final JWTCreator.Builder builder = JWT.create()
                 .withSubject(UUID.randomUUID().toString())
-                .withClaim("jam-hub:email", faker.internet().emailAddress())
                 .withClaim("jam-hub:bands", List.of(UUID.randomUUID().toString(), UUID.randomUUID().toString()))
                 .withIssuer("urn:jam-hub:auth")
                 .withAudience("jam-hub-service");
