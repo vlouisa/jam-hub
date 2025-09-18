@@ -20,3 +20,6 @@ mail:
       enable: true
     ssl:
       protocol: TLSv1.2
+      
+jwt-key-resolver:
+  active-bundle: 2025.09.16.094712

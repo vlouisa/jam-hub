@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 public class JwtConfig {
 
     @Bean
-    @Profile("!interface-it & !infrastructure-it & !repository-it & !application-it")
+    @Profile("!interface-it & !infrastructure-it & !application-it")
     public JwtKeys jwtKeys(JwtProperties properties) {
         return new JwtKeys(
                 properties,
