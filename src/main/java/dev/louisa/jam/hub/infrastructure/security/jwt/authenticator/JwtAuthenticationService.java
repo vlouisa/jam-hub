@@ -26,7 +26,7 @@ public class JwtAuthenticationService {
 
         } catch (SecurityException ex) {
             log.error("Error occurred: [{}-{}, {}, HttpStatus={}]",
-                    ex. getError().getDomainCode(),
+                    ex.getError().getDomainCode(),
                     ex.getError().getErrorCode(),
                     ex.getError().getMessage(),
                     ex.getHttpStatus());
