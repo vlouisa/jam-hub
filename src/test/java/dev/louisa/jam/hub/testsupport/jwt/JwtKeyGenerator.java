@@ -1,6 +1,7 @@
 package dev.louisa.jam.hub.testsupport.jwt;
 
 import com.nimbusds.jose.jwk.RSAKey;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKey;
 import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeyEntity;
 import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeyRepository;
 import dev.louisa.jam.hub.infrastructure.security.util.AESUtils;
@@ -19,14 +20,20 @@ public class JwtKeyGenerator {
     private final JwtKeyRepository repository;
 
     public static void main(String[] args) throws Exception {
-        JwtKeyGenerator generator = new JwtKeyGenerator(null);
-
+        JwtKeyGenerator generator = new JwtKeyGenerator();
         String masterKey = "RvLLoz/Zh/t2ba8FQY+SNfrnLU2kg5M9pnD2G9RqS1E=";
-        generator.generate(masterKey);
+        generator.generate(masterKey, "ACTIVE");
     }
 
+    public JwtKeyGenerator() {
+        this.repository = null;
+    }
 
-    public void generate(String masterKey) throws Exception {
+    public JwtKey generate(String masterKey) throws Exception {
+        return generate(masterKey, "ACTIVE");
+    }
+
+    public JwtKey generate(String masterKey, String status) throws Exception {
 
         // Generate RSA 2048-bit key pair
         final KeyPair kp = generateKeyPair();
@@ -49,21 +56,27 @@ public class JwtKeyGenerator {
         String encryptedPrivateKey = aes.encrypt(privateKeyStr);
 
         printKeyInfo(masterKey, rsaKey, encryptedPublicKey, encryptedPrivateKey);
-        saveToDb(rsaKey, encryptedPublicKey, encryptedPrivateKey);
-
+        saveToDb(UUID.fromString(rsaKey.getKeyID()), encryptedPublicKey, encryptedPrivateKey, status);
+        return JwtKey.builder()
+                .kid(UUID.fromString(rsaKey.getKeyID()))
+                .status(status)
+                .rsaKey(rsaKey)
+                .build();
     }
 
-    private void saveToDb(RSAKey rsaKey, String encryptedPublicKey, String encryptedPrivateKey) {
+    private void saveToDb(UUID kid, String encryptedPublicKey, String encryptedPrivateKey, String status) {
         if (repository == null) {
             System.out.println("No repository available, skipping persistence of generated keys");
             System.out.println("------------------------------------------- END OF KEY GENERATION --------------------------------------------");
+            return;
         }
+
         System.out.println("Persisting the generated keys to the DB");
         JwtKeyEntity entity = new JwtKeyEntity();
-        entity.setKid(UUID.fromString(rsaKey.getKeyID()));
+        entity.setKid(kid);
         entity.setPublicKey(encryptedPublicKey);
         entity.setPrivateKey(encryptedPrivateKey);
-        entity.setStatus("ACTIVE"); // Only one active key at a time
+        entity.setStatus(status);
         System.out.println("------------------------------------------- END OF KEY GENERATION --------------------------------------------");
 
         repository.save(entity);
@@ -86,7 +99,6 @@ public class JwtKeyGenerator {
     private static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
         kpg.initialize(2048);
-        KeyPair kp = kpg.generateKeyPair();
-        return kp;
+        return kpg.generateKeyPair();
     }
 }

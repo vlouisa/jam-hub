@@ -1,24 +1,28 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt.common;
 
 import com.nimbusds.jose.jwk.*;
+import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static dev.louisa.jam.hub.infrastructure.security.exception.SecurityError.JWT_KEY_RESOLVER_ERROR;
 
 @Slf4j
 public class JwtKeys {
 
-    private final List<JwtKey> allKeys;       // All loaded keys (active + inactive)
-    private final JwtKey activeSigningKey;    // The key used for signing new tokens
+    private final List<JwtKey> allKeys;
+    private final JwtKey activeSigningKey;
 
     public JwtKeys(List<JwtKey> keys) {
         this.allKeys = keys;
         this.activeSigningKey = keys.stream()
-                .filter(this::isActive) // define your active check
+                .filter(this::isActive) 
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No active JWT key"));
+                .orElseThrow(() -> new NoSuchElementException("No active JWT key registered"));
     }
 
     public JwtKey activeKey() {
@@ -29,7 +33,12 @@ public class JwtKeys {
         return allKeys.stream()
                 .filter(k -> k.kid().equals(kid))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Key not found for kid: " + kid));
+                .orElseThrow(() -> notFoundException(kid));
+    }
+
+    private static SecurityException notFoundException(UUID kid) {
+        return new SecurityException(JWT_KEY_RESOLVER_ERROR,                
+                new NoSuchElementException("Key not found for kid: " + kid));
     }
 
     public JWKSet toJWKSet() {

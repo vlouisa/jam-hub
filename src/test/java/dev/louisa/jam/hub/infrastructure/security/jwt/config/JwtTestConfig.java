@@ -12,7 +12,6 @@ import java.util.List;
 
 @TestConfiguration
 public class JwtTestConfig {
-    private static final String BUNDLE_ID = "2025.09.17.170752";
 
     @Bean
     public JwtKeys jwtKeys(JwtProperties properties, JwtKeyRepository repository, JwtKeyService service) throws Exception {
