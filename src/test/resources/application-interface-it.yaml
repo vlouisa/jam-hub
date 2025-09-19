@@ -16,4 +16,4 @@ spring:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     
 jwt-key-resolver:
-  active-bundle: 2025.09.17.170803
+  master-key: dB2e47+lseROtY3ekTuUuRAK5tVhUbx2/lhuygb4NLw=

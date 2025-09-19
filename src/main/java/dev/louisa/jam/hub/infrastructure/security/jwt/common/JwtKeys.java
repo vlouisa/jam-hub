@@ -1,81 +1,51 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt.common;
 
 import com.nimbusds.jose.jwk.*;
-import dev.louisa.jam.hub.domain.common.Guard;
 import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
-import dev.louisa.jam.hub.infrastructure.security.jwt.config.JwtProperties;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static dev.louisa.jam.hub.infrastructure.security.exception.SecurityError.JWT_KEY_RESOLVER_ERROR;
 
 @Slf4j
 public class JwtKeys {
-    private final List<JwtKey> jwtKeys = new ArrayList<>();
-    private final JwtProperties jwtProperties;
 
-    public JwtKeys(JwtProperties jwtProperties, JwtKey... jwtKeys) {
-        this.jwtKeys.addAll(List.of(jwtKeys));
-        this.jwtProperties = jwtProperties;
-        logKeysInfo(this.jwtKeys);
-        Guard.when(invalidActiveKeySpecified(jwtProperties.getActiveBundle(), jwtKeys))
-                .thenThrow(() -> new NoSuchElementException("Invalid active key bundle specified [%s]".formatted(jwtProperties.getActiveBundle())));
-    }
+    private final List<JwtKey> allKeys;
+    private final JwtKey activeSigningKey;
 
-    private static boolean invalidActiveKeySpecified(String activeBundle, JwtKey[] jwtKeys) {
-        return Arrays.stream(jwtKeys)
-                .map(JwtKey::bundleName)
-                .noneMatch(bundleName -> bundleName.equals(activeBundle));
-    }
-
-    private void logKeysInfo(List<JwtKey> keys) {
-        log.info("---------------------------------- JWT KEYS -----------------------------");
-        keys.stream()
-                .map(jwtKey -> formatLine(jwtKey.bundleName(), jwtKey.kid()))
-                .forEach(log::info);
-        log.info("---------------------------------- JWT KEYS -----------------------------");
-    }
-
-    private String formatLine(String bundleName, String kid) {
-        return String.format("-> %s (kid: %s)%s",
-                bundleName,
-                kid,
-                bundleName.equals(jwtProperties.getActiveBundle()) ? " [ACTIVE]" : "");
+    public JwtKeys(List<JwtKey> keys) {
+        this.allKeys = keys;
+        this.activeSigningKey = keys.stream()
+                .filter(this::isActive) 
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("No active JWT key registered"));
     }
 
     public JwtKey activeKey() {
-        return keyForBundle(jwtProperties.getActiveBundle());
+        return activeSigningKey;
     }
 
-    public JwtKey keyForBundle(String bundleName) {
-        return findKey(JwtKey::bundleName, bundleName, "No key found for bundle: %s");
+    public JwtKey keyForId(UUID kid) {
+        return allKeys.stream()
+                .filter(k -> k.kid().equals(kid))
+                .findFirst()
+                .orElseThrow(() -> notFoundException(kid));
     }
 
-    public JwtKey keyForId(String kid) {
-        return findKey(JwtKey::kid, kid, "No key found with kid: %s");
-    }
-
-    private JwtKey findKey(Function<JwtKey, String> extractor, String expected, String notFoundMessage) {
-        try {
-            return jwtKeys.stream()
-                    .filter(jwtKey -> extractor.apply(jwtKey).equals(expected))
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException(notFoundMessage.formatted(expected)));
-        } catch (NoSuchElementException e) {
-            throw new SecurityException(JWT_KEY_RESOLVER_ERROR, e);
-        }
+    private static SecurityException notFoundException(UUID kid) {
+        return new SecurityException(JWT_KEY_RESOLVER_ERROR,                
+                new NoSuchElementException("Key not found for kid: " + kid));
     }
 
     public JWKSet toJWKSet() {
-        return new JWKSet(
-                jwtKeys.stream()
-                        .map(JwtKey::rsaKey)
-                        .collect(Collectors.toUnmodifiableList()));
+        return new JWKSet(allKeys.stream().map(JwtKey::rsaKey).collect(Collectors.toUnmodifiableList()));
+    }
+
+    private boolean isActive(JwtKey key) {
+        return "ACTIVE".equalsIgnoreCase(key.status());
     }
 }

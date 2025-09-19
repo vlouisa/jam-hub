@@ -31,7 +31,7 @@ public class JwtProvider {
     public String generate(UUID userId, JwtCustomClaimBuilder customClaims) {
         final JwsHeader jwsHeaders = JwsHeader
                 .with(SignatureAlgorithm.RS256)
-                .keyId(jwtKeys.activeKey().kid())
+                .keyId(jwtKeys.activeKey().kid().toString())
                 .type("JWT")
                 .build();
 

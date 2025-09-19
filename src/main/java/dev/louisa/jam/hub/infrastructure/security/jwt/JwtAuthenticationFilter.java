@@ -1,6 +1,7 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt;
 
 import dev.louisa.jam.hub.infrastructure.security.SecurityLevelResolver;
+import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
 import dev.louisa.jam.hub.infrastructure.security.jwt.authenticator.JwtAuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -38,7 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        jwtAuthenticationService.authenticate(bearerTokenFrom(request));
+        try {
+            jwtAuthenticationService.authenticate(bearerTokenFrom(request));
+        } catch (SecurityException ex) {
+            log.error("Error occurred: [{}-{}, {}, HttpStatus={}]",
+                    ex.getError().getDomainCode(),
+                    ex.getError().getErrorCode(),
+                    ex.getError().getMessage(),
+                    ex.getHttpStatus());
+        }
         filterChain.doFilter(request, response);
     }
 

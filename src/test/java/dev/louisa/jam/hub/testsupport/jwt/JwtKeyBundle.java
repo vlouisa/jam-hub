@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.testsupport;
+package dev.louisa.jam.hub.testsupport.jwt;
 
 import lombok.extern.slf4j.Slf4j;
 
