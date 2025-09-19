@@ -11,7 +11,7 @@
 
     <groupId>dev.louisa</groupId>
     <artifactId>jam-hub-service</artifactId>
-    <version>0.5.2-SNAPSHOT</version>
+    <version>0.5.3-SNAPSHOT</version>
     <name>jam-hub-service</name>
     <description>jam-hub-service</description>
     <packaging>jar</packaging>
