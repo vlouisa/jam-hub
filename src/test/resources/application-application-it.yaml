@@ -17,4 +17,4 @@ spring:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 
 jwt-key-resolver:
-  master-key: yTTE26cd/ioOcfVk+it8qdHBKeTdDl1gpn9Ni9z23c0=  
+  master-key: yTTE26cd/ioOcfVk+it8qdHBKeTdDl1gpn9Ni9z23c0=
