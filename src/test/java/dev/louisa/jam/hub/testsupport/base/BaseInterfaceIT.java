@@ -26,10 +26,11 @@ public class BaseInterfaceIT {
     
     @Autowired
     protected MockRest api;
+    
     protected ErrorResponse errorResponse(JamHubError error) {
         return errorResponse(error, List.of());
     }
-
+   
     protected ErrorResponse errorResponse(JamHubError error, List<String> context) {
         return ErrorResponse.builder()
                 .errorCode(error.getDomainCode() + "-" + error.getErrorCode())

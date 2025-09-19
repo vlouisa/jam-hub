@@ -1,7 +1,8 @@
-package dev.louisa.jam.hub.infrastructure.security.jwt.common;
+package dev.louisa.jam.hub.testsupport.jwt;
 
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
+import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKey;
 import dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReader;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import static dev.louisa.jam.hub.infrastructure.security.util.RSAKeyReader.readKeyIdFromFile;
@@ -24,8 +26,8 @@ public class JwtKeyCreator {
         log.info("Creating JwtKey with kid '{}' from bundle '{}'", kid, bundleName);
         
         return JwtKey.builder()
-                .kid(kid)
-                .bundleName(bundleName)
+                .kid(UUID.fromString(kid))
+                .status("ACTIVE")
                 .rsaKey(createRSAKey(kid, privateKeyFileLocation(bundleName), publicKeyFileLocation(bundleName)))
                 .build();
     }

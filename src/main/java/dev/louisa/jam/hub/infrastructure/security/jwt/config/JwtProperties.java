@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "jwt-key-resolver")
 public class JwtProperties {
     private String activeBundle;
+    private String masterKey;
 }

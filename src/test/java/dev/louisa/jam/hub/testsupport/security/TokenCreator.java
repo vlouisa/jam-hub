@@ -72,7 +72,7 @@ public class TokenCreator {
     private JWTCreator.Builder createToken(JWTCreator.Builder jwtBuilder, TokenCustomizer tokenCustomizer) {
         JWTCreator.Builder builder =
                 jwtBuilder
-                        .withKeyId(jwtKey.kid())
+                        .withKeyId(jwtKey.kid().toString())
                         .withIssuedAt(Instant.now())
                         .withNotBefore(Instant.now())
                         .withExpiresAt(Instant.now().plus(10, MINUTES))

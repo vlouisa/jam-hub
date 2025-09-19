@@ -6,14 +6,15 @@ import lombok.Builder;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import static dev.louisa.jam.hub.infrastructure.security.exception.SecurityError.JWT_KEY_CONVERSION_ERROR;
 
 @Builder
 public record JwtKey(
-        String kid, 
-        String bundleName, 
+        UUID kid,
+        String status,
         RSAKey rsaKey) {
 
     public RSAPublicKey toPublicKey() {

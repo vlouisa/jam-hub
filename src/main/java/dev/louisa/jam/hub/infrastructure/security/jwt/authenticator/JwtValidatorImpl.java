@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import static com.auth0.jwt.algorithms.Algorithm.RSA256;
@@ -40,7 +41,7 @@ public class JwtValidatorImpl implements JwtValidator {
         final DecodedJWT unverifiedJwt = JWT.decode(token);
         final String keyId = unverifiedJwt.getKeyId();
         log.info("Key with kid '{}' used for verifying token", keyId);
-        return jwtKeys.keyForId(keyId);
+        return jwtKeys.keyForId(UUID.fromString(keyId));
     }
 
     private void validateClaims(DecodedJWT jwt) {
