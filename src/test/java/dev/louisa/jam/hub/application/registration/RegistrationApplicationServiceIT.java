@@ -8,9 +8,9 @@ import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
 import dev.louisa.jam.hub.domain.user.User;
-import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
+import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
 import dev.louisa.jam.hub.testsupport.base.BaseApplicationIT;
-import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
+import dev.louisa.jam.hub.application.registration.port.outbound.UserRegistrationRepository;
 import dev.louisa.victor.mail.pit.docker.MailPitContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -103,7 +103,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
                 .usingRepository(userRegistrationRepository)
                 .create();
 
-        registrationApplicationService.verifyOtp(registration.getId(), registration.getOtp(), "MyP@ssW0rd!");
+        registrationApplicationService.verify(registration.getId(), registration.getOtp(), "MyP@ssW0rd!");
 
         final UserRegistration retrievedRegistration = userRegistrationRepository.findById(registration.getId()).orElseThrow();
         assertThatRegistration(retrievedRegistration)
@@ -135,7 +135,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
                 .usingRepository(userRegistrationRepository)
                 .createVerified();
 
-        assertThatCode(() -> registrationApplicationService.verifyOtp(registration.getId(), registration.getOtp(), "MyP@ssW0rd!"))
+        assertThatCode(() -> registrationApplicationService.verify(registration.getId(), registration.getOtp(), "MyP@ssW0rd!"))
                 .isInstanceOf(UserRegistrationDomainException.class)
                 .hasMessageContaining(OTP_CODE_ALREADY_VERIFIED.getMessage());
 
@@ -151,7 +151,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
 
     @Test
     void shouldThrowWhenRegistrationDoesNotExist() {
-        assertThatCode(() -> registrationApplicationService.verifyOtp(UserRegistrationId.generate(), UUID.randomUUID(), "MyP@ssW0rd!"))
+        assertThatCode(() -> registrationApplicationService.verify(UserRegistrationId.generate(), UUID.randomUUID(), "MyP@ssW0rd!"))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessageContaining(ENTITY_NOT_FOUND.getMessage());
     }

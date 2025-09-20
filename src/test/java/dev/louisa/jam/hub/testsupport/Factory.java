@@ -7,7 +7,7 @@ import dev.louisa.jam.hub.domain.gig.GigFactory;
 import dev.louisa.jam.hub.domain.gig.GigRoleAssignmentFactory;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationFactory;
 import dev.louisa.jam.hub.domain.user.UserFactory;
-import dev.louisa.jam.hub.interfaces.gig.GigRequestFactory;
+import dev.louisa.jam.hub.api.gig.GigRequestFactory;
 
 public final class Factory {
     public static final class web {

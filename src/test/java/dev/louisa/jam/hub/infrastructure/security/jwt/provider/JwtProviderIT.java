@@ -1,5 +1,6 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt.provider;
 
+import dev.louisa.jam.hub.application.user.port.outbound.JwtProvider;
 import dev.louisa.jam.hub.infrastructure.Clock;
 import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureIT;
 import dev.louisa.jam.hub.testsupport.security.JwtClaimUtil;

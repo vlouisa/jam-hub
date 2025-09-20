@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.gig;
 
-import dev.louisa.jam.hub.domain.gig.persistence.GigRepository;
+import dev.louisa.jam.hub.application.gig.port.outbound.GigRepository;
 import dev.louisa.jam.hub.domain.common.Address;
 import dev.louisa.jam.hub.domain.common.Guard;
 import dev.louisa.jam.hub.domain.user.UserId;

@@ -5,9 +5,11 @@ import dev.louisa.jam.hub.application.user.PasswordFactory;
 import dev.louisa.jam.hub.domain.event.DomainEventPublisher;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
-import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
+import dev.louisa.jam.hub.application.registration.port.outbound.UserRegistrationRepository;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
-import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
+import dev.louisa.jam.hub.application.registration.port.inbound.RegisterUser;
+import dev.louisa.jam.hub.application.registration.port.inbound.VerifyRegistration;
+import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,13 +24,14 @@ import static dev.louisa.jam.hub.domain.user.User.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RegistrationApplicationService {
+public class RegistrationApplicationService implements RegisterUser, VerifyRegistration {
     private final UserRegistrationRepository userRegistrationRepository;
     private final UserRepository userRepository;
     private final PasswordFactory passwordFactory;
     private final DomainEventPublisher publisher;
 
     @Transactional
+    @Override
     public UserRegistrationId register(EmailAddress emailAddress) {
         userRepository.findByEmail(emailAddress).ifPresent(user -> {
             throw new ApplicationException(USER_ALREADY_EXIST);
@@ -41,7 +44,8 @@ public class RegistrationApplicationService {
     }
     
     @Transactional
-    public void verifyOtp(UserRegistrationId userRegistrationId, UUID otp, String rawPassword) {
+    @Override
+    public void verify(UserRegistrationId userRegistrationId, UUID otp, String rawPassword) {
         UserRegistration registration = userRegistrationRepository
                 .findById(userRegistrationId)
                 .orElseThrow(() -> new ApplicationException(ENTITY_NOT_FOUND));

@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.domain.user;
 
 import dev.louisa.jam.hub.application.user.PasswordFactory;
-import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
+import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
