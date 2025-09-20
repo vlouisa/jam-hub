@@ -22,7 +22,7 @@ import java.util.List;
 @ActiveProfiles("interface-it")
 @Import({InterfaceLayerITConfig.class, JwtTestConfig.class})
 @AutoConfigureMockMvc
-public class BaseInterfaceIT {
+public class BaseApiIT {
     
     @Autowired
     protected MockRest api;

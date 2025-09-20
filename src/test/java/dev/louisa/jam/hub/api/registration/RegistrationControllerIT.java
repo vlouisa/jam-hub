@@ -5,7 +5,7 @@ import dev.louisa.jam.hub.domain.registration.VerifyRegistrationRequest;
 import dev.louisa.jam.hub.application.registration.port.outbound.UserRegistrationRepository;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
 import dev.louisa.jam.hub.api.common.IdResponse;
-import dev.louisa.jam.hub.testsupport.base.BaseInterfaceIT;
+import dev.louisa.jam.hub.testsupport.base.BaseApiIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,7 +17,7 @@ import static dev.louisa.jam.hub.testsupport.Factory.domain.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 
-class RegistrationControllerIT extends BaseInterfaceIT {
+class RegistrationControllerIT extends BaseApiIT {
     
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;

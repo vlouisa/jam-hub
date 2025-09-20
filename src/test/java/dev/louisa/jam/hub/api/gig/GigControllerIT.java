@@ -7,7 +7,7 @@ import dev.louisa.jam.hub.application.gig.port.outbound.GigRepository;
 import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
 import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeys;
 import dev.louisa.jam.hub.api.common.IdResponse;
-import dev.louisa.jam.hub.testsupport.base.BaseInterfaceIT;
+import dev.louisa.jam.hub.testsupport.base.BaseApiIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +20,7 @@ import static dev.louisa.jam.hub.testsupport.security.TokenCreator.create;
 import static dev.louisa.jam.hub.testsupport.security.TokenCustomizer.*;
 import static org.springframework.http.HttpStatus.*;
 
-class GigControllerIT extends BaseInterfaceIT {
+class GigControllerIT extends BaseApiIT {
     @Autowired
     private BandRepository bandRepository;
     @Autowired
