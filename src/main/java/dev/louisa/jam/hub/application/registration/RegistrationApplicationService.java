@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.application.registration;
 
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
-import dev.louisa.jam.hub.application.user.PasswordFactory;
+import dev.louisa.jam.hub.application.user.port.outbound.PasswordHasher;
 import dev.louisa.jam.hub.domain.event.DomainEventPublisher;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
@@ -10,6 +10,7 @@ import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.application.registration.port.inbound.RegisterUser;
 import dev.louisa.jam.hub.application.registration.port.inbound.VerifyRegistration;
 import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
+import dev.louisa.jam.hub.domain.user.Password;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,9 @@ import static dev.louisa.jam.hub.domain.user.User.*;
 @RequiredArgsConstructor
 @Slf4j
 public class RegistrationApplicationService implements RegisterUser, VerifyRegistration {
+    private final PasswordHasher passwordHasher;
     private final UserRegistrationRepository userRegistrationRepository;
     private final UserRepository userRepository;
-    private final PasswordFactory passwordFactory;
     private final DomainEventPublisher publisher;
 
     @Transactional
@@ -52,7 +53,7 @@ public class RegistrationApplicationService implements RegisterUser, VerifyRegis
         
         registration.verifyWithOtp(otp);
 
-        userRepository.save(createNewUser(registration.getEmail(), passwordFactory.from(rawPassword)));
+        userRepository.save(createNewUser(registration.getEmail(), Password.fromString(rawPassword).hash(passwordHasher)));
         userRegistrationRepository.save(registration);
         registration.pullDomainEvents().forEach(publisher::publish);
     }

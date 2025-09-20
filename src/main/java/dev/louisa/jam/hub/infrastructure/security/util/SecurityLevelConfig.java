@@ -15,7 +15,7 @@ public class SecurityLevelConfig {
         return new UnsecuredEndpoints(List.of(
                 Map.entry("/api/v1/registrations", "POST"),
                 Map.entry("/api/v1/registrations/*/verify", "POST"),
-                Map.entry("/api/v1/auth/*", "GET")
+                Map.entry("/api/v1/auth/login", "POST")
         ));
     }
 }

@@ -1,12 +1,11 @@
 package dev.louisa.jam.hub.application.user.port.outbound;
 
+import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.infrastructure.security.jwt.provider.JwtCustomClaimBuilder;
-
-import java.util.UUID;
 
 public interface JwtProvider {
     
-    String generate(UUID userId);
+    String generate(UserId userId);
     
-    String generate(UUID userId, JwtCustomClaimBuilder claimsBuilder);
+    String generate(UserId userId, JwtCustomClaimBuilder claimsBuilder);
 }

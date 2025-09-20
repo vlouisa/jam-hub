@@ -2,11 +2,13 @@ package dev.louisa.jam.hub.application.registration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
-import dev.louisa.jam.hub.application.user.PasswordFactory;
+import dev.louisa.jam.hub.application.user.port.outbound.PasswordHasher;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
+import dev.louisa.jam.hub.domain.user.HashedPassword;
+import dev.louisa.jam.hub.domain.user.Password;
 import dev.louisa.jam.hub.domain.user.User;
 import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
 import dev.louisa.jam.hub.testsupport.base.BaseApplicationIT;
@@ -45,9 +47,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private PasswordFactory passwordFactory;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordHasher passwordHasher;
 
     @Autowired
     private RegistrationApplicationService registrationApplicationService;
@@ -88,7 +88,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
     @Test
     void shouldThrowWhenUserAlreadyExistsWithGivenEmailAddress() {
         var user = aUser
-                .usingPasswordFactory(passwordFactory)
+                .usingPasswordHasher(passwordHasher)
                 .usingRepository(userRepository)
                 .create();
 
@@ -97,6 +97,13 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
                 .hasMessageContaining(USER_ALREADY_EXIST.getMessage());
     }
 
+    @Test
+    void test() {
+        HashedPassword hashedPassword = Password.fromString("MyP@ssW0rd!").hash(passwordHasher);
+        
+        Password.fromString("MyP@ssW0rd!").matches(hashedPassword,passwordHasher);
+    }
+    
     @Test
     void shouldVerifyRegistration() throws JsonProcessingException {
         var registration = aUserRegistration
@@ -114,7 +121,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
 
         final User retrievedUser = userRepository.findByEmail(registration.getEmail()).orElseThrow();
         assertThatUser(retrievedUser)
-                .usingPasswordEncoder(passwordEncoder)
+                .usingPasswordHasher(passwordHasher)
                 .hasDisplayNameDerivedFromEmail()
                 .hasPassword("MyP@ssW0rd!")
                 .hasEmail(registration.getEmail());

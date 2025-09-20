@@ -1,6 +1,7 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt.provider;
 
 import dev.louisa.jam.hub.application.user.port.outbound.JwtProvider;
+import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.infrastructure.Clock;
 import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeys;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +27,13 @@ public class JwtProviderImpl implements JwtProvider {
     
     
     @Override
-    public String generate(UUID userId) {
+    public String generate(UserId userId) {
         return generate(userId, JwtCustomClaimBuilder.customClaims());
 
     }
     
     @Override
-    public String generate(UUID userId, JwtCustomClaimBuilder customClaims) {
+    public String generate(UserId userId, JwtCustomClaimBuilder customClaims) {
         final JwsHeader jwsHeaders = JwsHeader
                 .with(SignatureAlgorithm.RS256)
                 .keyId(jwtKeys.activeKey().kid().toString())
@@ -43,7 +44,7 @@ public class JwtProviderImpl implements JwtProvider {
         final JwtClaimsSet.Builder claims =
                 JwtClaimsSet.builder()
                         .id(UUID.randomUUID().toString())
-                        .subject(userId.toString())
+                        .subject(userId.toValue())
                         .issuer("urn:jam-hub:auth")
                         .audience(List.of("jam-hub-service", "jam-hub-gateway"))
                         .issuedAt(now)
