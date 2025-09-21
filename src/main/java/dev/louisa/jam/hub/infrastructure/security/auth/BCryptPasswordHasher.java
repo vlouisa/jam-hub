@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.infrastructure.security.auth;
 
-import dev.louisa.jam.hub.application.user.port.outbound.PasswordHasher;
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 

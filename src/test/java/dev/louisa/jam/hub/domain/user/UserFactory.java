@@ -1,7 +1,8 @@
 package dev.louisa.jam.hub.domain.user;
 
-import dev.louisa.jam.hub.application.user.port.outbound.PasswordHasher;
-import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
+import dev.louisa.jam.hub.application.auth.Password;
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
+import dev.louisa.jam.hub.application.auth.port.outbound.UserRepository;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

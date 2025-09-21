@@ -2,15 +2,15 @@ package dev.louisa.jam.hub.application.registration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
-import dev.louisa.jam.hub.application.user.port.outbound.PasswordHasher;
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
 import dev.louisa.jam.hub.domain.user.HashedPassword;
-import dev.louisa.jam.hub.domain.user.Password;
+import dev.louisa.jam.hub.application.auth.Password;
 import dev.louisa.jam.hub.domain.user.User;
-import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
+import dev.louisa.jam.hub.application.auth.port.outbound.UserRepository;
 import dev.louisa.jam.hub.testsupport.base.BaseApplicationIT;
 import dev.louisa.jam.hub.application.registration.port.outbound.UserRegistrationRepository;
 import dev.louisa.victor.mail.pit.docker.MailPitContainer;
@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 

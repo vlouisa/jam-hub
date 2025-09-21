@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.application.user.port.outbound;
+package dev.louisa.jam.hub.application.auth.port.outbound;
 
 public interface PasswordHasher {
     String hash(String rawPassword);

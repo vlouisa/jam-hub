@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.testsupport.asserts;
 
-import dev.louisa.jam.hub.application.user.port.outbound.PasswordHasher;
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.user.User;
 import dev.louisa.jam.hub.domain.user.UserId;

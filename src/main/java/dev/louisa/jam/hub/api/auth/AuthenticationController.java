@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.api.auth;
 
-import dev.louisa.jam.hub.application.user.port.inbound.AuthenticateUser;
+import dev.louisa.jam.hub.application.auth.port.inbound.AuthenticateUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

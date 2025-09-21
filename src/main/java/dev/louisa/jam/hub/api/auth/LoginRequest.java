@@ -1,9 +1,11 @@
 package dev.louisa.jam.hub.api.auth;
 
 import dev.louisa.jam.hub.domain.common.EmailAddress;
-import dev.louisa.jam.hub.domain.user.Credentials;
-import dev.louisa.jam.hub.domain.user.Password;
+import dev.louisa.jam.hub.application.auth.Credentials;
+import dev.louisa.jam.hub.application.auth.Password;
+import lombok.Builder;
 
+@Builder
 public record LoginRequest(String username, String password) {
  
     Credentials toCredentials() {

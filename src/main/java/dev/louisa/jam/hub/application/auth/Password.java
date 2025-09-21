@@ -1,6 +1,9 @@
-package dev.louisa.jam.hub.domain.user;
+package dev.louisa.jam.hub.application.auth;
 
-import dev.louisa.jam.hub.application.user.port.outbound.PasswordHasher;
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
+import dev.louisa.jam.hub.domain.user.HashedPassword;
+import dev.louisa.jam.hub.infrastructure.security.exception.SecurityError;
+import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
 
 import java.util.regex.Pattern;
 
@@ -19,7 +22,8 @@ public record Password(String value) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
         if (!COMPLEXITY_PATTERN.matcher(value).matches()) {
-            throw new IllegalArgumentException("Password does not meet complexity requirements");
+            throw new SecurityException(SecurityError.INVALID_CREDENTIALS, 
+                new IllegalArgumentException("Password does not meet complexity requirements"));
         }
     }
 

@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.domain.user;
+package dev.louisa.jam.hub.application.auth;
 
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import lombok.Builder;

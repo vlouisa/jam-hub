@@ -4,7 +4,7 @@ import dev.louisa.jam.hub.application.band.port.outbound.BandRepository;
 import dev.louisa.jam.hub.domain.gig.GigId;
 import dev.louisa.jam.hub.domain.gig.GigStatus;
 import dev.louisa.jam.hub.application.gig.port.outbound.GigRepository;
-import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
+import dev.louisa.jam.hub.application.auth.port.outbound.UserRepository;
 import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeys;
 import dev.louisa.jam.hub.api.common.IdResponse;
 import dev.louisa.jam.hub.testsupport.base.BaseApiIT;

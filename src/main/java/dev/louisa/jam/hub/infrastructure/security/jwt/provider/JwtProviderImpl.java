@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt.provider;
 
-import dev.louisa.jam.hub.application.user.port.outbound.JwtProvider;
+import dev.louisa.jam.hub.application.auth.port.outbound.JwtProvider;
 import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.infrastructure.Clock;
 import dev.louisa.jam.hub.infrastructure.security.jwt.common.JwtKeys;

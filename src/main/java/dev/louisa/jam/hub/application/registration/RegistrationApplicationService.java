@@ -1,7 +1,7 @@
 package dev.louisa.jam.hub.application.registration;
 
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
-import dev.louisa.jam.hub.application.user.port.outbound.PasswordHasher;
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
 import dev.louisa.jam.hub.domain.event.DomainEventPublisher;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
@@ -9,8 +9,8 @@ import dev.louisa.jam.hub.application.registration.port.outbound.UserRegistratio
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.application.registration.port.inbound.RegisterUser;
 import dev.louisa.jam.hub.application.registration.port.inbound.VerifyRegistration;
-import dev.louisa.jam.hub.application.user.port.outbound.UserRepository;
-import dev.louisa.jam.hub.domain.user.Password;
+import dev.louisa.jam.hub.application.auth.port.outbound.UserRepository;
+import dev.louisa.jam.hub.application.auth.Password;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package dev.louisa.jam.hub.application.user.port.outbound;
+package dev.louisa.jam.hub.application.auth.port.outbound;
 
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.user.User;
