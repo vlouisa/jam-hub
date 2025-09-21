@@ -1,7 +1,8 @@
 package dev.louisa.jam.hub.domain.user;
 
-import dev.louisa.jam.hub.application.user.PasswordFactory;
-import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
+import dev.louisa.jam.hub.application.auth.Password;
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
+import dev.louisa.jam.hub.application.auth.port.outbound.UserRepository;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,10 @@ import java.util.function.Consumer;
 @AllArgsConstructor
 public class UserFactory {
     private final Faker faker = new Faker();
-    private PasswordFactory passwordFactory;
+    private PasswordHasher passwordHasher;
 
-    public UserFactory usingPasswordFactory(PasswordFactory passwordFactory) {
-        return new UserFactory(passwordFactory);
+    public UserFactory usingPasswordHasher(PasswordHasher passwordHasher) {
+        return new UserFactory(passwordHasher);
     }
 
     public User create() {
@@ -32,13 +33,13 @@ public class UserFactory {
     }
     
     public User createWithCredentials(String emailAddress, String rawPassword) {
-        if (passwordFactory == null) {
+        if (passwordHasher == null) {
             return createWithEmail(emailAddress);
         }
 
         return create(b -> b
                 .email(EmailAddress.from(emailAddress))
-                .password(passwordFactory.from(rawPassword)));
+                .hashedPassword(Password.fromString(rawPassword).hash(passwordHasher)));
     }
 
     public User create(Consumer<User.UserBuilder<?, ?>> customizer) {

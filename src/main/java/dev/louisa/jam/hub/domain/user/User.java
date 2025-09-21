@@ -27,15 +27,15 @@ public class User extends AggregateRoot<UserId> {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "hash", column = @Column(name = "password")),
+            @AttributeOverride(name = "value", column = @Column(name = "password")),
     })
-    private Password password;
+    private HashedPassword hashedPassword;
 
-    public static User createNewUser(EmailAddress email, Password password) {
+    public static User createNewUser(EmailAddress email, HashedPassword hashedPassword) {
         return User.builder()
                 .id(UserId.generate())
                 .email(email)
-                .password(password)
+                .hashedPassword(hashedPassword)
                 .displayName(email.email())
                 .build();
     }

@@ -2,15 +2,17 @@ package dev.louisa.jam.hub.application.registration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
-import dev.louisa.jam.hub.application.user.PasswordFactory;
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.registration.UserRegistration;
 import dev.louisa.jam.hub.domain.registration.UserRegistrationId;
 import dev.louisa.jam.hub.domain.registration.exceptions.UserRegistrationDomainException;
+import dev.louisa.jam.hub.domain.user.HashedPassword;
+import dev.louisa.jam.hub.application.auth.Password;
 import dev.louisa.jam.hub.domain.user.User;
-import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
+import dev.louisa.jam.hub.application.auth.port.outbound.UserRepository;
 import dev.louisa.jam.hub.testsupport.base.BaseApplicationIT;
-import dev.louisa.jam.hub.domain.registration.persistence.UserRegistrationRepository;
+import dev.louisa.jam.hub.application.registration.port.outbound.UserRegistrationRepository;
 import dev.louisa.victor.mail.pit.docker.MailPitContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 
@@ -45,9 +46,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private PasswordFactory passwordFactory;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordHasher passwordHasher;
 
     @Autowired
     private RegistrationApplicationService registrationApplicationService;
@@ -88,7 +87,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
     @Test
     void shouldThrowWhenUserAlreadyExistsWithGivenEmailAddress() {
         var user = aUser
-                .usingPasswordFactory(passwordFactory)
+                .usingPasswordHasher(passwordHasher)
                 .usingRepository(userRepository)
                 .create();
 
@@ -98,12 +97,19 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
     }
 
     @Test
+    void test() {
+        HashedPassword hashedPassword = Password.fromString("MyP@ssW0rd!").hash(passwordHasher);
+        
+        Password.fromString("MyP@ssW0rd!").matches(hashedPassword,passwordHasher);
+    }
+    
+    @Test
     void shouldVerifyRegistration() throws JsonProcessingException {
         var registration = aUserRegistration
                 .usingRepository(userRegistrationRepository)
                 .create();
 
-        registrationApplicationService.verifyOtp(registration.getId(), registration.getOtp(), "MyP@ssW0rd!");
+        registrationApplicationService.verify(registration.getId(), registration.getOtp(), "MyP@ssW0rd!");
 
         final UserRegistration retrievedRegistration = userRegistrationRepository.findById(registration.getId()).orElseThrow();
         assertThatRegistration(retrievedRegistration)
@@ -114,7 +120,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
 
         final User retrievedUser = userRepository.findByEmail(registration.getEmail()).orElseThrow();
         assertThatUser(retrievedUser)
-                .usingPasswordEncoder(passwordEncoder)
+                .usingPasswordHasher(passwordHasher)
                 .hasDisplayNameDerivedFromEmail()
                 .hasPassword("MyP@ssW0rd!")
                 .hasEmail(registration.getEmail());
@@ -135,7 +141,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
                 .usingRepository(userRegistrationRepository)
                 .createVerified();
 
-        assertThatCode(() -> registrationApplicationService.verifyOtp(registration.getId(), registration.getOtp(), "MyP@ssW0rd!"))
+        assertThatCode(() -> registrationApplicationService.verify(registration.getId(), registration.getOtp(), "MyP@ssW0rd!"))
                 .isInstanceOf(UserRegistrationDomainException.class)
                 .hasMessageContaining(OTP_CODE_ALREADY_VERIFIED.getMessage());
 
@@ -151,7 +157,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
 
     @Test
     void shouldThrowWhenRegistrationDoesNotExist() {
-        assertThatCode(() -> registrationApplicationService.verifyOtp(UserRegistrationId.generate(), UUID.randomUUID(), "MyP@ssW0rd!"))
+        assertThatCode(() -> registrationApplicationService.verify(UserRegistrationId.generate(), UUID.randomUUID(), "MyP@ssW0rd!"))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessageContaining(ENTITY_NOT_FOUND.getMessage());
     }

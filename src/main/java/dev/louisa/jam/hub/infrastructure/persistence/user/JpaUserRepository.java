@@ -2,7 +2,7 @@ package dev.louisa.jam.hub.infrastructure.persistence.user;
 
 import dev.louisa.jam.hub.domain.user.User;
 import dev.louisa.jam.hub.domain.user.UserId;
-import dev.louisa.jam.hub.domain.user.persistence.UserRepository;
+import dev.louisa.jam.hub.application.auth.port.outbound.UserRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -4,10 +4,10 @@ import dev.louisa.jam.hub.testsupport.base.BaseApplicationTest;
 import dev.louisa.jam.hub.application.exceptions.ApplicationException;
 import dev.louisa.jam.hub.domain.band.Band;
 import dev.louisa.jam.hub.domain.band.BandId;
-import dev.louisa.jam.hub.domain.band.persistence.BandRepository;
+import dev.louisa.jam.hub.application.band.port.outbound.BandRepository;
 import dev.louisa.jam.hub.domain.gig.Gig;
 import dev.louisa.jam.hub.domain.gig.GigId;
-import dev.louisa.jam.hub.domain.gig.persistence.GigRepository;
+import dev.louisa.jam.hub.application.gig.port.outbound.GigRepository;
 import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.testsupport.Factory.application;
 import dev.louisa.jam.hub.testsupport.asserts.GigAssert;
@@ -58,7 +58,7 @@ class GigApplicationServiceTest extends BaseApplicationTest {
         when(bandRepository.findById(rollingStones.getId())).thenReturn(Optional.of(rollingStones));
         when(gigRepository.save(any())).thenReturn(gig);
 
-        final GigId gigId = gigApplicationService.planGigForBand(MICK, rollingStones.getId(), gigDetails);
+        final GigId gigId = gigApplicationService.planNewGig(MICK, rollingStones.getId(), gigDetails);
 
         assertThat(gigId.toValue()).isEqualTo(gig.getId().toValue());
 
@@ -76,7 +76,7 @@ class GigApplicationServiceTest extends BaseApplicationTest {
     void shouldThrowExceptionWhenBandNotFound() {
         var gigDetails = application.gigDetails.create();
 
-        assertThatCode(() -> gigApplicationService.planGigForBand(MICK, rollingStones.getId(), gigDetails))
+        assertThatCode(() -> gigApplicationService.planNewGig(MICK, rollingStones.getId(), gigDetails))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessage("APP-001 | 404 NOT_FOUND | Entity not found");
 
@@ -87,7 +87,7 @@ class GigApplicationServiceTest extends BaseApplicationTest {
         var gigDetails = application.gigDetails.create();
         when(bandRepository.findById(rollingStones.getId())).thenReturn(Optional.of(rollingStones));
 
-        assertThatCode(() -> gigApplicationService.planGigForBand(LENNY, rollingStones.getId(), gigDetails))
+        assertThatCode(() -> gigApplicationService.planNewGig(LENNY, rollingStones.getId(), gigDetails))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessageContaining("APP-100")
                 .hasMessageContaining("403 FORBIDDEN")

@@ -1,6 +1,6 @@
 package dev.louisa.jam.hub.domain.band;
 
-import dev.louisa.jam.hub.domain.band.persistence.BandRepository;
+import dev.louisa.jam.hub.application.band.port.outbound.BandRepository;
 import dev.louisa.jam.hub.domain.common.Guard;
 import dev.louisa.jam.hub.domain.user.UserId;
 import lombok.RequiredArgsConstructor;

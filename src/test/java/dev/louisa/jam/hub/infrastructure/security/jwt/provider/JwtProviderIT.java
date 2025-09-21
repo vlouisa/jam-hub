@@ -1,5 +1,7 @@
 package dev.louisa.jam.hub.infrastructure.security.jwt.provider;
 
+import dev.louisa.jam.hub.application.auth.port.outbound.JwtProvider;
+import dev.louisa.jam.hub.domain.user.UserId;
 import dev.louisa.jam.hub.infrastructure.Clock;
 import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureIT;
 import dev.louisa.jam.hub.testsupport.security.JwtClaimUtil;
@@ -22,7 +24,7 @@ class JwtProviderIT extends BaseInfraStructureIT {
     @MockitoBean
     private Clock clock;
     
-    private UUID userId;
+    private UserId userId;
     private List<UUID> bandIds;
     
     
@@ -31,7 +33,7 @@ class JwtProviderIT extends BaseInfraStructureIT {
 
     @BeforeEach
     void setUp() {
-        userId = UUID.randomUUID();
+        userId = UserId.generate();
         bandIds = List.of(UUID.randomUUID(), UUID.randomUUID());
         when(clock.now()).thenReturn(TODAY);
     }
@@ -48,7 +50,7 @@ class JwtProviderIT extends BaseInfraStructureIT {
         assertThat(JwtClaimUtil.getClaims(jwt))
                 .anyMatch(c -> c.startsWith("jti:"))
                 .contains(
-                        "sub:%s".formatted(userId),
+                        "sub:%s".formatted(userId.toValue()),
                         "iss:urn:jam-hub:auth",
                         "aud:[jam-hub-service,jam-hub-gateway]",
                         "iat:%s".formatted(TODAY.getEpochSecond()),

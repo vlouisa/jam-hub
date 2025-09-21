@@ -1,13 +1,13 @@
 package dev.louisa.jam.hub.testsupport.asserts;
 
+import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
 import dev.louisa.jam.hub.domain.common.EmailAddress;
 import dev.louisa.jam.hub.domain.user.User;
 import dev.louisa.jam.hub.domain.user.UserId;
 import org.assertj.core.api.AbstractAssert;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserAssert extends AbstractAssert<UserAssert, User> {
-    private PasswordEncoder passwordEncoder;
+    private PasswordHasher passwordHasher;
     
     private UserAssert(User actual) {
         super(actual, UserAssert.class);
@@ -17,8 +17,8 @@ public class UserAssert extends AbstractAssert<UserAssert, User> {
         return new UserAssert(actual);
     }
     
-    public UserAssert usingPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
+    public UserAssert usingPasswordHasher(PasswordHasher passwordHasher) {
+        this.passwordHasher = passwordHasher;
         return this;
     }
 
@@ -41,11 +41,11 @@ public class UserAssert extends AbstractAssert<UserAssert, User> {
     public UserAssert hasPassword(String expectedRawPassword) {
         isNotNull();
         
-        if (passwordEncoder == null) {
-            throw new IllegalStateException("PasswordEncoder must be set using usingPasswordEncoder() before calling hasPassword()");
+        if (passwordHasher == null) {
+            throw new IllegalStateException("PasswordHasher must be set using usingPasswordHasher() before calling hasPassword()");
         }
         
-        if (!actual.getPassword().matches(expectedRawPassword, passwordEncoder)) {
+        if (!passwordHasher.matches(expectedRawPassword, actual.getHashedPassword().value())) {
             failWithMessage("Expected password does not match actual password");
         }
         return this;
