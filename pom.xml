@@ -190,7 +190,7 @@
                     <targetTests>
                         <param>dev.louisa.jam.hub.*</param>
                     </targetTests>
-                    <threads>4</threads>
+                    <threads>8</threads>
                     <timeoutConstant>10000</timeoutConstant>
                     <timeoutFactor>2.0</timeoutFactor> 
                 </configuration>
