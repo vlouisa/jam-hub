@@ -42,8 +42,8 @@ class RequestTokenExtractorTest extends BaseInfraStructureTest {
             "Bearer ",
             "NEdITbIbLgNSE9wjc9jVu6eQLwRqveDS/GLjtKV+Re8="
     })
-    void shouldThrowWhenHeaderIsMalformed() {
-        request.addHeader("Authorization", "Bearer");
+    void shouldThrowWhenHeaderIsMalformed(String headerValue) {
+        request.addHeader("Authorization", headerValue);
         
         assertThatCode(() -> bearerTokenFrom(request))
         .isInstanceOf(SecurityException.class)
