@@ -19,7 +19,8 @@ public record Password(String value) {
 
     public Password {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("Password cannot be empty");
+            throw new SecurityException(SecurityError.INVALID_CREDENTIALS,
+                new IllegalArgumentException("Password cannot be empty"));
         }
         if (!COMPLEXITY_PATTERN.matcher(value).matches()) {
             throw new SecurityException(SecurityError.INVALID_CREDENTIALS, 
