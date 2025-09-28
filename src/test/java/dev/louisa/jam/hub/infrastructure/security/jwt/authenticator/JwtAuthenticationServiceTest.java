@@ -77,7 +77,7 @@ class JwtAuthenticationServiceTest extends BaseInfraStructureTest {
 
         assertThatCode(() -> jwtAuthenticationService.authenticate(token))
                 .isInstanceOf(SecurityException.class)
-                .hasMessageContaining("JWT Verification error");;
+                .hasMessageContaining("JWT Verification error");
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
         verify(jwtValidator).validate(token);
