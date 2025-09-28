@@ -21,7 +21,15 @@ public class RequestTokenExtractor {
         return header.substring(AUTHORIZATION_HEADER_VALUE_PREFIX.length());
     }
 
-    private static boolean isBearerToken(String token) {
-        return StringUtils.hasText(token) && token.startsWith(AUTHORIZATION_HEADER_VALUE_PREFIX);
+    private static boolean isBearerToken(String headerValue) {
+        if (headerValue == null) {
+            return false;
+        }
+        
+        if (!headerValue.startsWith(AUTHORIZATION_HEADER_VALUE_PREFIX)) {
+            return false;
+        }
+
+        return StringUtils.hasText(headerValue.substring(AUTHORIZATION_HEADER_VALUE_PREFIX.length()));
     }
 }

@@ -38,6 +38,7 @@ class RequestTokenExtractorTest extends BaseInfraStructureTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
+            " ",
             "Bearer",
             "Bearer ",
             "NEdITbIbLgNSE9wjc9jVu6eQLwRqveDS/GLjtKV+Re8="
