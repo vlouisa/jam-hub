@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.louisa.jam.hub.infrastructure.security.UserPrincipal;
 import dev.louisa.jam.hub.infrastructure.security.UserPrincipalAuthenticationToken;
+import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
 import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,7 +75,9 @@ class JwtAuthenticationServiceTest extends BaseInfraStructureTest {
         when(jwtValidator.validate(token))
                 .thenThrow(new JWTVerificationException("Signature invalid"));
 
-        jwtAuthenticationService.authenticate(token);
+        assertThatCode(() -> jwtAuthenticationService.authenticate(token))
+                .isInstanceOf(SecurityException.class)
+                .hasMessageContaining("JWT Verification error");
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
         verify(jwtValidator).validate(token);
