@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert.mailPitMessages;
+import static dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 class EmailServiceIT extends BaseInfraStructureIT {
@@ -58,8 +58,8 @@ class EmailServiceIT extends BaseInfraStructureIT {
     void shouldSendMail() throws JsonProcessingException {
         emailService.sendEmail(EMAIL);
 
-        mailPitMessages()
-                .fromBaseUri(mailPitContainer.baseUri())
+        messagesFrom(mailPitContainer.baseUri())
+                .awaitMessages(1)
                 .assertThat()
                 .message(1)
                 .hasSender("elaine.marley@mêléeisland.com")
@@ -75,7 +75,7 @@ class EmailServiceIT extends BaseInfraStructureIT {
             "SENDER, SMTP_SENDER_ERROR",
             "RECIPIENT, SMTP_SENDER_ERROR",
     })
-    void shouldReportAuthenticationError(MailPitChaosTrigger trigger, MailError mailError) throws JsonProcessingException {
+    void shouldReportAuthenticationError(MailPitChaosTrigger trigger, MailError mailError) {
         MailPitApi.forceSmtpError(mailPitContainer.baseUri(), trigger);
 
         assertThatCode(() -> emailService.sendEmail(EMAIL))

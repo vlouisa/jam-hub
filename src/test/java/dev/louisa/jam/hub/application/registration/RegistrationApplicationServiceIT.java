@@ -74,8 +74,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
                 .hasOtp(registration.getOtp())
                 .hasExpiryAfter(now());
 
-        mailPitMessages()
-                .fromBaseUri(mailPitContainer.baseUri())
+        messagesFrom(mailPitContainer.baseUri())
                 .awaitMessages(1)
                 .assertThat()
                 .message(1)
@@ -126,8 +125,7 @@ class RegistrationApplicationServiceIT extends BaseApplicationIT {
                 .hasEmail(registration.getEmail());
 
 
-        mailPitMessages()
-                .fromBaseUri(mailPitContainer.baseUri())
+        messagesFrom(mailPitContainer.baseUri())
                 .awaitMessages(1)
                 .assertThat()
                 .message(1)
