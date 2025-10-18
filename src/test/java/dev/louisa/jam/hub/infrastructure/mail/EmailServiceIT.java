@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert.*;
+import static dev.louisa.victor.mail.pit.asserter.MailPitResponseAssert.messagesFrom;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 class EmailServiceIT extends BaseInfraStructureIT {
