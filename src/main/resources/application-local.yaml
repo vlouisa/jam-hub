@@ -6,9 +6,12 @@ spring:
     show-sql: true
   datasource:
     url: jdbc:postgresql://localhost:54321/jam_hub_db?user=jam_hub_owner&password=jam_hub
+    hikari:
+      connection-timeout: 5000    # 5 seconds
+      validation-timeout: 3000    # 3 seconds for connection validation    
   config:
     import: optional:classpath:local.env[.properties]
-    
+
 mail:
   user: ${MAIL_PIT_USER}
   password: ${MAIL_PIT_PASSWORD}
@@ -23,3 +26,16 @@ mail:
       
 jwt-key-resolver:
   master-key: ${MASTER_KEY} 
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      database-cb:
+        slidingWindowSize: 60
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 40
+        waitDurationInOpenState: 30s
+        permittedNumberOfCallsInHalfOpenState: 1
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        record-exceptions:
+          - org.springframework.transaction.CannotCreateTransactionException
