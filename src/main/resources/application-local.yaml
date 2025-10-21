@@ -7,8 +7,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:54321/jam_hub_db?user=jam_hub_owner&password=jam_hub
     hikari:
-      connection-timeout: 5000    # 5 seconds
-      validation-timeout: 3000    # 3 seconds for connection validation    
+      connection-timeout: 2000
+      validation-timeout: 1000    
   config:
     import: optional:classpath:local.env[.properties]
 
@@ -26,16 +26,3 @@ mail:
       
 jwt-key-resolver:
   master-key: ${MASTER_KEY} 
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      database-cb:
-        slidingWindowSize: 60
-        minimumNumberOfCalls: 5
-        failureRateThreshold: 40
-        waitDurationInOpenState: 30s
-        permittedNumberOfCallsInHalfOpenState: 1
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        record-exceptions:
-          - org.springframework.transaction.CannotCreateTransactionException
