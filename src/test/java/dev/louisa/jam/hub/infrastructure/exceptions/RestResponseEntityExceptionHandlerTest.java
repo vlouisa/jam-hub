@@ -5,6 +5,9 @@ import dev.louisa.jam.hub.domain.user.exceptions.UserDomainException;
 import dev.louisa.jam.hub.testsupport.base.BaseInfraStructureTest;
 import dev.louisa.jam.hub.infrastructure.ErrorResponse;
 import dev.louisa.jam.hub.testsupport.LoggerSpy;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import org.hibernate.exception.JDBCConnectionException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +18,7 @@ import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.web.context.request.WebRequest;
 
 import java.sql.SQLTransientConnectionException;
+import java.time.Duration;
 import java.util.List;
 
 import static ch.qos.logback.classic.Level.*;
@@ -83,6 +87,30 @@ class RestResponseEntityExceptionHandlerTest extends BaseInfraStructureTest {
     }
 
     @Test
+    void shouldHandleCircuitBreakerException() {
+        var fail = CallNotPermittedException.createCallNotPermittedException(createCircuitBreaker());
+        ResponseEntity<Object> response = handler.handleCallNotPermittedException(fail, webRequest);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(SERVICE_UNAVAILABLE);
+        assertThat(response.getBody()).isInstanceOf(ErrorResponse.class);
+
+        final ErrorResponse responseBody = (ErrorResponse) response.getBody();
+
+        assertThatErrorResponse(responseBody)
+                .hasErrorCode("INF-100")
+                .hasMessage("Circuit breaker is OPEN, no requests allowed")
+                .hasEmptyContext();
+
+        loggerSpy
+                .assertThatAtLeastOneMessageWithLevel(ERROR)
+                .contains(
+                        "INF-100",
+                        "503 SERVICE_UNAVAILABLE", 
+                        "Circuit breaker is OPEN, no requests allowed");
+    }
+
+    @Test
     void shouldHandleGenericException() {
         var fail = new Exception("fail");
         ResponseEntity<Object> response = handler.handleGenericException(fail, webRequest);
@@ -104,5 +132,17 @@ class RestResponseEntityExceptionHandlerTest extends BaseInfraStructureTest {
                         "GEN-000",
                         "500 INTERNAL_SERVER_ERROR", 
                         "A generic error occurred");
+    }
+    
+    private CircuitBreaker createCircuitBreaker() {
+        CircuitBreakerConfig config = CircuitBreakerConfig.custom()
+                .failureRateThreshold(50)
+                .waitDurationInOpenState(Duration.ofMillis(500))
+                .slidingWindowSize(10)
+                .minimumNumberOfCalls(5)
+                .permittedNumberOfCallsInHalfOpenState(2)
+                .build();
+
+        return CircuitBreaker.of("testBreaker", config);
     }
 }
