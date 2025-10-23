@@ -67,7 +67,6 @@ while ($true) {
 
     # --- Determine per-state values ---
     if ($state -eq "CLOSED") {
-        $closedCallsText = "$bufferedCalls / $slidingWindowSize"
         $closedFailureText = $fText
         $halfOpenCallsText = "N/A"
         $halfOpenFailureText = "N/A"
@@ -98,33 +97,47 @@ while ($true) {
     }
 
     # --- Display summary ---
-    Write-Host "`n=== Circuit Breaker Status ($breaker) ===" -ForegroundColor Cyan
+    Write-Host "-------------------------------------------------"
+    Write-Host "CIRCUIT BREAKER STATUS ($breaker)"
+    Write-Host "-------------------------------------------------"
     Write-Host "State              :`t$emoji $state"
-    Write-Host ""
-
-    Write-Host "=========== CLOSED STATE STATS ===========" -ForegroundColor Gray
-    Write-Host "Calls              :`t$closedCallsText"
-    Write-Host -NoNewline "Failure rate       :`t"
-    Write-Host $closedFailureText -ForegroundColor $fColor
     Write-Host "Failure threshold  :`t$failureRateThreshold %"
-    Write-Host "Min sample size    :`t$minimumNumberOfCalls calls"
-    Write-Host "Sliding window     :`t$slidingWindowSize calls"
     Write-Host ""
 
-    Write-Host "======== HALF OPEN STATE STATS ===========" -ForegroundColor Gray
-    Write-Host "Calls              :`t$halfOpenCallsText"
-    Write-Host -NoNewline "Failure rate       :`t"
-    Write-Host $halfOpenFailureText -ForegroundColor $fColor
-    Write-Host "Failure threshold  :`t$failureRateThreshold %"
-    Write-Host "Min sample size    :`t$permittedHalfOpen calls"
-    Write-Host ""
+    switch ($state) {
+        "CLOSED" {
+            Write-Host "--------------- CLOSED STATE STATS --------------" -ForegroundColor Gray
+            Write-Host "Calls              :`t$bufferedCalls / $slidingWindowSize"
+            Write-Host -NoNewline "Failure rate       :`t"
+            Write-Host $closedFailureText -ForegroundColor $fColor
+            Write-Host "Min sample size    :`t$minimumNumberOfCalls calls"
+            Write-Host "Sliding window     :`t$slidingWindowSize calls"
+            Write-Host ""
+        }
 
-    Write-Host "========== OPEN STATE STATS =============" -ForegroundColor Gray
-    Write-Host "Cool-off duration  :`t$waitDurationOpenSeconds s"
-    Write-Host "Elapsed time       :`t$elapsedText"
-    Write-Host "Remaining time     :`t$remainingText"
-    Write-Host "====================================="
-    Write-Host "(Refreshing every 10 seconds...)`n" -ForegroundColor DarkGray
+        "HALF_OPEN" {
+            Write-Host "------------- HALF OPEN STATE STATS -------------" -ForegroundColor Gray
+            Write-Host "Calls              :`t$halfOpenCallsText"
+            Write-Host -NoNewline "Failure rate       :`t"
+            Write-Host $halfOpenFailureText -ForegroundColor $fColor
+            Write-Host "Min sample size    :`t$permittedHalfOpen calls"
+            Write-Host ""
+        }
 
-    Start-Sleep -Seconds 10
+        "OPEN" {
+            Write-Host "---------------- OPEN STATE STATS ---------------" -ForegroundColor Gray
+            Write-Host "Cool-off duration  :`t$waitDurationOpenSeconds s"
+            Write-Host "Elapsed time       :`t$elapsedText"
+            Write-Host "Remaining time     :`t$remainingText"
+            Write-Host ""
+        }
+
+        default {
+            Write-Host "No detailed stats available for state: $state" -ForegroundColor Yellow
+        }
+    }
+    Write-Host "(Press any key to refresh... or Ctrl+C to exit)`n" -ForegroundColor DarkGray
+    do {
+        $key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    } while ($key.ControlKeyState -ne 0 -or $key.VirtualKeyCode -in 16,17,18)
 }
