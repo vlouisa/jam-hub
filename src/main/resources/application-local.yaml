@@ -6,9 +6,12 @@ spring:
     show-sql: true
   datasource:
     url: jdbc:postgresql://localhost:54321/jam_hub_db?user=jam_hub_owner&password=jam_hub
+    hikari:
+      connection-timeout: 2000
+      validation-timeout: 1000    
   config:
     import: optional:classpath:local.env[.properties]
-    
+
 mail:
   user: ${MAIL_PIT_USER}
   password: ${MAIL_PIT_PASSWORD}

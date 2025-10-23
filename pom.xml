@@ -42,6 +42,7 @@
         <mail-pit.version>0.2.1</mail-pit.version>
         <pitest.version>1.20.3</pitest.version>
         <pitest.junit5.version>1.2.3</pitest.junit5.version>
+        <resilience4j.version>2.3.0</resilience4j.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <wiremock.version>3.5.2</wiremock.version>
     </properties>
@@ -119,6 +120,23 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-spring-boot3</artifactId>
+            <version>${resilience4j.version}</version>
+        </dependency>
+        <!-- For metrics & health endpoints -->
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-micrometer</artifactId>
+            <version>${resilience4j.version}</version>
+        </dependency>
+
+        <!-- Spring Boot Actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wiremock</groupId>

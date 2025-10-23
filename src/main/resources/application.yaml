@@ -5,3 +5,12 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, resilience4j, resilience4j.circuitbreakers, resilience4j.rate-limiters, resilience4j.bulkheads
+  health:
+    circuitbreakers:
+      enabled: true
