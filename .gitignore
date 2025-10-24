@@ -1,9 +1,16 @@
-#Generated stuff
-target/
-
 #IntelliJ
 .idea/
 *.iml
 
 ### Local Configuration ###
 *.env
+
+### Maven
+target/
+
+### Gradle
+.gradle/
+gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+build/
