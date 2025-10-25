@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "3.5.5"
+    id("org.springframework.boot") version "3.5.7"
     id("io.spring.dependency-management") version "1.1.7"
     java
 }
@@ -87,23 +87,6 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
-tasks.test {
-    description = "Runs the only tests tagged with @Tag(\"unit-test\")"
-    group = "verification"
-    
-    useJUnitPlatform {
-        includeTags("unit-test")
-    }
-}
-
-tasks.register<Test>("allTests") {
-    description = "Runs all tests."
-    useJUnitPlatform()
-}
-
-tasks.named("check") {
-    dependsOn("allTests")
-}
 
 tasks.register<JavaExec>("pitest") {
     group = "verification"
