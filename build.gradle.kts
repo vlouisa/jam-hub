@@ -28,7 +28,7 @@ repositories {
 
 extra["jakartaMailApiVersion"] = "2.1.3"
 extra["javaJwtVersion"] = "4.5.0"
-extra["datafakerVersion"] = "2.4.4"
+extra["datafakerVersion"] = "2.5.2"
 extra["flywayCoreVersion"] = "10.15.2"
 extra["flywayPostgresVersion"] = "10.14.0"
 extra["mockRestVersion"] = "0.5.3"
@@ -36,7 +36,7 @@ extra["mailPitVersion"] = "0.2.1"
 extra["pitestVersion"] = "1.20.3"
 extra["pitestJunit5Version"] = "1.2.3"
 extra["resilience4jVersion"] = "2.3.0"
-extra["testcontainersVersion"] = "1.21.3"
+extra["testcontainersVersion"] = "2.0.1"
 extra["wiremockVersion"] = "3.5.2"
 
 dependencies {
@@ -69,7 +69,6 @@ dependencies {
     testImplementation("org.wiremock:wiremock-standalone:${property("wiremockVersion")}")
     testImplementation("net.datafaker:datafaker:${property("datafakerVersion")}")
     testImplementation("org.testcontainers:testcontainers:${property("testcontainersVersion")}")
-    testImplementation("org.testcontainers:junit-jupiter:${property("testcontainersVersion")}")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:jdbc")
     testImplementation("dev.louisa.victor:mock-rest:${property("mockRestVersion")}")
