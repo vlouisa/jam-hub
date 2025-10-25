@@ -20,6 +20,7 @@ import java.util.UUID;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class DomainEntity implements AuditableEntity {
     @Id
+    @Builder.Default
     private UUID id = UUID.randomUUID();
 
     @CreationTimestamp

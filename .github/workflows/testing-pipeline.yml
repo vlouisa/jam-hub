@@ -1,47 +1,44 @@
-name: Test Pipeline
+name: Test Pipeline (Gradle)
 
 on:
   push:
     branches-ignore:
       - main   # do not run on main
-        
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: read
+
     steps:
       # Step 1: Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: Set up JDK
+      # Step 2: Set up JDK 21
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+          cache: gradle
 
-      # Step 3: Setup Maven authentication for GitHub Packages
-      - name: Setup Maven authentication
-        env:
-          GH_PACKAGES_PAT: ${{ secrets.GH_PACKAGES_PAT }}
+      # Step 3: Configure Gradle credentials for GitHub Packages
+      - name: Configure Gradle for GitHub Packages
         run: |
-          mkdir -p $HOME/.m2
-          cat <<EOF > $HOME/.m2/settings.xml
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-            <servers>
-              <server>
-                <id>github-vlouisa</id> <!-- must match <id> in your pom.xml repository -->
-                <username>vlouisa</username>
-                <password>${GH_PACKAGES_PAT}</password>
-              </server>
-            </servers>
-          </settings>
+          mkdir -p ~/.gradle
+          cat <<EOF > ~/.gradle/gradle.properties
+          gpr.user=${{ github.actor }}
+          gpr.key=${{ secrets.GITHUB_TOKEN }}
           EOF
 
-      # Step 4: Build and test project
-      - name: Build with Maven
-        run: mvn clean verify
+      # Step 4: Grant execute permission for Gradle wrapper
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      # Step 5: Build and test using Gradle
+      - name: Build and run tests
+        run: ./gradlew clean check --no-daemon --stacktrace

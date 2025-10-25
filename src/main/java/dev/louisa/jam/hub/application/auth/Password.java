@@ -4,6 +4,7 @@ import dev.louisa.jam.hub.application.auth.port.outbound.PasswordHasher;
 import dev.louisa.jam.hub.domain.user.HashedPassword;
 import dev.louisa.jam.hub.infrastructure.security.exception.SecurityError;
 import dev.louisa.jam.hub.infrastructure.security.exception.SecurityException;
+import org.springframework.lang.NonNull;
 
 import java.util.regex.Pattern;
 
@@ -37,7 +38,7 @@ public record Password(String value) {
     }
 
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return "********"; // don’t leak raw password
     }
 }
