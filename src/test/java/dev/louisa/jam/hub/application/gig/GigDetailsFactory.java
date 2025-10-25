@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.function.Consumer;
 
 public class GigDetailsFactory {
-    private static final Faker faker = new Faker(new Locale("nl-NL"));
+    private static final Faker faker = new Faker(Locale.forLanguageTag("nl-NL"));
 
     public GigDetails create() {
         return create(gigDetailsBuilder -> {});
