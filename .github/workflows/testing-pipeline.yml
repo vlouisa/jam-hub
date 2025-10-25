@@ -1,9 +1,9 @@
 name: Test Pipeline (Gradle)
 
-on:
-  push:
-    branches-ignore:
-      - main   # do not run on main
+#on:
+#  push:
+#    branches-ignore:
+#      - main   # do not run on main
 
 jobs:
   build:

@@ -71,7 +71,7 @@ jobs:
         id: read_version
         run: |
           chmod +x gradlew
-          CURRENT_VERSION=$(./gradlew properties -q | grep "^version:" | awk '{print $2}')
+          CURRENT_VERSION=$(./gradlew properties -q | grep -E "^[[:space:]]*version:" | sed 's/.*version:[[:space:]]*//')
           echo "Current version: $CURRENT_VERSION"
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_ENV
 
