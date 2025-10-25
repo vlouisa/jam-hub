@@ -20,11 +20,16 @@ repositories {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/vlouisa/mail-pit")
         credentials {
-            username = project.findProperty("gpr.user") as String? ?: ""
-            password = project.findProperty("gpr.key") as String? ?: ""
+            val user = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            val key = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            if (user != null && key != null) {
+                username = user
+                password = key
+            }
         }
     }
 }
+
 
 extra["jakartaMailApiVersion"] = "2.1.3"
 extra["javaJwtVersion"] = "4.5.0"
