@@ -1,20 +1,24 @@
-name: Deploy / Release Pipeline
+name: Deploy / Release Pipeline (Gradle)
 
 on:
   pull_request:
     types: [closed]
     branches:
-      - main
+      - main-test
 
 jobs:
   bump-version:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+      packages: read
+
     steps:
       # Step 1: Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -25,11 +29,12 @@ jobs:
           git config user.email "version-bump@users.noreply.github.com"
 
       # Step 3: Set up JDK
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+          cache: gradle
 
       # Step 4: Get source branch of merged PR
       - name: Get merged branch
@@ -52,33 +57,22 @@ jobs:
             exit 1
           fi
 
-      # Step 6: Setup Maven authentication for GitHub Packages
-      - name: Setup Maven authentication
-        env:
-          GH_PACKAGES_PAT: ${{ secrets.GH_PACKAGES_PAT }}
+      # Step 6: Configure Gradle credentials (for private dependencies)
+      - name: Configure Gradle for GitHub Packages
         run: |
-          mkdir -p $HOME/.m2
-          cat <<EOF > $HOME/.m2/settings.xml
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-            <servers>
-              <server>
-                <id>github-vlouisa</id> <!-- must match <id> in your pom.xml repository -->
-                <username>vlouisa</username>
-                <password>${GH_PACKAGES_PAT}</password>
-              </server>
-            </servers>
-          </settings>
+          mkdir -p ~/.gradle
+          cat <<EOF > ~/.gradle/gradle.properties
+          gpr.user=${{ github.actor }}
+          gpr.key=${{ secrets.GITHUB_TOKEN }}
           EOF
 
-      # Step 7: Get current Maven version
-      - name: Get current Maven version
+      # Step 7: Get current project version from build.gradle.kts
+      - name: Get current Gradle version
         id: read_version
         run: |
-          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          CURRENT_VERSION=$(./gradlew properties -q | grep "^version:" | awk '{print $2}')
+          echo "Current version: $CURRENT_VERSION"
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_ENV
-          echo "Current development version: $CURRENT_VERSION"
 
       # Step 8: Compute new version
       - name: Compute new version
@@ -94,37 +88,33 @@ jobs:
             MAJOR=$((MAJOR + 1))
             MINOR=0
             PATCH=0
-          else
-            PATCH=$((PATCH))
           fi
 
-          NEW_VERSION="$MAJOR.$MINOR.$((PATCH +1))-SNAPSHOT"
+          NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))-SNAPSHOT"
           TAG_VERSION="$MAJOR.$MINOR.$PATCH"
           echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
           echo "tag_version=$TAG_VERSION" >> $GITHUB_ENV
-          echo "Bumped development version to $NEW_VERSION, tag: $TAG_VERSION"
+          echo "Bumped development version to $NEW_VERSION (tag: $TAG_VERSION)"
 
-      # Step 9: Set Maven version
-      - name: Set Maven version
-        run: mvn versions:set -DnewVersion=$new_version -DgenerateBackupPoms=false
-
-      # Step 10: Commit and push changes using GITHUB_TOKEN
-      - name: Commit and push
+      # Step 9: Update version in build.gradle.kts
+      - name: Update Gradle version
         run: |
-          git add pom.xml
-          git commit -m "Bump version to $new_version [skip ci]" || echo "No changes to commit"
+          sed -i "s/^version = \".*\"/version = \"$new_version\"/" build.gradle.kts
+          git add build.gradle.kts
+          git commit -m "Bump version to $new_version [skip ci]" || echo "No version change to commit"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD
 
-      # Step 11: Create and push Git tag using GITHUB_TOKEN
-      - name: Create and push tag
-        run: |
-          git tag -a "$tag_version" -m "Release $tag_version"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$tag_version"
+      # Step 10: Create and push Git tag
+#      - name: Create and push tag
+#        run: |
+#          git tag -a "$tag_version" -m "Release $tag_version"
+#          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$tag_version"
 
-      # Step 12: Create GitHub release
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.tag_version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Step 11: Create GitHub release
+#      - name: Create GitHub release
+#        uses: softprops/action-gh-release@v2
+#        with:
+#          tag_name: ${{ env.tag_version }}
+#          name: "Release ${{ env.tag_version }}"
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
