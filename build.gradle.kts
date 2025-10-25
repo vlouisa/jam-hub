@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "dev.louisa"
-version = ".2.1-SNAPSHOT"
+version = "0.6.1-SNAPSHOT"
 description = "jam-hub-service"
 
 java {
