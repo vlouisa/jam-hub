@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [closed]
     branches:
-      - main-test
+      - main
 
 jobs:
   bump-version:
@@ -106,16 +106,16 @@ jobs:
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD
 
       # Step 10: Create and push Git tag
-#      - name: Create and push tag
-#        run: |
-#          git tag -a "$tag_version" -m "Release $tag_version"
-#          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$tag_version"
+      - name: Create and push tag
+        run: |
+          git tag -a "$tag_version" -m "Release $tag_version"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$tag_version"
 
       # Step 11: Create GitHub release
-#      - name: Create GitHub release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          tag_name: ${{ env.tag_version }}
-#          name: "Release ${{ env.tag_version }}"
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.tag_version }}
+          name: "Release ${{ env.tag_version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
