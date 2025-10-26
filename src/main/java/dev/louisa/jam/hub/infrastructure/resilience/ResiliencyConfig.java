@@ -1,10 +1,11 @@
-package dev.louisa.jam.hub.infrastructure.circuitbreaker;
+package dev.louisa.jam.hub.infrastructure.resilience;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.micrometer.tagged.TaggedCircuitBreakerMetrics;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.CannotCreateTransactionException;
@@ -15,11 +16,12 @@ import static io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.Sliding
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class ResiliencyConfig {
 
     @Bean
     public CircuitBreakerRegistry circuitBreakerRegistry(MeterRegistry meterRegistry) {
-        CircuitBreakerConfig config =  CircuitBreakerConfig.custom()
+        var config =  CircuitBreakerConfig.custom()
                 .slidingWindowType(COUNT_BASED)
                 .slidingWindowSize(60)
                 .minimumNumberOfCalls(5)
@@ -30,10 +32,14 @@ public class ResiliencyConfig {
                 .recordExceptions(CannotCreateTransactionException.class)
                 .build();
 
-        CircuitBreakerRegistry registry = CircuitBreakerRegistry.of(config);
+        var registry = CircuitBreakerRegistry.of(config);
 
         // Create named circuit breakers BEFORE binding them to the meter registry
-        registry.circuitBreaker("database-cb");
+        registry.circuitBreaker("database-cb")
+                .getEventPublisher()
+                .onStateTransition(event -> log.info("Circuit breaker '{}' state change:  {}", 
+                        event.getCircuitBreakerName(),
+                        event.getStateTransition()));
         
         // This ensures that metrics are collected and are available in Micrometer / Actuator
         TaggedCircuitBreakerMetrics
